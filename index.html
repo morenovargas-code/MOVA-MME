@@ -93,6 +93,8 @@
   .user-menu-item.danger{color:var(--red)}.user-menu-item.danger:hover{background:rgba(229,57,53,.06)}
 
   /* SIDEBAR */
+  .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:199;backdrop-filter:blur(2px)}
+  .sidebar-overlay.show{display:block}
   .sidebar{width:var(--sidebar-w);background:var(--white);position:fixed;top:48px;left:0;bottom:0;border-right:1px solid var(--gray-200);padding:16px 0;z-index:90;overflow-y:auto;transition:transform .3s}
   .sidebar-section{padding:0 12px;margin-bottom:8px}
   .sidebar-label{font-size:10px;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:1.2px;padding:12px 12px 6px}
@@ -165,9 +167,9 @@
   .eq-table tr:hover td{background:var(--gray-50)}
   .eq-name{color:var(--navy);font-weight:600}
   .eq-status{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;padding:3px 10px;border-radius:20px}
-  .eq-status.active{background:rgba(76,175,80,.1);color:var(--green-dark)}.eq-status.maint{background:rgba(255,152,0,.1);color:#E65100}.eq-status.down{background:rgba(229,57,53,.1);color:var(--red)}
+  .eq-status.active{background:rgba(76,175,80,.1);color:var(--green-dark)}.eq-status.maint{background:rgba(255,152,0,.1);color:#E65100}.eq-status.down{background:rgba(229,57,53,.1);color:var(--red)}.eq-status.standby{background:rgba(100,116,139,.1);color:var(--gray-600)}
   .eq-status-dot{width:6px;height:6px;border-radius:50%}
-  .active .eq-status-dot{background:var(--green)}.maint .eq-status-dot{background:var(--orange)}.down .eq-status-dot{background:var(--red)}
+  .active .eq-status-dot{background:var(--green)}.maint .eq-status-dot{background:var(--orange)}.down .eq-status-dot{background:var(--red)}.standby .eq-status-dot{background:var(--gray-500)}
   .cal-item{display:flex;gap:14px;padding:12px 8px;border-bottom:1px solid var(--gray-100);align-items:flex-start;cursor:pointer;border-radius:8px;margin:0 -8px;transition:all .15s}.cal-item:hover{background:var(--gray-50)}.cal-item:last-child{border-bottom:none}
   .cal-date{width:44px;height:50px;border-radius:8px;background:linear-gradient(135deg,var(--blue),var(--blue-bright));display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;color:var(--white)}
   .cal-date-day{font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700;line-height:1}.cal-date-month{font-size:9px;font-weight:600;text-transform:uppercase;opacity:.8}
@@ -419,8 +421,116 @@
   @keyframes fadeIn{to{opacity:1;transform:translateY(0)}}
   .delay-1{animation-delay:.1s}.delay-2{animation-delay:.2s}.delay-3{animation-delay:.3s}.delay-4{animation-delay:.4s}.delay-5{animation-delay:.5s}
 
-  @media(max-width:1200px){.content{grid-template-columns:1fr}.hero-right{display:none}.hero-dots{display:none}.kpi-grid{grid-template-columns:repeat(2,1fr)}.docs-grid{grid-template-columns:repeat(2,1fr)}.preop-menu{grid-template-columns:1fr;max-width:400px}}
-  @media(max-width:768px){.sidebar{transform:translateX(-100%)}.sidebar.mobile-open{transform:translateX(0);z-index:95}.main{margin-left:0}.content,.preop-container,.page-header{padding-left:20px;padding-right:20px}.hero{padding:0 20px}.quick-access{padding:0 20px}.menu-toggle{display:flex!important}.topbar-nav{display:none}}
+  /* ===== RESPONSIVE: TABLET (≤1200px) ===== */
+  @media(max-width:1200px){
+    .content{grid-template-columns:1fr}
+    .hero-right{display:none}.hero-dots{display:none}
+    .kpi-grid{grid-template-columns:repeat(2,1fr)}
+    .docs-grid{grid-template-columns:repeat(2,1fr)}
+    .preop-menu{grid-template-columns:1fr 1fr;max-width:600px}
+    .dashboard-nav{grid-template-columns:repeat(2,1fr)}
+  }
+
+  /* ===== RESPONSIVE: MOBILE (≤768px) ===== */
+  @media(max-width:768px){
+    /* Sidebar */
+    .sidebar{transform:translateX(-100%);width:280px}
+    .sidebar.mobile-open{transform:translateX(0);z-index:200}
+    .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:199}
+    .sidebar-overlay.show{display:block}
+    .main{margin-left:0}
+    .menu-toggle{display:flex!important}
+    .topbar-nav{display:none}
+    .topbar-search{display:none}
+    .topbar-user-name{display:none}
+
+    /* Paddings globales */
+    .content,.preop-container,.page-header,.falla-container,.hv-container{padding-left:16px!important;padding-right:16px!important}
+    .hero{padding:0 16px;height:auto;min-height:220px}
+    .hero-content{max-width:100%}
+    .hero-title{font-size:26px}
+    .hero-subtitle{font-size:13px;margin-bottom:16px}
+    .hero-actions{flex-direction:column;gap:8px}
+    .hero-btn{width:100%;justify-content:center;padding:12px 16px}
+    .hero-tag{font-size:10px}
+    .quick-access{padding:0 16px;flex-wrap:wrap;gap:0}
+    .quick-item{font-size:12px;padding:10px 14px;flex:1;min-width:140px;justify-content:center}
+
+    /* KPIs */
+    .kpi-grid{grid-template-columns:1fr 1fr;gap:8px}
+    .kpi-value{font-size:22px}
+
+    /* Docs */
+    .docs-grid{grid-template-columns:1fr!important}
+
+    /* Equipos */
+    .dashboard-nav{grid-template-columns:1fr 1fr;gap:10px}
+    .nav-card{padding:14px}
+    .nav-value{font-size:22px}
+    .upload-bar{flex-direction:column;align-items:stretch;gap:8px}
+    .upload-bar label{text-align:center;justify-content:center}
+
+    /* Tablas */
+    .eq-table{font-size:12px}
+    .eq-table th,.eq-table td{padding:8px 10px}
+    .card-body{padding:14px 16px}
+    .card-header{padding:14px 16px}
+
+    /* Forms */
+    .form-row{grid-template-columns:1fr!important}
+    .preop-menu{grid-template-columns:1fr!important;max-width:100%;gap:12px}
+    .preop-card{padding:24px 16px}
+    .preop-status-bar{flex-direction:column;gap:10px}
+    .checklist-row{flex-direction:column;align-items:flex-start;gap:8px}
+    .checklist-actions{width:100%;justify-content:flex-start}
+    .preop-post-actions{grid-template-columns:1fr}
+
+    /* Hoja de vida */
+    .hv-two-col{grid-template-columns:1fr}
+    .hv-grid{grid-template-columns:1fr}
+    .hv-cert-meta{grid-template-columns:1fr}
+    .hv-cert-header{flex-direction:column;text-align:center;padding:18px 16px}
+    .hv-cert-body{padding:16px}
+    .hv-toolbar{flex-direction:column}
+    .hv-actions{width:100%}
+    .hv-btn{width:100%;justify-content:center}
+
+    /* Falla */
+    .falla-tipo-grid{grid-template-columns:1fr 1fr;gap:8px}
+    .falla-prioridad{flex-direction:column;gap:8px}
+    .falla-card{padding:20px 16px}
+
+    /* Page header */
+    .page-header{flex-direction:column;align-items:flex-start}
+    .page-header h1{font-size:20px}
+    .auto-back-btn{margin-left:16px!important}
+
+    /* Historial */
+    .historial-grid{grid-template-columns:1fr}
+
+    /* Calendar */
+    .cal-item{gap:10px}
+
+    /* Progress */
+    .content-right{order:-1}
+
+    /* Dropdowns */
+    .dropdown{min-width:260px;right:-40px}
+  }
+
+  /* ===== RESPONSIVE: SMALL PHONE (≤480px) ===== */
+  @media(max-width:480px){
+    .hero{min-height:200px}
+    .hero-title{font-size:22px}
+    .kpi-grid{grid-template-columns:1fr}
+    .falla-tipo-grid{grid-template-columns:1fr}
+    .dashboard-nav{grid-template-columns:1fr}
+    .quick-access{flex-direction:column}
+    .quick-item{min-width:100%}
+    .topbar{padding:0 10px;gap:8px}
+    .topbar-logo{font-size:13px}
+    .logo-icon{width:28px;height:28px;font-size:10px}
+  }
   /* HOJA DE VIDA */
   .hv-container{padding:28px 48px}
   .hv-toolbar{background:var(--white);border:1px solid var(--gray-200);border-radius:12px;padding:18px 22px;margin-bottom:20px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
@@ -482,7 +592,6 @@
   .hv-estado.activo{background:rgba(76,175,80,.12);color:var(--green-dark)}
   .hv-estado.inactivo{background:rgba(229,57,53,.12);color:var(--red)}
   .hv-estado.mantenimiento{background:rgba(255,152,0,.12);color:#E65100}
-  @media(max-width:900px){.hv-two-col{grid-template-columns:1fr}.hv-grid{grid-template-columns:1fr}.hv-cert-meta{grid-template-columns:1fr}}
 
   /* HERO CAROUSEL — solo rota el lado derecho */
   .hero-right{position:absolute;right:40px;top:50%;transform:translateY(-50%);width:420px;height:200px}
@@ -493,7 +602,6 @@
   .hero-dots{position:absolute;bottom:16px;right:40px;display:flex;gap:8px;z-index:5}
   .hero-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.3);cursor:pointer;transition:all .3s}
   .hero-dot.active{background:var(--yellow);width:24px;border-radius:4px}
-  @media(max-width:1200px){.hero-right{display:none}.hero-dots{display:none}}
 
   /* REPORTAR FALLA */
   .falla-container{padding:28px 48px;max-width:800px}
@@ -518,7 +626,6 @@
   .falla-success .fs-icon{font-size:56px;margin-bottom:16px}
   .falla-success h3{font-family:'Space Grotesk',sans-serif;color:var(--navy);font-size:20px;margin-bottom:8px}
   .falla-success p{font-size:13px;color:var(--gray-500);margin-bottom:20px}
-  @media(max-width:768px){.falla-tipo-grid{grid-template-columns:1fr 1fr}.falla-container{padding:20px}}
 </style>
 </head>
 <body>
@@ -580,6 +687,7 @@
 </div>
 
 <!-- SIDEBAR -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
 <div class="sidebar" id="sidebar">
   <div class="sidebar-section"><div class="sidebar-label">Principal</div>
     <a class="sidebar-item active" data-page="inicio" onclick="window.navTo('inicio')"><span class="sidebar-icon">🏠</span>Inicio</a>
@@ -608,8 +716,6 @@
         <p class="hero-subtitle">Mantenimiento, Maquinaria y Equipos. Gestión integral del programa de mantenimiento preventivo y correctivo.</p>
         <div class="hero-actions">
           <button class="hero-btn primary" onclick="window.navTo('fallas')">🔧 Reportar Falla</button>
-          <button class="hero-btn secondary" onclick="window.navTo('ordenes')">📋 Nueva Orden de Trabajo</button>
-          <button class="hero-btn secondary" onclick="window.navTo('preoperacionales')">📅 Ver Calendario</button>
         </div>
       </div>
       <!-- Lado derecho: ROTA -->
@@ -640,7 +746,6 @@
       <div class="hero-dots" id="heroDots"></div>
     </div>
     <div class="quick-access fade-in delay-1">
-      <a class="quick-item" onclick="window.navTo('fallas')"><span class="qi-icon qi-red">⚠️</span>Reportar Falla</a>
       <a class="quick-item" onclick="window.navTo('preoperacionales')"><span class="qi-icon qi-blue">📝</span>Inspección Preoperacional</a>
       <a class="quick-item" onclick="window.navTo('ordenes')"><span class="qi-icon qi-green">🔧</span>Solicitar Mantenimiento</a>
       <a class="quick-item" onclick="window.navTo('equipos')"><span class="qi-icon qi-yellow">⛽</span>Control de Combustible</a>
@@ -1051,11 +1156,11 @@ function cargarEquipos(proyecto){
     }
     const equipos=snap.docs.map(d=>({id:d.id,...d.data()}));
     if(countEl)countEl.textContent=`${equipos.length} equipo${equipos.length!==1?'s':''}`;
-    const stMap={operativo:'active',mantenimiento:'maint',fuera_servicio:'down'};
-    const stLabel={operativo:'Operativo',mantenimiento:'En Mtto.',fuera_servicio:'Fuera Servicio'};
-    container.innerHTML=`<div class="card"><div class="card-body" style="padding:0"><table class="eq-table"><thead><tr><th>Equipo</th><th>Código</th><th>Estado</th><th>Proyecto</th></tr></thead><tbody>${equipos.map(eq=>{
+    const stMap={operativo:'active',mantenimiento:'maint',fuera_servicio:'down',stand_by:'standby'};
+    const stLabel={operativo:'Operativo',mantenimiento:'En Mtto.',fuera_servicio:'Fuera Servicio',stand_by:'Stand By'};
+    container.innerHTML=`<div class="card"><div class="card-body" style="padding:0;overflow-x:auto"><table class="eq-table"><thead><tr><th>Equipo</th><th>Código</th><th>Estado</th><th>Proyecto</th></tr></thead><tbody>${equipos.map(eq=>{
       const st=stMap[eq.estado]||'active';const sl=stLabel[eq.estado]||eq.estado||'—';
-      return`<tr><td class="eq-name">${eq.nombre||'—'}</td><td>${eq.codigo||'—'}</td><td><span class="eq-status ${st}"><span class="eq-status-dot"></span>${sl}</span></td><td style="text-transform:capitalize">${eq.proyecto||'—'}</td></tr>`}).join('')}</tbody></table></div></div>`;
+      return`<tr><td class="eq-name">${eq.nombre||'—'}</td><td>${eq.codigo||'—'}</td><td><span class="eq-status ${st}" style="cursor:pointer" onclick="window.cambiarEstadoEquipo('${eq.id}','${eq.estado||'operativo'}')" title="Click para cambiar estado"><span class="eq-status-dot"></span>${sl} <i class="bi bi-chevron-down" style="font-size:10px;opacity:.6"></i></span></td><td style="text-transform:capitalize">${eq.proyecto||'—'}</td></tr>`}).join('')}</tbody></table></div></div>`;
   },(error)=>{
     console.error("Error onSnapshot:",error);
     if(error.code==='failed-precondition'){container.innerHTML='<div class="eq-empty"><i class="bi bi-exclamation-triangle"></i><p>Se requiere un índice en Firebase Console.<br>Revisa la consola del navegador para el enlace.</p></div>'}
@@ -1063,6 +1168,37 @@ function cargarEquipos(proyecto){
   });
 }
 window.cargarEquipos=cargarEquipos;
+
+// ===== CAMBIAR ESTADO DE EQUIPO =====
+window.cambiarEstadoEquipo = async function(eqId, estadoActual) {
+  const estados = ['operativo','mantenimiento','fuera_servicio','stand_by'];
+  const labels = {'operativo':'✅ Operativo','mantenimiento':'🟡 En Mantenimiento','fuera_servicio':'🔴 Fuera de Servicio','stand_by':'⏸️ Stand By'};
+  const opciones = estados.filter(e => e !== estadoActual).map(e => `<div class="estado-opt" data-estado="${e}" style="padding:10px 16px;cursor:pointer;font-size:13px;font-weight:500;border-bottom:1px solid var(--gray-100);transition:background .15s" onmouseover="this.style.background='var(--gray-50)'" onmouseout="this.style.background=''" onclick="window._confirmarEstado('${eqId}','${e}')">${labels[e]}</div>`).join('');
+  // Crear popup
+  const old = document.getElementById('estado-popup');
+  if (old) old.remove();
+  const popup = document.createElement('div');
+  popup.id = 'estado-popup';
+  popup.style.cssText = 'position:fixed;inset:0;z-index:500;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.4);backdrop-filter:blur(2px)';
+  popup.innerHTML = `<div style="background:var(--white);border-radius:12px;min-width:280px;box-shadow:0 20px 60px rgba(0,0,0,.2);overflow:hidden;animation:modalIn .2s ease">
+    <div style="padding:16px 20px;border-bottom:1px solid var(--gray-200);font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:14px;color:var(--navy)">Cambiar Estado</div>
+    <div style="padding:4px 0">${opciones}</div>
+    <div style="padding:10px 16px;text-align:right"><button onclick="document.getElementById('estado-popup').remove()" style="padding:8px 16px;border:1px solid var(--gray-200);border-radius:6px;background:var(--white);color:var(--gray-600);font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif">Cancelar</button></div>
+  </div>`;
+  popup.addEventListener('click', e => { if (e.target === popup) popup.remove(); });
+  document.body.appendChild(popup);
+};
+
+window._confirmarEstado = async function(eqId, nuevoEstado) {
+  try {
+    await setDoc(doc(db, "equipos", eqId), { estado: nuevoEstado, actualizado: serverTimestamp() }, { merge: true });
+    const labels = {operativo:'Operativo',mantenimiento:'En Mantenimiento',fuera_servicio:'Fuera de Servicio',stand_by:'Stand By'};
+    showToast('success', `Estado cambiado a: ${labels[nuevoEstado]}`);
+  } catch(err) {
+    showToast('error', 'Error: ' + err.message);
+  }
+  document.getElementById('estado-popup')?.remove();
+};
 
 // ===== SUBIR EXCEL: un solo handler, asigna proyecto automáticamente =====
 document.getElementById('excelInput').addEventListener('change',async(event)=>{
@@ -2075,7 +2211,10 @@ window.initHojaVidaPage=function(){
 <script>
 window.switchAuthTab=function(tab){document.querySelectorAll('.auth-tab').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.auth-form').forEach(f=>f.classList.remove('active'));if(tab==='login'){document.querySelector('.auth-tab:first-child').classList.add('active');document.getElementById('loginForm').classList.add('active')}else{document.querySelector('.auth-tab:last-child').classList.add('active');document.getElementById('registerForm').classList.add('active')}};
 
-window.navTo=function(page){document.querySelectorAll('.page-section').forEach(s=>s.classList.remove('active'));const t=document.getElementById('page-'+page);if(t){t.classList.add('active');t.querySelectorAll('.fade-in').forEach(el=>{el.style.animation='none';el.offsetHeight;el.style.animation=''})}document.querySelectorAll('#topNav a').forEach(a=>a.classList.remove('active'));const tl=document.querySelector(`#topNav a[data-page="${page}"]`);if(tl)tl.classList.add('active');document.querySelectorAll('.sidebar-item').forEach(s=>s.classList.remove('active'));const sl=document.querySelector(`.sidebar-item[data-page="${page}"]`);if(sl)sl.classList.add('active');if(page==='fallas'&&window.initFallaPage)window.initFallaPage();if(page==='preoperacionales'&&window.initPreopPage)window.initPreopPage();if(page==='bimensuales'&&window.initBimensualPage)window.initBimensualPage();if(page==='locativas'&&window.initLocativaPage)window.initLocativaPage();if(page==='hojavida'&&window.initHojaVidaPage)window.initHojaVidaPage();if(page==='equipos'&&window.cargarEquipos)window.cargarEquipos(document.querySelector('.project-btn.active')?.dataset.project||'todos');if(page==='inicio'){if(window._initHeroCarousel)window._initHeroCarousel();setTimeout(()=>{document.querySelectorAll('.progress-fill').forEach(b=>{b.style.width='0';setTimeout(()=>{b.style.width=b.dataset.target+'%'},100)})},300)}window.scrollTo({top:0,behavior:'smooth'});document.getElementById('sidebar')?.classList.remove('mobile-open')};
+window.navTo=function(page){document.querySelectorAll('.page-section').forEach(s=>s.classList.remove('active'));const t=document.getElementById('page-'+page);if(t){t.classList.add('active');t.querySelectorAll('.fade-in').forEach(el=>{el.style.animation='none';el.offsetHeight;el.style.animation=''});
+  // Agregar botón "Volver al inicio" en todas las páginas excepto inicio
+  if(page!=='inicio'){let bb=t.querySelector('.auto-back-btn');if(!bb){bb=document.createElement('a');bb.className='auto-back-btn';bb.innerHTML='<i class="bi bi-arrow-left"></i> Volver al Inicio';bb.style.cssText='display:inline-flex;align-items:center;gap:6px;padding:8px 16px;margin:16px 0 0 48px;border-radius:8px;border:1px solid var(--gray-200);background:var(--white);color:var(--gray-600);font-size:12px;font-weight:500;cursor:pointer;transition:all .2s;font-family:DM Sans,sans-serif;text-decoration:none';bb.onmouseover=function(){this.style.background='var(--gray-50)'};bb.onmouseout=function(){this.style.background='var(--white)'};bb.onclick=function(){window.navTo("inicio")};const ph=t.querySelector('.page-header,.preop-container,.falla-container,.hv-container');if(ph)t.insertBefore(bb,ph);else t.prepend(bb)}}
+}document.querySelectorAll('#topNav a').forEach(a=>a.classList.remove('active'));const tl=document.querySelector(`#topNav a[data-page="${page}"]`);if(tl)tl.classList.add('active');document.querySelectorAll('.sidebar-item').forEach(s=>s.classList.remove('active'));const sl=document.querySelector(`.sidebar-item[data-page="${page}"]`);if(sl)sl.classList.add('active');if(page==='fallas'&&window.initFallaPage)window.initFallaPage();if(page==='preoperacionales'&&window.initPreopPage)window.initPreopPage();if(page==='bimensuales'&&window.initBimensualPage)window.initBimensualPage();if(page==='locativas'&&window.initLocativaPage)window.initLocativaPage();if(page==='hojavida'&&window.initHojaVidaPage)window.initHojaVidaPage();if(page==='equipos'&&window.cargarEquipos)window.cargarEquipos(document.querySelector('.project-btn.active')?.dataset.project||'todos');if(page==='inicio'){if(window._initHeroCarousel)window._initHeroCarousel();setTimeout(()=>{document.querySelectorAll('.progress-fill').forEach(b=>{b.style.width='0';setTimeout(()=>{b.style.width=b.dataset.target+'%'},100)})},300)}window.scrollTo({top:0,behavior:'smooth'});document.getElementById('sidebar')?.classList.remove('mobile-open');document.getElementById('sidebarOverlay')?.classList.remove('show')};
 
 document.addEventListener('DOMContentLoaded',()=>{
   const p=document.getElementById('progressBars');if(p){[{l:'Mtto. Preventivo',v:87,c:'green'},{l:'Mtto. Instalaciones',v:72,c:'yellow'},{l:'Inspecciones',v:95,c:'green'},{l:'OT Cerradas',v:63,c:'red'}].forEach(x=>{p.innerHTML+=`<div class="progress-item"><div class="progress-header"><span class="progress-label">${x.l}</span><span class="progress-value">${x.v}%</span></div><div class="progress-bar"><div class="progress-fill ${x.c}" data-target="${x.v}" style="width:0"></div></div></div>`});setTimeout(()=>{document.querySelectorAll('.progress-fill').forEach(b=>{b.style.width=b.dataset.target+'%'})},600)}
@@ -2087,7 +2226,14 @@ window.toggleDrop=function(id){event.stopPropagation();document.getElementById(i
 document.addEventListener('click',()=>{document.querySelectorAll('.dropdown,.user-menu').forEach(d=>d.classList.remove('show'))});
 function showToast(type,msg){const c=document.getElementById('toastContainer');const t=document.createElement('div');t.className='toast '+type;t.innerHTML=`<div class="toast-icon">${{success:'✅',error:'❌',info:'ℹ️'}[type]||'ℹ️'}</div><span>${msg}</span>`;c.appendChild(t);setTimeout(()=>t.remove(),3200)}
 window.showToast=showToast;
-document.getElementById('menuToggle')?.addEventListener('click',()=>{document.getElementById('sidebar').classList.toggle('mobile-open')});
+document.getElementById('menuToggle')?.addEventListener('click',()=>{
+  document.getElementById('sidebar').classList.toggle('mobile-open');
+  document.getElementById('sidebarOverlay').classList.toggle('show');
+});
+document.getElementById('sidebarOverlay')?.addEventListener('click',()=>{
+  document.getElementById('sidebar').classList.remove('mobile-open');
+  document.getElementById('sidebarOverlay').classList.remove('show');
+});
 document.getElementById('globalSearch')?.addEventListener('input',e=>{const term=e.target.value.toLowerCase();const ap=document.querySelector('.page-section.active');if(!term){ap.querySelectorAll('.doc-card,tr').forEach(el=>el.style.display='');return}if(ap.id==='page-documentos')ap.querySelectorAll('.doc-card').forEach(c=>{c.style.display=c.textContent.toLowerCase().includes(term)?'':'none'});else if(ap.id==='page-equipos')ap.querySelectorAll('.eq-table tbody tr').forEach(r=>{r.style.display=r.textContent.toLowerCase().includes(term)?'':'none'})});
 </script>
 </body>
