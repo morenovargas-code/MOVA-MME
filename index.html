@@ -10,6 +10,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <style>
   :root{--navy:#0F2137;--navy-mid:#162D4A;--navy-light:#1E3A5F;--blue:#2E75B6;--blue-bright:#3B8DD4;--yellow:#F4B400;--yellow-light:#FFD54F;--green:#4CAF50;--green-dark:#388E3C;--red:#E53935;--orange:#FF9800;--white:#FFFFFF;--gray-50:#F8FAFC;--gray-100:#F1F5F9;--gray-200:#E2E8F0;--gray-300:#CBD5E1;--gray-400:#94A3B8;--gray-500:#64748B;--gray-600:#475569;--gray-700:#334155;--sidebar-w:240px}
   *{margin:0;padding:0;box-sizing:border-box}
@@ -130,7 +131,7 @@
   .quick-item{display:flex;align-items:center;gap:8px;padding:14px 22px;font-size:13px;font-weight:600;color:var(--gray-500);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap}
   .quick-item:hover{color:var(--blue);border-bottom-color:var(--blue);background:var(--gray-50)}
   .quick-item .qi-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px}
-  .qi-yellow{background:rgba(244,180,0,.12)}.qi-blue{background:rgba(46,117,182,.1)}.qi-green{background:rgba(76,175,80,.1)}.qi-red{background:rgba(229,57,53,.1)}
+  .qi-yellow{background:rgba(244,180,0,.12)}.qi-red{background:rgba(229,57,53,.1)}.qi-blue{background:rgba(46,117,182,.1)}.qi-green{background:rgba(76,175,80,.1)}.qi-red{background:rgba(229,57,53,.1)}
 
   /* CONTENT */
   .content{padding:28px 48px;display:grid;grid-template-columns:1fr 340px;gap:24px}
@@ -418,7 +419,7 @@
   @keyframes fadeIn{to{opacity:1;transform:translateY(0)}}
   .delay-1{animation-delay:.1s}.delay-2{animation-delay:.2s}.delay-3{animation-delay:.3s}.delay-4{animation-delay:.4s}.delay-5{animation-delay:.5s}
 
-  @media(max-width:1200px){.content{grid-template-columns:1fr}.hero-visual{display:none}.kpi-grid{grid-template-columns:repeat(2,1fr)}.docs-grid{grid-template-columns:repeat(2,1fr)}.preop-menu{grid-template-columns:1fr;max-width:400px}}
+  @media(max-width:1200px){.content{grid-template-columns:1fr}.hero-right{display:none}.hero-dots{display:none}.kpi-grid{grid-template-columns:repeat(2,1fr)}.docs-grid{grid-template-columns:repeat(2,1fr)}.preop-menu{grid-template-columns:1fr;max-width:400px}}
   @media(max-width:768px){.sidebar{transform:translateX(-100%)}.sidebar.mobile-open{transform:translateX(0);z-index:95}.main{margin-left:0}.content,.preop-container,.page-header{padding-left:20px;padding-right:20px}.hero{padding:0 20px}.quick-access{padding:0 20px}.menu-toggle{display:flex!important}.topbar-nav{display:none}}
   /* HOJA DE VIDA */
   .hv-container{padding:28px 48px}
@@ -482,6 +483,42 @@
   .hv-estado.inactivo{background:rgba(229,57,53,.12);color:var(--red)}
   .hv-estado.mantenimiento{background:rgba(255,152,0,.12);color:#E65100}
   @media(max-width:900px){.hv-two-col{grid-template-columns:1fr}.hv-grid{grid-template-columns:1fr}.hv-cert-meta{grid-template-columns:1fr}}
+
+  /* HERO CAROUSEL — solo rota el lado derecho */
+  .hero-right{position:absolute;right:40px;top:50%;transform:translateY(-50%);width:420px;height:200px}
+  .hero-right-slide{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity 1.2s ease;pointer-events:none}
+  .hero-right-slide.active{opacity:1;pointer-events:auto}
+  .hero-right-slide .phrase-text{font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:700;color:var(--white);line-height:1.5;text-align:center}
+  .hero-right-slide .phrase-author{font-size:12px;color:var(--yellow-light);font-style:italic;text-align:center;margin-top:8px}
+  .hero-dots{position:absolute;bottom:16px;right:40px;display:flex;gap:8px;z-index:5}
+  .hero-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.3);cursor:pointer;transition:all .3s}
+  .hero-dot.active{background:var(--yellow);width:24px;border-radius:4px}
+  @media(max-width:1200px){.hero-right{display:none}.hero-dots{display:none}}
+
+  /* REPORTAR FALLA */
+  .falla-container{padding:28px 48px;max-width:800px}
+  .falla-card{background:var(--white);border-radius:12px;border:1px solid var(--gray-200);padding:32px;box-shadow:0 4px 20px rgba(0,0,0,.04)}
+  .falla-card h2{font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:700;color:var(--navy);margin-bottom:6px;display:flex;align-items:center;gap:10px}
+  .falla-card .falla-sub{font-size:13px;color:var(--gray-400);margin-bottom:24px}
+  .falla-tipo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px}
+  .falla-tipo-opt{padding:14px 12px;border:2px solid var(--gray-200);border-radius:10px;text-align:center;cursor:pointer;transition:all .2s;font-size:13px;font-weight:600;color:var(--gray-500)}
+  .falla-tipo-opt:hover{border-color:var(--blue);color:var(--navy)}
+  .falla-tipo-opt.selected{border-color:var(--red);background:rgba(229,57,53,.06);color:var(--red)}
+  .falla-tipo-opt .ft-icon{font-size:22px;display:block;margin-bottom:6px}
+  .falla-prioridad{display:flex;gap:8px;margin-bottom:20px}
+  .falla-prio-btn{flex:1;padding:10px;border:2px solid var(--gray-200);border-radius:8px;text-align:center;cursor:pointer;font-size:12px;font-weight:700;transition:all .2s;text-transform:uppercase;letter-spacing:.5px}
+  .falla-prio-btn:hover{transform:translateY(-1px)}
+  .falla-prio-btn.selected.alta{border-color:var(--red);background:rgba(229,57,53,.08);color:var(--red)}
+  .falla-prio-btn.selected.media{border-color:var(--orange);background:rgba(255,152,0,.08);color:var(--orange)}
+  .falla-prio-btn.selected.baja{border-color:var(--green);background:rgba(76,175,80,.08);color:var(--green-dark)}
+  .falla-submit{width:100%;padding:16px;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .25s;display:flex;align-items:center;justify-content:center;gap:8px;background:var(--red);color:var(--white);margin-top:8px}
+  .falla-submit:hover{background:#C62828;transform:translateY(-1px)}
+  .falla-submit:disabled{background:var(--gray-300);cursor:not-allowed;transform:none}
+  .falla-success{text-align:center;padding:60px 20px}
+  .falla-success .fs-icon{font-size:56px;margin-bottom:16px}
+  .falla-success h3{font-family:'Space Grotesk',sans-serif;color:var(--navy);font-size:20px;margin-bottom:8px}
+  .falla-success p{font-size:13px;color:var(--gray-500);margin-bottom:20px}
+  @media(max-width:768px){.falla-tipo-grid{grid-template-columns:1fr 1fr}.falla-container{padding:20px}}
 </style>
 </head>
 <body>
@@ -550,6 +587,7 @@
   <div class="sidebar-section"><div class="sidebar-label">Gestión Documental</div>
     <a class="sidebar-item" data-page="documentos" onclick="window.navTo('documentos')"><span class="sidebar-icon">📂</span>Listado Maestro</a></div>
   <div class="sidebar-section"><div class="sidebar-label">Operaciones</div>
+    <a class="sidebar-item" data-page="fallas" onclick="window.navTo('fallas')"><span class="sidebar-icon">⚠️</span>Reportar Falla</a>
     <a class="sidebar-item" data-page="equipos" onclick="window.navTo('equipos')"><span class="sidebar-icon">🚜</span>Equipos</a>
     <a class="sidebar-item" data-page="preoperacionales" onclick="window.navTo('preoperacionales')"><span class="sidebar-icon">✅</span>Preoperacionales</a>
     <a class="sidebar-item" data-page="ordenes" onclick="window.navTo('ordenes')"><span class="sidebar-icon">🔧</span>Órdenes de Trabajo</a>
@@ -562,11 +600,51 @@
 <div class="main">
   <!-- INICIO -->
   <div class="page-section active" id="page-inicio">
-    <div class="hero fade-in"><div class="hero-pattern"></div><div class="hero-content"><div class="hero-tag">⚡ Sistema de Gestión de Mantenimiento</div><h1 class="hero-title">MM&E — <span>MOVA</span></h1><p class="hero-subtitle">Mantenimiento, Maquinaria y Equipos. Gestión integral del programa de mantenimiento preventivo y correctivo.</p><div class="hero-actions"><button class="hero-btn primary" onclick="window.navTo('preoperacionales')">✅ Preoperacional</button><button class="hero-btn secondary" onclick="window.navTo('equipos')">🚜 Equipos</button></div></div><div class="hero-visual"><div class="hero-stat fade-in delay-2"><div class="hero-stat-value green">92%</div><div class="hero-stat-label">Disponibilidad</div></div><div class="hero-stat fade-in delay-3"><div class="hero-stat-value yellow">87%</div><div class="hero-stat-label">Cumplimiento</div></div><div class="hero-stat fade-in delay-4"><div class="hero-stat-value blue">156h</div><div class="hero-stat-label">MTBF</div></div></div></div>
+    <div class="hero" id="heroCarousel"><div class="hero-pattern"></div>
+      <!-- Lado izquierdo: SIEMPRE VISIBLE -->
+      <div class="hero-content">
+        <div class="hero-tag">⚡ Sistema de Gestión de Mantenimiento</div>
+        <h1 class="hero-title">MM&E — <span>MOVA</span></h1>
+        <p class="hero-subtitle">Mantenimiento, Maquinaria y Equipos. Gestión integral del programa de mantenimiento preventivo y correctivo.</p>
+        <div class="hero-actions">
+          <button class="hero-btn primary" onclick="window.navTo('fallas')">🔧 Reportar Falla</button>
+          <button class="hero-btn secondary" onclick="window.navTo('ordenes')">📋 Nueva Orden de Trabajo</button>
+          <button class="hero-btn secondary" onclick="window.navTo('preoperacionales')">📅 Ver Calendario</button>
+        </div>
+      </div>
+      <!-- Lado derecho: ROTA -->
+      <div class="hero-right" id="heroRight">
+        <div class="hero-right-slide active" data-slide="0">
+          <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center">
+            <div class="hero-stat"><div class="hero-stat-value green">92%</div><div class="hero-stat-label">Disponibilidad</div></div>
+            <div class="hero-stat"><div class="hero-stat-value yellow">87%</div><div class="hero-stat-label">Cumplimiento</div></div>
+            <div class="hero-stat"><div class="hero-stat-value blue">156h</div><div class="hero-stat-label">MTBF</div></div>
+          </div>
+        </div>
+        <div class="hero-right-slide" data-slide="1">
+          <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center">
+            <div class="hero-stat" style="min-width:130px"><div class="hero-stat-value green" style="font-size:28px">92.4%</div><div class="hero-stat-label">Disponibilidad Flota</div></div>
+            <div class="hero-stat" style="min-width:130px"><div class="hero-stat-value" style="font-size:28px;color:var(--white)">4.2h</div><div class="hero-stat-label">MTTR Promedio</div></div>
+          </div>
+        </div>
+        <div class="hero-right-slide" data-slide="2">
+          <div><div class="phrase-text">"La seguridad no es un gasto, es una inversión en nuestra gente."</div><div class="phrase-author">— Política HSEQ, Moreno Vargas S.A.</div></div>
+        </div>
+        <div class="hero-right-slide" data-slide="3">
+          <div><div class="phrase-text">"El mantenimiento preventivo no detiene la producción, la garantiza."</div><div class="phrase-author">— Departamento de Mantenimiento</div></div>
+        </div>
+        <div class="hero-right-slide" data-slide="4">
+          <div><div class="phrase-text">"Cada inspección que realizas hoy previene una emergencia mañana."</div><div class="phrase-author">— MM&E MOVA</div></div>
+        </div>
+      </div>
+      <div class="hero-dots" id="heroDots"></div>
+    </div>
     <div class="quick-access fade-in delay-1">
+      <a class="quick-item" onclick="window.navTo('fallas')"><span class="qi-icon qi-red">⚠️</span>Reportar Falla</a>
       <a class="quick-item" onclick="window.navTo('preoperacionales')"><span class="qi-icon qi-blue">📝</span>Inspección Preoperacional</a>
-      <a class="quick-item" onclick="window.navTo('equipos')"><span class="qi-icon qi-green">🚜</span>Estado de Equipos</a>
-      <a class="quick-item" onclick="window.navTo('documentos')"><span class="qi-icon qi-yellow">📂</span>Documentos</a>
+      <a class="quick-item" onclick="window.navTo('ordenes')"><span class="qi-icon qi-green">🔧</span>Solicitar Mantenimiento</a>
+      <a class="quick-item" onclick="window.navTo('equipos')"><span class="qi-icon qi-yellow">⛽</span>Control de Combustible</a>
+      <a class="quick-item" onclick="window.navTo('documentos')"><span class="qi-icon qi-blue">📊</span>Informe Mensual</a>
     </div>
     <div class="content">
       <div class="content-left">
@@ -577,6 +655,79 @@
         <div class="card fade-in delay-3"><div class="card-header"><div class="card-title"><span class="card-title-icon" style="background:rgba(46,117,182,.1);color:var(--blue)">📅</span>Próximos Mantenimientos</div></div><div class="card-body"><div class="cal-item"><div class="cal-date"><span class="cal-date-day">10</span><span class="cal-date-month">Abr</span></div><div class="cal-info"><div class="cal-info-title">Mtto. Preventivo — PC350</div><div class="cal-info-sub">Cambio aceite hidráulico · 4h</div><span class="cal-info-tag cal-tag-prev">Preventivo</span></div></div><div class="cal-item"><div class="cal-date" style="background:linear-gradient(135deg,var(--red),#EF5350)"><span class="cal-date-day">11</span><span class="cal-date-month">Abr</span></div><div class="cal-info"><div class="cal-info-title">Reparación — 120K</div><div class="cal-info-sub">Transmisión · Prioridad alta</div><span class="cal-info-tag cal-tag-corr">Correctivo</span></div></div></div></div>
         <div class="card fade-in delay-4"><div class="card-header"><div class="card-title"><span class="card-title-icon" style="background:rgba(244,180,0,.1);color:var(--yellow)">📈</span>Avance del Programa</div></div><div class="card-body" id="progressBars"></div></div>
         <div class="card fade-in delay-5"><div class="card-header"><div class="card-title"><span class="card-title-icon" style="background:rgba(46,117,182,.1);color:var(--blue)">💬</span>Actividad Reciente</div></div><div class="card-body"><div class="activity-item"><div class="activity-avatar" style="background:linear-gradient(135deg,#2E75B6,#3B8DD4)">CM</div><div><div class="activity-text"><strong>Carlos M.</strong> actualizó <strong>A4-PR-001</strong></div><div class="activity-time">Hace 2h</div></div></div><div class="activity-item"><div class="activity-avatar" style="background:linear-gradient(135deg,#4CAF50,#66BB6A)">LP</div><div><div class="activity-text"><strong>Laura P.</strong> completó inspección <strong>EQ-003</strong></div><div class="activity-time">Hace 4h</div></div></div></div></div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- REPORTAR FALLA -->
+  <div class="page-section" id="page-fallas">
+    <div class="page-header"><div><h1>⚠️ Reportar Falla</h1><div class="page-header-subtitle">Registra y notifica fallas de equipo al departamento de mantenimiento</div></div></div>
+    <div class="falla-container">
+      <div class="falla-card" id="fallaForm">
+        <h2>⚠️ Nuevo Reporte de Falla</h2>
+        <p class="falla-sub">Completa los datos del equipo y la falla detectada. Se guardará en el sistema y se enviará un correo de notificación.</p>
+
+        <div class="form-row" style="margin-bottom:14px">
+          <div class="form-group"><label class="form-label">CEMA / Código del Equipo *</label><input class="form-input" id="falla-cema" placeholder="Ej: 7EO3030" required></div>
+          <div class="form-group"><label class="form-label">Nombre del Equipo</label><input class="form-input" id="falla-nombre" placeholder="Ej: Excavadora PC200"></div>
+        </div>
+        <div class="form-row" style="margin-bottom:14px">
+          <div class="form-group"><label class="form-label">Proyecto / Ubicación *</label>
+            <select class="form-select" id="falla-proyecto"><option value="">Seleccionar...</option><option>Rubiales</option><option>Scatec</option><option>Guajira</option><option>Bogotá — Suba</option><option>Otro</option></select>
+          </div>
+          <div class="form-group"><label class="form-label">Horómetro / Odómetro</label><input class="form-input" id="falla-horometro" placeholder="Lectura actual" type="number"></div>
+        </div>
+
+        <label class="form-label" style="margin-bottom:8px">Tipo de Falla *</label>
+        <div class="falla-tipo-grid" id="fallaTipoGrid">
+          <div class="falla-tipo-opt" data-tipo="Mecánica" onclick="window.selectFallaTipo(this)"><span class="ft-icon">⚙️</span>Mecánica</div>
+          <div class="falla-tipo-opt" data-tipo="Eléctrica" onclick="window.selectFallaTipo(this)"><span class="ft-icon">⚡</span>Eléctrica</div>
+          <div class="falla-tipo-opt" data-tipo="Hidráulica" onclick="window.selectFallaTipo(this)"><span class="ft-icon">💧</span>Hidráulica</div>
+          <div class="falla-tipo-opt" data-tipo="Estructural" onclick="window.selectFallaTipo(this)"><span class="ft-icon">🏗️</span>Estructural</div>
+          <div class="falla-tipo-opt" data-tipo="Neumática" onclick="window.selectFallaTipo(this)"><span class="ft-icon">🌬️</span>Neumática</div>
+          <div class="falla-tipo-opt" data-tipo="Otra" onclick="window.selectFallaTipo(this)"><span class="ft-icon">🔍</span>Otra</div>
+        </div>
+
+        <label class="form-label" style="margin-bottom:8px">Prioridad *</label>
+        <div class="falla-prioridad" id="fallaPrioridad">
+          <div class="falla-prio-btn alta" data-prio="Alta" onclick="window.selectFallaPrio(this)">🔴 Alta</div>
+          <div class="falla-prio-btn media" data-prio="Media" onclick="window.selectFallaPrio(this)">🟡 Media</div>
+          <div class="falla-prio-btn baja" data-prio="Baja" onclick="window.selectFallaPrio(this)">🟢 Baja</div>
+        </div>
+
+        <div class="form-group" style="margin-bottom:14px">
+          <label class="form-label">Descripción de la Falla *</label>
+          <textarea class="form-textarea" id="falla-descripcion" placeholder="Describe la falla con el mayor detalle posible: qué sistema se ve afectado, cuándo se detectó, si el equipo puede seguir operando..." style="min-height:100px"></textarea>
+        </div>
+
+        <div class="form-group" style="margin-bottom:14px">
+          <label class="form-label">¿El equipo puede seguir operando?</label>
+          <div style="display:flex;gap:12px;margin-top:4px">
+            <label style="display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer"><input type="radio" name="falla-operable" value="SI" checked> Sí, con restricciones</label>
+            <label style="display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer"><input type="radio" name="falla-operable" value="NO"> No, equipo detenido</label>
+          </div>
+        </div>
+
+        <div class="form-row" style="margin-bottom:14px">
+          <div class="form-group"><label class="form-label">Correo para notificación</label><input class="form-input" id="falla-email" type="email" placeholder="mantenimiento@morenovargas.com" value="mantenimiento@morenovargas.com"></div>
+          <div class="form-group"><label class="form-label">Reportado por</label><input class="form-input" id="falla-reportadopor" disabled></div>
+        </div>
+
+        <button class="falla-submit" id="fallaSubmitBtn" onclick="window.enviarFalla()">
+          <i class="bi bi-send"></i> Enviar Reporte de Falla
+        </button>
+      </div>
+
+      <!-- Success state -->
+      <div class="falla-card falla-success" id="fallaSuccess" style="display:none">
+        <div class="fs-icon">✅</div>
+        <h3>Reporte enviado correctamente</h3>
+        <p>La falla ha sido registrada en el sistema y se ha enviado un correo de notificación.</p>
+        <div style="display:flex;gap:10px;justify-content:center">
+          <button class="hv-btn hv-btn-edit" onclick="window.resetFallaForm()"><i class="bi bi-plus-lg"></i> Nuevo Reporte</button>
+          <button class="hv-btn hv-btn-cancel" onclick="window.navTo('inicio')"><i class="bi bi-house"></i> Inicio</button>
+        </div>
       </div>
     </div>
   </div>
@@ -1642,6 +1793,162 @@ window.inspVerHistorial = async function() {
   } catch(err) { document.getElementById('insp-hist-lista').innerHTML = `<p style="color:var(--red)">Error: ${err.message}</p>`; }
 };
 
+
+// ===== HERO CAROUSEL — solo rota el lado derecho =====
+(function(){
+  let heroIdx = 0;
+  const totalSlides = 5;
+  const interval = 8000;
+  let heroTimer = null;
+
+  function initHeroCarousel() {
+    const dots = document.getElementById('heroDots');
+    if (!dots) return;
+    dots.innerHTML = '';
+    for (let i = 0; i < totalSlides; i++) {
+      const d = document.createElement('div');
+      d.className = 'hero-dot' + (i === 0 ? ' active' : '');
+      d.addEventListener('click', () => goToSlide(i));
+      dots.appendChild(d);
+    }
+    heroTimer = setInterval(nextSlide, interval);
+  }
+
+  function goToSlide(idx) {
+    heroIdx = idx;
+    document.querySelectorAll('.hero-right-slide').forEach(s => s.classList.remove('active'));
+    const target = document.querySelector(`.hero-right-slide[data-slide="${idx}"]`);
+    if (target) target.classList.add('active');
+    document.querySelectorAll('.hero-dot').forEach((d, i) => d.classList.toggle('active', i === idx));
+    clearInterval(heroTimer);
+    heroTimer = setInterval(nextSlide, interval);
+  }
+
+  function nextSlide() { goToSlide((heroIdx + 1) % totalSlides); }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initHeroCarousel);
+  } else {
+    initHeroCarousel();
+  }
+  window._initHeroCarousel = initHeroCarousel;
+})();
+
+// ===== REPORTAR FALLA =====
+window._fallaTipo = '';
+window._fallaPrio = '';
+
+window.selectFallaTipo = function(el) {
+  document.querySelectorAll('.falla-tipo-opt').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  window._fallaTipo = el.dataset.tipo;
+};
+
+window.selectFallaPrio = function(el) {
+  document.querySelectorAll('.falla-prio-btn').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  window._fallaPrio = el.dataset.prio;
+};
+
+window.enviarFalla = async function() {
+  const cema = document.getElementById('falla-cema').value.trim();
+  const nombre = document.getElementById('falla-nombre').value.trim();
+  const proyecto = document.getElementById('falla-proyecto').value;
+  const horometro = document.getElementById('falla-horometro').value.trim();
+  const descripcion = document.getElementById('falla-descripcion').value.trim();
+  const operable = document.querySelector('input[name="falla-operable"]:checked')?.value || 'SI';
+  const email = document.getElementById('falla-email').value.trim();
+
+  // Validaciones
+  if (!cema) { showToast('error', 'Ingresa el código del equipo'); return; }
+  if (!proyecto) { showToast('error', 'Selecciona el proyecto'); return; }
+  if (!window._fallaTipo) { showToast('error', 'Selecciona el tipo de falla'); return; }
+  if (!window._fallaPrio) { showToast('error', 'Selecciona la prioridad'); return; }
+  if (!descripcion) { showToast('error', 'Describe la falla'); return; }
+
+  const btn = document.getElementById('fallaSubmitBtn');
+  btn.innerHTML = '<span style="display:inline-block;width:16px;height:16px;border:2px solid white;border-top-color:transparent;border-radius:50%;animation:spin .6s linear infinite"></span> Enviando...';
+  btn.disabled = true;
+
+  const data = {
+    cema, nombre, proyecto, horometro,
+    tipoFalla: window._fallaTipo,
+    prioridad: window._fallaPrio,
+    descripcion, operable, email,
+    reportadoPor: window.operadorActivo || '—',
+    estado: 'abierta',
+    fecha: serverTimestamp()
+  };
+
+  try {
+    // 1. Guardar en Firestore
+    await addDoc(collection(db, "reportes_fallas"), data);
+
+    // 2. Enviar email via EmailJS (si está configurado)
+    try {
+      if (typeof emailjs !== 'undefined' && window.EMAILJS_SERVICE_ID) {
+        await emailjs.send(window.EMAILJS_SERVICE_ID, window.EMAILJS_TEMPLATE_ID, {
+          to_email: email,
+          from_name: window.nombreOperador || 'Operador MOVA',
+          equipo: `${cema} — ${nombre || 'Sin nombre'}`,
+          proyecto: proyecto,
+          tipo_falla: window._fallaTipo,
+          prioridad: window._fallaPrio,
+          descripcion: descripcion,
+          operable: operable === 'SI' ? 'Sí, con restricciones' : 'No, equipo detenido',
+          horometro: horometro || 'N/A',
+          fecha: new Date().toLocaleDateString("es-CO")
+        });
+        showToast('success', '✅ Reporte guardado y correo enviado');
+      } else {
+        showToast('success', '✅ Reporte guardado (configura EmailJS para enviar correo)');
+      }
+    } catch(emailErr) {
+      console.warn('Email no enviado:', emailErr);
+      showToast('info', 'Reporte guardado. El correo no se pudo enviar.');
+    }
+
+    // 3. Mostrar éxito
+    document.getElementById('fallaForm').style.display = 'none';
+    document.getElementById('fallaSuccess').style.display = 'block';
+
+  } catch(err) {
+    console.error('Error:', err);
+    showToast('error', 'Error: ' + err.message);
+    btn.innerHTML = '<i class="bi bi-send"></i> Enviar Reporte de Falla';
+    btn.disabled = false;
+  }
+};
+
+window.resetFallaForm = function() {
+  document.getElementById('fallaForm').style.display = 'block';
+  document.getElementById('fallaSuccess').style.display = 'none';
+  document.getElementById('falla-cema').value = '';
+  document.getElementById('falla-nombre').value = '';
+  document.getElementById('falla-proyecto').value = '';
+  document.getElementById('falla-horometro').value = '';
+  document.getElementById('falla-descripcion').value = '';
+  document.querySelectorAll('.falla-tipo-opt,.falla-prio-btn').forEach(o => o.classList.remove('selected'));
+  window._fallaTipo = ''; window._fallaPrio = '';
+  const btn = document.getElementById('fallaSubmitBtn');
+  btn.innerHTML = '<i class="bi bi-send"></i> Enviar Reporte de Falla';
+  btn.disabled = false;
+};
+
+window.initFallaPage = function() {
+  const rp = document.getElementById('falla-reportadopor');
+  if (rp) rp.value = window.nombreOperador || window.operadorActivo || '';
+};
+
+// ===== EMAILJS CONFIG =====
+// Para activar el envío de correo, crea una cuenta en https://www.emailjs.com (gratis)
+// y reemplaza estos valores:
+window.EMAILJS_SERVICE_ID = ''; // ej: 'service_abc123'
+window.EMAILJS_TEMPLATE_ID = ''; // ej: 'template_xyz789'
+// Inicializar EmailJS (descomenta y pon tu Public Key):
+// emailjs.init('TU_PUBLIC_KEY_AQUI');
+
+
 // ===== BIMENSUALES — MENU =====
 window.mostrarMenuBimensual = function() {
   inspGenericMenu('bimensualContent', '🔍 Inspección Bimensual', 'Seleccione el tipo de línea', [
@@ -1768,7 +2075,7 @@ window.initHojaVidaPage=function(){
 <script>
 window.switchAuthTab=function(tab){document.querySelectorAll('.auth-tab').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.auth-form').forEach(f=>f.classList.remove('active'));if(tab==='login'){document.querySelector('.auth-tab:first-child').classList.add('active');document.getElementById('loginForm').classList.add('active')}else{document.querySelector('.auth-tab:last-child').classList.add('active');document.getElementById('registerForm').classList.add('active')}};
 
-window.navTo=function(page){document.querySelectorAll('.page-section').forEach(s=>s.classList.remove('active'));const t=document.getElementById('page-'+page);if(t){t.classList.add('active');t.querySelectorAll('.fade-in').forEach(el=>{el.style.animation='none';el.offsetHeight;el.style.animation=''})}document.querySelectorAll('#topNav a').forEach(a=>a.classList.remove('active'));const tl=document.querySelector(`#topNav a[data-page="${page}"]`);if(tl)tl.classList.add('active');document.querySelectorAll('.sidebar-item').forEach(s=>s.classList.remove('active'));const sl=document.querySelector(`.sidebar-item[data-page="${page}"]`);if(sl)sl.classList.add('active');if(page==='preoperacionales'&&window.initPreopPage)window.initPreopPage();if(page==='bimensuales'&&window.initBimensualPage)window.initBimensualPage();if(page==='locativas'&&window.initLocativaPage)window.initLocativaPage();if(page==='hojavida'&&window.initHojaVidaPage)window.initHojaVidaPage();if(page==='equipos'&&window.cargarEquipos)window.cargarEquipos(document.querySelector('.project-btn.active')?.dataset.project||'todos');if(page==='inicio'){setTimeout(()=>{document.querySelectorAll('.progress-fill').forEach(b=>{b.style.width='0';setTimeout(()=>{b.style.width=b.dataset.target+'%'},100)})},300)}window.scrollTo({top:0,behavior:'smooth'});document.getElementById('sidebar')?.classList.remove('mobile-open')};
+window.navTo=function(page){document.querySelectorAll('.page-section').forEach(s=>s.classList.remove('active'));const t=document.getElementById('page-'+page);if(t){t.classList.add('active');t.querySelectorAll('.fade-in').forEach(el=>{el.style.animation='none';el.offsetHeight;el.style.animation=''})}document.querySelectorAll('#topNav a').forEach(a=>a.classList.remove('active'));const tl=document.querySelector(`#topNav a[data-page="${page}"]`);if(tl)tl.classList.add('active');document.querySelectorAll('.sidebar-item').forEach(s=>s.classList.remove('active'));const sl=document.querySelector(`.sidebar-item[data-page="${page}"]`);if(sl)sl.classList.add('active');if(page==='fallas'&&window.initFallaPage)window.initFallaPage();if(page==='preoperacionales'&&window.initPreopPage)window.initPreopPage();if(page==='bimensuales'&&window.initBimensualPage)window.initBimensualPage();if(page==='locativas'&&window.initLocativaPage)window.initLocativaPage();if(page==='hojavida'&&window.initHojaVidaPage)window.initHojaVidaPage();if(page==='equipos'&&window.cargarEquipos)window.cargarEquipos(document.querySelector('.project-btn.active')?.dataset.project||'todos');if(page==='inicio'){if(window._initHeroCarousel)window._initHeroCarousel();setTimeout(()=>{document.querySelectorAll('.progress-fill').forEach(b=>{b.style.width='0';setTimeout(()=>{b.style.width=b.dataset.target+'%'},100)})},300)}window.scrollTo({top:0,behavior:'smooth'});document.getElementById('sidebar')?.classList.remove('mobile-open')};
 
 document.addEventListener('DOMContentLoaded',()=>{
   const p=document.getElementById('progressBars');if(p){[{l:'Mtto. Preventivo',v:87,c:'green'},{l:'Mtto. Instalaciones',v:72,c:'yellow'},{l:'Inspecciones',v:95,c:'green'},{l:'OT Cerradas',v:63,c:'red'}].forEach(x=>{p.innerHTML+=`<div class="progress-item"><div class="progress-header"><span class="progress-label">${x.l}</span><span class="progress-value">${x.v}%</span></div><div class="progress-bar"><div class="progress-fill ${x.c}" data-target="${x.v}" style="width:0"></div></div></div>`});setTimeout(()=>{document.querySelectorAll('.progress-fill').forEach(b=>{b.style.width=b.dataset.target+'%'})},600)}
