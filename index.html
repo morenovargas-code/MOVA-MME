@@ -1,0 +1,1787 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MM&E MOVA - Sistema de Gestión</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+<style>
+  :root{--navy:#0F2137;--navy-mid:#162D4A;--navy-light:#1E3A5F;--blue:#2E75B6;--blue-bright:#3B8DD4;--yellow:#F4B400;--yellow-light:#FFD54F;--green:#4CAF50;--green-dark:#388E3C;--red:#E53935;--orange:#FF9800;--white:#FFFFFF;--gray-50:#F8FAFC;--gray-100:#F1F5F9;--gray-200:#E2E8F0;--gray-300:#CBD5E1;--gray-400:#94A3B8;--gray-500:#64748B;--gray-600:#475569;--gray-700:#334155;--sidebar-w:240px}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'DM Sans',sans-serif;background:var(--gray-100);color:var(--gray-700);overflow-x:hidden}
+
+  /* AUTH */
+  .auth-screen{position:fixed;inset:0;z-index:9999;background:linear-gradient(135deg,var(--navy),var(--navy-mid),var(--navy-light));display:flex;align-items:center;justify-content:center;transition:opacity .4s,visibility .4s}
+  .auth-screen.hidden{opacity:0;visibility:hidden;pointer-events:none}
+  .auth-screen::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 800px 400px at 30% 20%,rgba(244,180,0,.08),transparent),radial-gradient(ellipse 600px 300px at 70% 80%,rgba(46,117,182,.1),transparent)}
+  .auth-screen::after{content:'';position:absolute;inset:0;opacity:.03;background-image:repeating-linear-gradient(0deg,transparent,transparent 40px,rgba(255,255,255,.5) 40px,rgba(255,255,255,.5) 41px),repeating-linear-gradient(90deg,transparent,transparent 40px,rgba(255,255,255,.5) 40px,rgba(255,255,255,.5) 41px)}
+  .auth-card{position:relative;z-index:2;background:rgba(255,255,255,.06);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:48px 40px;width:90%;max-width:420px;box-shadow:0 30px 80px rgba(0,0,0,.3);text-align:center}
+  .auth-logo{width:64px;height:64px;background:var(--yellow);border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:16px;color:var(--navy)}
+  .auth-card h1{font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:700;color:var(--white);margin-bottom:4px}
+  .auth-card h1 span{color:var(--yellow)}
+  .auth-card .auth-sub{color:var(--gray-400);font-size:14px;margin-bottom:32px}
+  .auth-tabs{display:flex;gap:4px;background:rgba(255,255,255,.06);border-radius:10px;padding:3px;margin-bottom:24px}
+  .auth-tab{flex:1;padding:10px;border:none;border-radius:8px;background:transparent;color:var(--gray-400);font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s}
+  .auth-tab.active{background:rgba(255,255,255,.12);color:var(--white)}
+  .auth-form{display:none}.auth-form.active{display:block}
+  .auth-field{margin-bottom:16px;text-align:left}
+  .auth-field label{display:block;font-size:12px;font-weight:600;color:var(--gray-300);margin-bottom:6px;text-transform:uppercase;letter-spacing:.3px}
+  .auth-field input,.auth-field select{width:100%;padding:12px 16px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:10px;color:var(--white);font-size:14px;font-family:'DM Sans',sans-serif;outline:none;transition:all .2s}
+  .auth-field input::placeholder{color:var(--gray-500)}
+  .auth-field input:focus,.auth-field select:focus{border-color:var(--blue);background:rgba(255,255,255,.1);box-shadow:0 0 0 3px rgba(46,117,182,.15)}
+  .auth-field select option{background:var(--navy);color:var(--white)}
+  .auth-submit{width:100%;padding:14px;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .25s;margin-top:8px;display:flex;align-items:center;justify-content:center;gap:8px}
+  .auth-submit.login-btn{background:var(--blue);color:var(--white)}.auth-submit.login-btn:hover{background:var(--blue-bright);transform:translateY(-1px)}
+  .auth-submit.register-btn{background:var(--yellow);color:var(--navy)}.auth-submit.register-btn:hover{background:var(--yellow-light)}
+  .auth-error{color:var(--red);font-size:12px;margin-top:8px;min-height:18px}
+
+  /* IPE MODAL */
+  .ipe-overlay{position:fixed;inset:0;z-index:10000;background:rgba(15,33,55,.85);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center}
+  .ipe-overlay.show{display:flex}
+  .ipe-modal{background:var(--white);border-radius:16px;width:90%;max-width:420px;padding:36px;box-shadow:0 30px 80px rgba(0,0,0,.3);animation:modalIn .3s ease;text-align:center}
+  .ipe-modal h2{font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:700;color:var(--navy);margin-bottom:8px}
+  .ipe-modal p{color:var(--gray-500);font-size:13px;margin-bottom:24px}
+  .ipe-modal select{width:100%;padding:12px 16px;border:1px solid var(--gray-200);border-radius:10px;font-size:14px;font-family:'DM Sans',sans-serif;color:var(--gray-700);outline:none;margin-bottom:16px}
+  .ipe-modal select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(46,117,182,.1)}
+  .ipe-modal .ipe-save{width:100%;padding:14px;border:none;border-radius:10px;background:var(--blue);color:var(--white);font-size:14px;font-weight:700;cursor:pointer;transition:all .25s;font-family:'DM Sans',sans-serif}
+  .ipe-modal .ipe-save:hover{background:var(--blue-bright)}
+
+  /* TOPBAR */
+  .topbar{height:48px;background:var(--navy);display:flex;align-items:center;padding:0 20px;position:fixed;top:0;left:0;right:0;z-index:100;gap:16px}
+  .topbar-logo{display:flex;align-items:center;gap:10px;color:var(--yellow);font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:15px;letter-spacing:.5px;cursor:pointer}
+  .topbar-logo .logo-icon{width:32px;height:32px;background:var(--yellow);border-radius:6px;display:flex;align-items:center;justify-content:center;color:var(--navy);font-size:11px;font-weight:700}
+  .topbar-nav{display:flex;gap:4px;margin-left:20px}
+  .topbar-nav a{color:var(--gray-300);text-decoration:none;font-size:13px;padding:6px 14px;border-radius:6px;transition:all .2s;font-weight:500;cursor:pointer}
+  .topbar-nav a:hover,.topbar-nav a.active{background:rgba(255,255,255,.08);color:var(--white)}
+  .topbar-search{margin-left:auto;position:relative}
+  .topbar-search input{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:7px 14px 7px 36px;color:var(--white);font-size:13px;width:260px;outline:none;transition:all .3s;font-family:'DM Sans',sans-serif}
+  .topbar-search input::placeholder{color:var(--gray-400)}
+  .topbar-search input:focus{background:rgba(255,255,255,.12);border-color:var(--blue);width:320px}
+  .topbar-search svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--gray-400);width:16px;height:16px}
+  .topbar-right{display:flex;align-items:center;gap:12px;margin-left:16px}
+  .topbar-btn{width:34px;height:34px;border-radius:8px;border:none;background:rgba(255,255,255,.06);color:var(--gray-300);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;font-size:16px;position:relative}
+  .topbar-btn:hover{background:rgba(255,255,255,.12);color:var(--white)}
+  .topbar-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--blue-bright));display:flex;align-items:center;justify-content:center;color:var(--white);font-size:12px;font-weight:600;cursor:pointer;position:relative}
+  .notif-dot{position:absolute;top:4px;right:4px;width:8px;height:8px;background:var(--red);border-radius:50%;border:2px solid var(--navy)}
+  .topbar-user-name{color:var(--gray-300);font-size:12px;font-weight:500;max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .menu-toggle{display:none}
+
+  /* DROPDOWNS */
+  .dropdown{position:absolute;top:44px;right:0;background:var(--white);border-radius:12px;border:1px solid var(--gray-200);box-shadow:0 20px 60px rgba(0,0,0,.15);min-width:300px;z-index:200;display:none;animation:dropIn .2s ease}
+  .dropdown.show{display:block}
+  @keyframes dropIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+  .dropdown-header{padding:14px 18px;border-bottom:1px solid var(--gray-100);font-weight:700;font-size:14px;color:var(--navy)}
+  .dropdown-item{display:flex;gap:12px;padding:12px 18px;border-bottom:1px solid var(--gray-50);cursor:pointer;transition:background .15s}
+  .dropdown-item:hover{background:var(--gray-50)}
+  .dropdown-item .notif-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+  .dropdown-item .notif-text{font-size:12.5px;color:var(--gray-600);line-height:1.4}
+  .dropdown-item .notif-text strong{color:var(--navy)}
+  .dropdown-item .notif-time{font-size:11px;color:var(--gray-400);margin-top:2px}
+  .user-menu{position:absolute;top:44px;right:0;background:var(--white);border-radius:12px;border:1px solid var(--gray-200);box-shadow:0 20px 60px rgba(0,0,0,.15);min-width:220px;z-index:200;display:none;animation:dropIn .2s ease;padding:8px}
+  .user-menu.show{display:block}
+  .user-menu-header{padding:12px;border-bottom:1px solid var(--gray-100);margin-bottom:4px}
+  .user-menu-header .name{font-weight:700;color:var(--navy);font-size:14px}
+  .user-menu-header .role{font-size:12px;color:var(--gray-400)}
+  .user-menu-item{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:8px;font-size:13px;color:var(--gray-600);cursor:pointer;transition:all .15s}
+  .user-menu-item:hover{background:var(--gray-100);color:var(--navy)}
+  .user-menu-item.danger{color:var(--red)}.user-menu-item.danger:hover{background:rgba(229,57,53,.06)}
+
+  /* SIDEBAR */
+  .sidebar{width:var(--sidebar-w);background:var(--white);position:fixed;top:48px;left:0;bottom:0;border-right:1px solid var(--gray-200);padding:16px 0;z-index:90;overflow-y:auto;transition:transform .3s}
+  .sidebar-section{padding:0 12px;margin-bottom:8px}
+  .sidebar-label{font-size:10px;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:1.2px;padding:12px 12px 6px}
+  .sidebar-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:var(--gray-600);font-size:13.5px;font-weight:500;cursor:pointer;transition:all .15s;text-decoration:none;position:relative;user-select:none}
+  .sidebar-item:hover{background:var(--gray-100);color:var(--navy)}
+  .sidebar-item.active{background:linear-gradient(135deg,rgba(46,117,182,.08),rgba(46,117,182,.04));color:var(--blue);font-weight:600}
+  .sidebar-item.active::before{content:'';position:absolute;left:0;top:6px;bottom:6px;width:3px;background:var(--blue);border-radius:0 3px 3px 0}
+  .sidebar-icon{width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+  .sidebar-badge{margin-left:auto;background:var(--red);color:var(--white);font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px}
+
+  /* MAIN */
+  .main{margin-left:var(--sidebar-w);margin-top:48px;min-height:calc(100vh - 48px)}
+  .page-section{display:none}.page-section.active{display:block}
+
+  /* HERO */
+  .hero{position:relative;height:280px;background:linear-gradient(135deg,var(--navy),var(--navy-mid),var(--navy-light));overflow:hidden;display:flex;align-items:center;padding:0 48px}
+  .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 800px 400px at 80% 50%,rgba(244,180,0,.08),transparent),radial-gradient(ellipse 600px 300px at 20% 80%,rgba(46,117,182,.1),transparent)}
+  .hero-pattern{position:absolute;inset:0;opacity:.04;background-image:repeating-linear-gradient(0deg,transparent,transparent 40px,rgba(255,255,255,.5) 40px,rgba(255,255,255,.5) 41px),repeating-linear-gradient(90deg,transparent,transparent 40px,rgba(255,255,255,.5) 40px,rgba(255,255,255,.5) 41px)}
+  .hero-content{position:relative;z-index:2;max-width:600px}
+  .hero-tag{display:inline-flex;align-items:center;gap:6px;background:rgba(244,180,0,.15);border:1px solid rgba(244,180,0,.3);color:var(--yellow-light);font-size:11px;font-weight:600;padding:4px 12px;border-radius:20px;margin-bottom:16px;letter-spacing:.5px;text-transform:uppercase}
+  .hero-title{font-family:'Space Grotesk',sans-serif;font-size:36px;font-weight:700;color:var(--white);line-height:1.15;margin-bottom:10px}
+  .hero-title span{color:var(--yellow)}
+  .hero-subtitle{color:var(--gray-300);font-size:15px;line-height:1.5;margin-bottom:24px}
+  .hero-actions{display:flex;gap:10px;flex-wrap:wrap}
+  .hero-btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all .25s;font-family:'DM Sans',sans-serif}
+  .hero-btn.primary{background:var(--yellow);color:var(--navy)}.hero-btn.primary:hover{background:var(--yellow-light);transform:translateY(-1px);box-shadow:0 6px 20px rgba(244,180,0,.3)}
+  .hero-btn.secondary{background:rgba(255,255,255,.1);color:var(--white);border:1px solid rgba(255,255,255,.2)}.hero-btn.secondary:hover{background:rgba(255,255,255,.16)}
+  .hero-visual{position:absolute;right:40px;top:50%;transform:translateY(-50%);display:flex;gap:12px}
+  .hero-stat{background:rgba(255,255,255,.06);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:16px 20px;text-align:center;min-width:120px;transition:transform .3s}.hero-stat:hover{transform:translateY(-4px)}
+  .hero-stat-value{font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:700;color:var(--white);line-height:1}
+  .hero-stat-value.green{color:var(--green)}.hero-stat-value.yellow{color:var(--yellow)}.hero-stat-value.blue{color:var(--blue-bright)}
+  .hero-stat-label{font-size:11px;color:var(--gray-400);margin-top:6px;font-weight:500}
+
+  /* QUICK ACCESS */
+  .quick-access{display:flex;gap:0;background:var(--white);border-bottom:1px solid var(--gray-200);padding:0 48px;overflow-x:auto}
+  .quick-item{display:flex;align-items:center;gap:8px;padding:14px 22px;font-size:13px;font-weight:600;color:var(--gray-500);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap}
+  .quick-item:hover{color:var(--blue);border-bottom-color:var(--blue);background:var(--gray-50)}
+  .quick-item .qi-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px}
+  .qi-yellow{background:rgba(244,180,0,.12)}.qi-blue{background:rgba(46,117,182,.1)}.qi-green{background:rgba(76,175,80,.1)}.qi-red{background:rgba(229,57,53,.1)}
+
+  /* CONTENT */
+  .content{padding:28px 48px;display:grid;grid-template-columns:1fr 340px;gap:24px}
+  .content-left,.content-right{display:flex;flex-direction:column;gap:24px}
+  .card{background:var(--white);border-radius:12px;border:1px solid var(--gray-200);overflow:hidden;transition:box-shadow .3s}.card:hover{box-shadow:0 4px 20px rgba(0,0,0,.06)}
+  .card-header{display:flex;align-items:center;justify-content:space-between;padding:18px 22px;border-bottom:1px solid var(--gray-100)}
+  .card-title{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;color:var(--navy);display:flex;align-items:center;gap:8px}
+  .card-title-icon{width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px}
+  .card-action{font-size:12px;font-weight:600;color:var(--blue);cursor:pointer;padding:4px 10px;border-radius:6px;transition:background .2s;text-decoration:none}.card-action:hover{background:rgba(46,117,182,.08)}
+  .card-body{padding:18px 22px}
+
+  /* SHARED */
+  .kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  .kpi-card{padding:16px;border-radius:10px;border:1px solid var(--gray-200);position:relative;overflow:hidden;cursor:pointer;transition:all .2s}.kpi-card:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.08)}
+  .kpi-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px}.kpi-card.good::after{background:var(--green)}.kpi-card.warn::after{background:var(--orange)}
+  .kpi-label{font-size:11px;color:var(--gray-500);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+  .kpi-value{font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:700;color:var(--navy);line-height:1}
+  .kpi-trend{font-size:11px;font-weight:600;margin-top:6px;display:flex;align-items:center;gap:4px}.kpi-trend.up{color:var(--green)}.kpi-trend.down{color:var(--red)}
+  .docs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .doc-card{border:1px solid var(--gray-200);border-radius:10px;padding:16px;cursor:pointer;transition:all .25s;position:relative;overflow:hidden}
+  .doc-card:hover{border-color:var(--blue);background:linear-gradient(135deg,rgba(46,117,182,.02),rgba(46,117,182,.06));transform:translateY(-2px);box-shadow:0 4px 12px rgba(46,117,182,.1)}
+  .doc-card-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;margin-bottom:12px}
+  .doc-card-icon.prog{background:linear-gradient(135deg,#E3F2FD,#BBDEFB)}.doc-card-icon.proc{background:linear-gradient(135deg,#FFF8E1,#FFECB3)}.doc-card-icon.form{background:linear-gradient(135deg,#E8F5E9,#C8E6C9)}.doc-card-icon.char{background:linear-gradient(135deg,#F3E5F5,#E1BEE7)}
+  .doc-card-title{font-size:13px;font-weight:600;color:var(--navy);margin-bottom:4px;line-height:1.3}
+  .doc-card-code{font-size:11px;color:var(--gray-400);font-weight:500;font-family:'Space Grotesk',sans-serif}
+  .doc-card-tag{position:absolute;top:10px;right:10px;font-size:9px;font-weight:700;padding:2px 8px;border-radius:4px;text-transform:uppercase;letter-spacing:.5px}
+  .tag-updated{background:rgba(76,175,80,.12);color:var(--green-dark)}.tag-new{background:rgba(46,117,182,.12);color:var(--blue)}.tag-review{background:rgba(255,152,0,.12);color:#E65100}
+  .eq-table{width:100%;border-collapse:collapse;font-size:13px}
+  .eq-table th{text-align:left;padding:10px 14px;font-size:11px;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:.5px;border-bottom:2px solid var(--gray-200)}
+  .eq-table td{padding:12px 14px;border-bottom:1px solid var(--gray-100);color:var(--gray-600);font-weight:500}
+  .eq-table tr:hover td{background:var(--gray-50)}
+  .eq-name{color:var(--navy);font-weight:600}
+  .eq-status{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;padding:3px 10px;border-radius:20px}
+  .eq-status.active{background:rgba(76,175,80,.1);color:var(--green-dark)}.eq-status.maint{background:rgba(255,152,0,.1);color:#E65100}.eq-status.down{background:rgba(229,57,53,.1);color:var(--red)}
+  .eq-status-dot{width:6px;height:6px;border-radius:50%}
+  .active .eq-status-dot{background:var(--green)}.maint .eq-status-dot{background:var(--orange)}.down .eq-status-dot{background:var(--red)}
+  .cal-item{display:flex;gap:14px;padding:12px 8px;border-bottom:1px solid var(--gray-100);align-items:flex-start;cursor:pointer;border-radius:8px;margin:0 -8px;transition:all .15s}.cal-item:hover{background:var(--gray-50)}.cal-item:last-child{border-bottom:none}
+  .cal-date{width:44px;height:50px;border-radius:8px;background:linear-gradient(135deg,var(--blue),var(--blue-bright));display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;color:var(--white)}
+  .cal-date-day{font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700;line-height:1}.cal-date-month{font-size:9px;font-weight:600;text-transform:uppercase;opacity:.8}
+  .cal-info-title{font-size:13px;font-weight:600;color:var(--navy);margin-bottom:2px}.cal-info-sub{font-size:11px;color:var(--gray-400)}
+  .cal-info-tag{display:inline-block;font-size:10px;font-weight:600;padding:2px 8px;border-radius:4px;margin-top:4px}
+  .cal-tag-prev{background:rgba(46,117,182,.1);color:var(--blue)}.cal-tag-corr{background:rgba(229,57,53,.1);color:var(--red)}.cal-tag-insp{background:rgba(76,175,80,.1);color:var(--green-dark)}
+  .activity-item{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--gray-100);font-size:12.5px}.activity-item:last-child{border-bottom:none}
+  .activity-avatar{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:var(--white);flex-shrink:0}
+  .activity-text{color:var(--gray-600);line-height:1.4}.activity-text strong{color:var(--navy)}.activity-time{font-size:11px;color:var(--gray-400);margin-top:2px}
+  .progress-item{margin-bottom:14px}.progress-item:last-child{margin-bottom:0}
+  .progress-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+  .progress-label{font-size:12px;font-weight:600;color:var(--gray-600)}.progress-value{font-size:12px;font-weight:700;color:var(--navy);font-family:'Space Grotesk'}
+  .progress-bar{height:6px;background:var(--gray-100);border-radius:3px;overflow:hidden}
+  .progress-fill{height:100%;border-radius:3px;transition:width 1.5s ease;width:0}
+  .progress-fill.green{background:linear-gradient(90deg,var(--green),#66BB6A)}.progress-fill.yellow{background:linear-gradient(90deg,var(--yellow),var(--yellow-light))}.progress-fill.red{background:linear-gradient(90deg,var(--red),#EF5350)}
+
+  /* FORMS */
+  .form-group{margin-bottom:18px}
+  .form-label{display:block;font-size:12px;font-weight:600;color:var(--gray-600);margin-bottom:6px;text-transform:uppercase;letter-spacing:.3px}
+  .form-input,.form-select,.form-textarea{width:100%;padding:10px 14px;border:1px solid var(--gray-200);border-radius:8px;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--gray-700);outline:none;transition:all .2s;background:var(--white)}
+  .form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(46,117,182,.1)}
+  .form-textarea{resize:vertical;min-height:80px}
+  .form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all .2s;font-family:'DM Sans',sans-serif}
+  .btn-primary{background:var(--blue);color:var(--white)}.btn-primary:hover{background:var(--blue-bright)}
+  .btn-ghost{background:transparent;color:var(--gray-500);border:1px solid var(--gray-200)}.btn-ghost:hover{background:var(--gray-50)}
+  .btn-sm{padding:6px 14px;font-size:12px}
+  .page-header{padding:28px 48px 0;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+  .page-header h1{font-family:'Space Grotesk',sans-serif;font-size:24px;font-weight:700;color:var(--navy);display:flex;align-items:center;gap:12px}
+  .page-header-subtitle{color:var(--gray-400);font-size:14px;margin-top:4px}
+
+  /* TOAST */
+  .toast-container{position:fixed;top:64px;right:20px;z-index:600;display:flex;flex-direction:column;gap:8px}
+  .toast{background:var(--white);border-radius:10px;border:1px solid var(--gray-200);box-shadow:0 10px 40px rgba(0,0,0,.12);padding:14px 20px;display:flex;align-items:center;gap:12px;min-width:300px;animation:toastIn .3s ease,toastOut .3s ease 2.7s forwards;font-size:13px;font-weight:500;color:var(--gray-700)}
+  .toast .toast-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+  .toast.success .toast-icon{background:rgba(76,175,80,.1)}.toast.error .toast-icon{background:rgba(229,57,53,.1)}.toast.info .toast-icon{background:rgba(46,117,182,.1)}
+  @keyframes toastIn{from{opacity:0;transform:translateX(60px)}to{opacity:1;transform:translateX(0)}}
+  @keyframes toastOut{from{opacity:1}to{opacity:0;transform:translateX(60px)}}
+  @keyframes modalIn{from{opacity:0;transform:scale(.95) translateY(10px)}to{opacity:1;transform:scale(1) translateY(0)}}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  /* PREOP */
+  .preop-container{padding:28px 48px}
+  .preop-menu{display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:700px;margin:40px auto}
+  .preop-card{background:var(--white);border-radius:16px;border:2px solid var(--gray-200);padding:40px 30px;text-align:center;cursor:pointer;transition:all .3s;position:relative;overflow:hidden}
+  .preop-card::before{content:'';position:absolute;bottom:0;left:0;right:0;height:4px;transition:height .3s}
+  .preop-card.amarilla::before{background:var(--yellow)}.preop-card.blanca::before{background:var(--blue)}
+  .preop-card:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,.1)}.preop-card:hover::before{height:6px}
+  .preop-card .preop-icon{font-size:40px;margin-bottom:16px}
+  .preop-card h3{font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:700;color:var(--navy);margin-bottom:6px}
+  .preop-card p{color:var(--gray-500);font-size:14px}
+  .preop-form-section{background:var(--white);border-radius:12px;border:1px solid var(--gray-200);padding:24px;margin-bottom:20px}
+  .preop-form-section h4{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;color:var(--navy);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+  .checklist-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--gray-100);gap:16px}.checklist-row:last-child{border-bottom:none}
+  .checklist-text{font-size:13px;color:var(--gray-700);flex:1;line-height:1.4}
+  .checklist-actions{display:flex;gap:4px;flex-shrink:0}
+  .checklist-actions input[type="radio"]{display:none}
+  .checklist-actions label{display:flex;align-items:center;justify-content:center;gap:3px;padding:6px 12px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;border:1px solid var(--gray-200);color:var(--gray-500);background:var(--white)}
+  .checklist-actions input[value="B"]:checked+label{background:var(--green);color:var(--white);border-color:var(--green)}
+  .checklist-actions input[value="M"]:checked+label{background:var(--red);color:var(--white);border-color:var(--red)}
+  .checklist-actions input[value="NA"]:checked+label{background:var(--gray-400);color:var(--white);border-color:var(--gray-400)}
+  .preop-status-bar{display:flex;gap:20px;padding:16px 20px;background:var(--gray-50);border-radius:10px;border:1px solid var(--gray-200);margin-bottom:20px;flex-wrap:wrap}
+  .preop-status-item{display:flex;align-items:center;gap:8px;font-size:13px}
+  .preop-status-item i{color:var(--blue);font-size:16px}
+  .preop-status-item .ps-label{color:var(--gray-400);font-size:11px;font-weight:600;text-transform:uppercase}.preop-status-item .ps-value{color:var(--navy);font-weight:600}
+  .preop-save-btn{width:100%;padding:16px;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .25s;display:flex;align-items:center;justify-content:center;gap:8px}
+  .preop-save-btn.disabled{background:var(--gray-200);color:var(--gray-400);cursor:not-allowed}
+  .preop-save-btn.ready{background:var(--green);color:var(--white)}.preop-save-btn.ready:hover{background:var(--green-dark);transform:translateY(-1px)}
+  .preop-post-actions{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:20px}
+  .preop-post-btn{padding:16px;border-radius:10px;border:2px solid var(--gray-200);background:var(--white);font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;text-align:center;font-family:'DM Sans',sans-serif;color:var(--navy)}
+  .preop-post-btn:hover{border-color:var(--blue);background:rgba(46,117,182,.04)}
+  .preop-post-btn i{font-size:20px;display:block;margin-bottom:6px;color:var(--blue)}
+  .back-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;border:1px solid var(--gray-200);background:var(--white);color:var(--gray-600);font-size:13px;font-weight:500;cursor:pointer;transition:all .2s;margin-bottom:20px;font-family:'DM Sans',sans-serif}.back-btn:hover{background:var(--gray-50)}
+  .historial-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px;margin-top:20px}
+  .historial-card{background:var(--white);border:1px solid var(--gray-200);border-radius:12px;padding:20px;transition:all .2s}.historial-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.06)}
+  .historial-card .h-date{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;color:var(--navy);margin-bottom:4px}
+  .historial-card .h-type{font-size:12px;color:var(--gray-400);margin-bottom:12px}
+  .historial-card .h-btn{width:100%;padding:8px;border:1px solid var(--blue);border-radius:8px;background:transparent;color:var(--blue);font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif}.historial-card .h-btn:hover{background:var(--blue);color:var(--white)}
+
+  /* EQUIP PAGE */
+  .project-submenu{display:flex;gap:4px;background:var(--gray-100);border-radius:10px;padding:3px;margin-bottom:20px;width:fit-content}
+  .project-btn{padding:8px 20px;border-radius:8px;font-size:13px;font-weight:600;color:var(--gray-500);cursor:pointer;transition:all .2s;border:none;background:transparent;font-family:'DM Sans',sans-serif}
+  .project-btn:hover{color:var(--navy)}
+  .project-btn.active{background:var(--white);color:var(--navy);box-shadow:0 1px 4px rgba(0,0,0,.08)}
+  .eq-loading{text-align:center;padding:40px;color:var(--gray-400);font-size:14px}
+  .eq-empty{text-align:center;padding:40px;color:var(--gray-400)}.eq-empty i{font-size:32px;display:block;margin-bottom:8px}
+  .upload-bar{display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+  .upload-bar label{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:8px;background:var(--blue);color:var(--white);font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif}
+  .upload-bar label:hover{background:var(--blue-bright);transform:translateY(-1px)}
+  .upload-bar input[type="file"]{display:none}
+  .upload-bar .upload-info{font-size:12px;color:var(--gray-400)}
+  .upload-project-label{font-size:13px;font-weight:600;color:var(--navy);padding:6px 14px;background:var(--gray-50);border:1px solid var(--gray-200);border-radius:8px}
+  .eq-count{font-size:12px;color:var(--gray-400);margin-bottom:12px}
+
+/* Contenedor: fuerza la fila horizontal */
+/* El contenedor con más espacio */
+.dashboard-nav {
+    display: flex !important;
+    gap: 20px;
+    margin-bottom: 35px;
+    padding: 10px 5px;
+    overflow-x: auto; /* Por si añades más proyectos luego */
+}
+
+/* Tarjeta con efecto de elevación y bordes redondeados premium */
+.nav-card {
+    flex: 1;
+    min-width: 220px;
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 18px; /* Más redondeado = más moderno */
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    border: 1px solid rgba(0,0,0,0.04);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Efecto Hover: se levanta y brilla un poco */
+.nav-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    background: #fcfcfc;
+}
+
+/* Indicador de activo: Una barra lateral gruesa en lugar de borde completo */
+.nav-card.active {
+    background: #f8faff;
+    border-left: 5px solid #2563eb;
+    box-shadow: inset 0 0 0 1px rgba(37, 99, 235, 0.1);
+}
+
+/* Iconos más grandes y con sombras de color */
+.nav-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+    transition: transform 0.3s ease;
+}
+
+.nav-card:hover .nav-icon {
+    transform: scale(1.1) rotate(-5deg);
+}
+
+/* Colores Vibrantes */
+.nav-icon.all { background: linear-gradient(135deg, #6366f1, #4338ca); color: white; }
+.nav-icon.rubiales { background: linear-gradient(135deg, #f59e0b, #d97706); color: white; }
+.nav-icon.scatec { background: linear-gradient(135deg, #10b981, #059669); color: white; }
+.nav-icon.guajira { background: linear-gradient(135deg, #0ea5e9, #0284c7); color: white; }
+
+/* Tipografía */
+.nav-label {
+    font-size: 12px;
+    color: #94a3b8;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.nav-value {
+    font-size: 28px;
+    font-weight: 800;
+    color: #1e293b;
+    margin: 0;
+    letter-spacing: -1px;
+}
+/* Contenedor con sombra suave y bordes redondeados */
+#equipos-table-container {
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+    overflow: hidden;
+    border: 1px solid #eef2f6;
+    margin-top: 25px;
+}
+
+.eq-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+}
+
+/* Encabezado elegante: fondo gris muy claro y letras en azul grisáceo */
+.eq-table thead tr {
+    background-color: #f8fafc;
+}
+
+.eq-table th {
+    padding: 18px 20px;
+    text-align: left;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #64748b;
+    letter-spacing: 1px;
+    border-bottom: 2px solid #f1f5f9;
+}
+
+/* Filas: más altas y con un efecto de resaltado al pasar el mouse */
+.eq-table td {
+    padding: 16px 20px;
+    border-bottom: 1px solid #f1f5f9;
+    color: #334155;
+    font-size: 14px;
+}
+
+.eq-table tr:hover td {
+    background-color: #f1f5ff; /* Un azul muy tenue al pasar el mouse */
+}
+
+/* Estilo para el CEMA (como una etiqueta técnica) */
+.badge-cema {
+    background: #f1f5f9;
+    color: #1e293b;
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-family: 'Courier New', Courier, monospace; /* Look de código técnico */
+    border: 1px solid #e2e8f0;
+}
+
+/* Colores para el Estado (Pills) */
+.status-pill {
+    padding: 6px 12px;
+    border-radius: 50px;
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.status-activo { background: #dcfce7; color: #15803d; }
+.status-mtto { background: #fee2e2; color: #b91c1c; }
+
+
+
+.btn-action:hover { color: #2563eb; }
+
+  /* ANIMATIONS */
+  .fade-in{animation:fadeIn .5s ease forwards;opacity:0;transform:translateY(10px)}
+  @keyframes fadeIn{to{opacity:1;transform:translateY(0)}}
+  .delay-1{animation-delay:.1s}.delay-2{animation-delay:.2s}.delay-3{animation-delay:.3s}.delay-4{animation-delay:.4s}.delay-5{animation-delay:.5s}
+
+  @media(max-width:1200px){.content{grid-template-columns:1fr}.hero-visual{display:none}.kpi-grid{grid-template-columns:repeat(2,1fr)}.docs-grid{grid-template-columns:repeat(2,1fr)}.preop-menu{grid-template-columns:1fr;max-width:400px}}
+  @media(max-width:768px){.sidebar{transform:translateX(-100%)}.sidebar.mobile-open{transform:translateX(0);z-index:95}.main{margin-left:0}.content,.preop-container,.page-header{padding-left:20px;padding-right:20px}.hero{padding:0 20px}.quick-access{padding:0 20px}.menu-toggle{display:flex!important}.topbar-nav{display:none}}
+  /* HOJA DE VIDA */
+  .hv-container{padding:28px 48px}
+  .hv-toolbar{background:var(--white);border:1px solid var(--gray-200);border-radius:12px;padding:18px 22px;margin-bottom:20px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+  .hv-search-wrap{position:relative;flex:1;min-width:240px}
+  .hv-search-wrap input{width:100%;padding:11px 14px 11px 38px;border:1px solid var(--gray-200);border-radius:8px;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--gray-700);outline:none;transition:all .2s}
+  .hv-search-wrap input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(46,117,182,.1)}
+  .hv-search-wrap::before{content:'🔍';position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:14px;opacity:.5}
+  .hv-suggest{position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--white);border:1px solid var(--gray-200);border-radius:10px;box-shadow:0 12px 40px rgba(0,0,0,.12);max-height:280px;overflow-y:auto;z-index:50;display:none}
+  .hv-suggest.show{display:block}
+  .hv-suggest-item{padding:10px 14px;cursor:pointer;border-bottom:1px solid var(--gray-50);font-size:13px;color:var(--gray-700);transition:background .15s}
+  .hv-suggest-item:hover{background:var(--gray-50)}
+  .hv-suggest-item:last-child{border-bottom:none}
+  .hv-suggest-item strong{color:var(--navy);font-family:'Space Grotesk',sans-serif;margin-right:6px}
+  .hv-suggest-item .sg-meta{font-size:11px;color:var(--gray-400);display:block;margin-top:2px}
+  .hv-actions{display:flex;gap:8px}
+  .hv-btn{display:inline-flex;align-items:center;gap:6px;padding:10px 16px;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s}
+  .hv-btn-import{background:var(--green);color:var(--white)}
+  .hv-btn-import:hover{background:var(--green-dark)}
+  .hv-btn-import input{display:none}
+  .hv-btn-edit{background:var(--blue);color:var(--white)}
+  .hv-btn-edit:hover{background:var(--blue-bright)}
+  .hv-btn-save{background:var(--green);color:var(--white)}
+  .hv-btn-save:hover{background:var(--green-dark)}
+  .hv-btn-cancel{background:var(--gray-100);color:var(--gray-600)}
+  .hv-btn-cancel:hover{background:var(--gray-200)}
+  .hv-btn-pdf{background:var(--red);color:var(--white)}
+  .hv-btn-pdf:hover{background:#C62828}
+  .hv-empty{text-align:center;padding:80px 20px;color:var(--gray-400);background:var(--white);border-radius:12px;border:2px dashed var(--gray-200)}
+  .hv-empty .empty-icon{font-size:56px;margin-bottom:16px}
+  .hv-empty h3{font-family:'Space Grotesk',sans-serif;color:var(--navy);margin-bottom:8px;font-size:18px}
+  .hv-empty p{font-size:13px;line-height:1.6}
+  .hv-cert{background:var(--white);border-radius:12px;border:1px solid var(--gray-200);overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.04)}
+  .hv-cert-header{background:linear-gradient(135deg,var(--navy),var(--navy-mid));color:var(--white);padding:24px 32px;display:flex;justify-content:space-between;align-items:center;gap:20px}
+  .hv-cert-header .cert-title{font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700;letter-spacing:.5px;line-height:1.3}
+  .hv-cert-header .cert-title small{display:block;font-size:11px;opacity:.7;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px}
+  .hv-cert-header .cert-brand{background:var(--yellow);color:var(--navy);padding:8px 16px;border-radius:8px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:14px;letter-spacing:.5px}
+  .hv-cert-meta{padding:18px 32px;background:var(--gray-50);border-bottom:1px solid var(--gray-200);display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .hv-cert-meta-item .ml{font-size:10px;color:var(--gray-400);font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+  .hv-cert-meta-item .mv{font-size:15px;color:var(--navy);font-weight:700;font-family:'Space Grotesk',sans-serif;margin-top:2px}
+  .hv-cert-body{padding:28px 32px}
+  .hv-section{margin-bottom:28px}
+  .hv-section-title{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:1px;padding-bottom:8px;margin-bottom:12px;border-bottom:2px solid var(--yellow);display:flex;align-items:center;gap:8px}
+  .hv-section-title i{color:var(--blue)}
+  .hv-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px 24px}
+  .hv-field{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px dotted var(--gray-200);gap:12px}
+  .hv-field .fl{font-size:12px;color:var(--gray-500);font-weight:500;flex-shrink:0}
+  .hv-field .fv{font-size:13px;color:var(--navy);font-weight:600;text-align:right;font-family:'Space Grotesk',sans-serif}
+  .hv-field .fv.empty{color:var(--gray-300);font-style:italic;font-weight:400}
+  .hv-field input.fv-edit{background:rgba(46,117,182,.04);border:1px solid var(--blue);border-radius:6px;padding:5px 10px;font-size:12px;font-family:'Space Grotesk',sans-serif;font-weight:600;color:var(--navy);text-align:right;outline:none;max-width:60%}
+  .hv-field input.fv-edit:focus{box-shadow:0 0 0 3px rgba(46,117,182,.1)}
+  .hv-two-col{display:grid;grid-template-columns:1fr 1fr;gap:32px}
+  .hv-photo{width:100%;aspect-ratio:4/3;background:var(--gray-50);border:2px dashed var(--gray-200);border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--gray-400);font-size:13px}
+  .hv-photo img{width:100%;height:100%;object-fit:cover;border-radius:8px}
+  .hv-mtto-table{width:100%;border-collapse:collapse;font-size:12px}
+  .hv-mtto-table th{background:var(--navy);color:var(--white);padding:8px 10px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;text-align:left}
+  .hv-mtto-table td{padding:10px;border-bottom:1px solid var(--gray-100);color:var(--gray-600)}
+  .hv-mtto-table .empty-row td{text-align:center;color:var(--gray-300);font-style:italic;padding:14px}
+  .hv-estado{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+  .hv-estado.activo{background:rgba(76,175,80,.12);color:var(--green-dark)}
+  .hv-estado.inactivo{background:rgba(229,57,53,.12);color:var(--red)}
+  .hv-estado.mantenimiento{background:rgba(255,152,0,.12);color:#E65100}
+  @media(max-width:900px){.hv-two-col{grid-template-columns:1fr}.hv-grid{grid-template-columns:1fr}.hv-cert-meta{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- AUTH -->
+<div class="auth-screen" id="authScreen">
+  <div class="auth-card">
+    <div class="auth-logo">MM&E</div>
+    <h1>MM&E — <span>MOVA</span></h1>
+    <p class="auth-sub">Sistema de Gestión de Mantenimiento</p>
+    <div class="auth-tabs">
+      <button class="auth-tab active" onclick="switchAuthTab('login')">Ingresar</button>
+      <button class="auth-tab" onclick="switchAuthTab('register')">Registrarse</button>
+    </div>
+    <form class="auth-form active" id="loginForm">
+      <div class="auth-field"><label>Correo Electrónico</label><input type="email" id="login-email" placeholder="correo@ejemplo.com" required></div>
+      <div class="auth-field"><label>Contraseña</label><input type="password" id="login-password" placeholder="••••••••" required></div>
+      <div class="auth-error" id="loginError"></div>
+      <button type="submit" class="auth-submit login-btn"><i class="bi bi-box-arrow-in-right"></i> Ingresar</button>
+    </form>
+    <form class="auth-form" id="registerForm">
+      <div class="auth-field"><label>Correo Electrónico</label><input type="email" id="reg-email" placeholder="correo@ejemplo.com" required></div>
+      <div class="auth-field"><label>Contraseña</label><input type="password" id="reg-password" placeholder="Mínimo 6 caracteres" required></div>
+      <div class="auth-field"><label>IPE (Equipo de Protección) *</label>
+        <select id="reg-ipe" required><option value="">Seleccionar IPE...</option><option value="IPE-001">IPE-001 — Casco + Gafas + Guantes</option><option value="IPE-002">IPE-002 — Casco + Botas + Chaleco</option><option value="IPE-003">IPE-003 — Completo</option><option value="IPE-004">IPE-004 — Básico</option></select>
+      </div>
+      <div class="auth-error" id="regError"></div>
+      <button type="submit" class="auth-submit register-btn"><i class="bi bi-person-plus"></i> Crear Cuenta</button>
+    </form>
+  </div>
+</div>
+
+<!-- IPE MODAL -->
+<div class="ipe-overlay" id="ipeOverlay">
+  <div class="ipe-modal">
+    <h2>⚙️ Asignar IPE</h2>
+    <p>Tu cuenta no tiene un IPE asignado. Selecciona uno para continuar.</p>
+    <select id="ipe-modal-select"><option value="">Seleccionar IPE...</option><option value="IPE-001">IPE-001 — Casco + Gafas + Guantes</option><option value="IPE-002">IPE-002 — Casco + Botas + Chaleco</option><option value="IPE-003">IPE-003 — Completo</option><option value="IPE-004">IPE-004 — Básico</option></select>
+    <button class="ipe-save" id="ipeModalSave">Guardar IPE</button>
+  </div>
+</div>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="topbar-logo" onclick="window.navTo('inicio')"><div class="logo-icon">MM&E</div>MOVA</div>
+  <div class="topbar-nav" id="topNav">
+    <a data-page="inicio" class="active" onclick="window.navTo('inicio')">Inicio</a>
+    <a data-page="documentos" onclick="window.navTo('documentos')">Documentos</a>
+    <a data-page="equipos" onclick="window.navTo('equipos')">Equipos</a>
+    <a data-page="preoperacionales" onclick="window.navTo('preoperacionales')">Preoperacional</a>
+  </div>
+  <div class="topbar-search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><input type="text" placeholder="Buscar..." id="globalSearch" autocomplete="off"></div>
+  <div class="topbar-right">
+    <span class="topbar-user-name" id="topbarUserName"></span>
+    <button class="topbar-btn" onclick="toggleDrop('notifDrop')">🔔<span class="notif-dot"></span><div class="dropdown" id="notifDrop"><div class="dropdown-header">Notificaciones</div><div class="dropdown-item"><div class="notif-icon" style="background:rgba(229,57,53,.1)">🔴</div><div><div class="notif-text"><strong>Motoniveladora 120K</strong> fuera de servicio</div><div class="notif-time">Hace 30 min</div></div></div></div></button>
+    <div class="topbar-avatar" onclick="toggleDrop('userDrop')"><span id="avatarInitials">JR</span><div class="user-menu" id="userDrop"><div class="user-menu-header"><div class="name" id="menuUserName">Usuario</div><div class="role">Coord. Mantenimiento</div></div><div class="user-menu-item" onclick="window.cerrarSesion()">🚪 Cerrar Sesión</div></div></div>
+    <button class="topbar-btn menu-toggle" id="menuToggle">☰</button>
+  </div>
+</div>
+
+<!-- SIDEBAR -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-section"><div class="sidebar-label">Principal</div>
+    <a class="sidebar-item active" data-page="inicio" onclick="window.navTo('inicio')"><span class="sidebar-icon">🏠</span>Inicio</a>
+    <a class="sidebar-item" data-page="dashboard" onclick="window.navTo('dashboard')"><span class="sidebar-icon">📊</span>Dashboard KPIs</a></div>
+  <div class="sidebar-section"><div class="sidebar-label">Gestión Documental</div>
+    <a class="sidebar-item" data-page="documentos" onclick="window.navTo('documentos')"><span class="sidebar-icon">📂</span>Listado Maestro</a></div>
+  <div class="sidebar-section"><div class="sidebar-label">Operaciones</div>
+    <a class="sidebar-item" data-page="equipos" onclick="window.navTo('equipos')"><span class="sidebar-icon">🚜</span>Equipos</a>
+    <a class="sidebar-item" data-page="preoperacionales" onclick="window.navTo('preoperacionales')"><span class="sidebar-icon">✅</span>Preoperacionales</a>
+    <a class="sidebar-item" data-page="ordenes" onclick="window.navTo('ordenes')"><span class="sidebar-icon">🔧</span>Órdenes de Trabajo</a>
+    <a class="sidebar-item" data-page="bimensuales" onclick="window.navTo('bimensuales')"><span class="sidebar-icon">🔍</span>Insp. Bimensuales</a>
+    <a class="sidebar-item" data-page="locativas" onclick="window.navTo('locativas')"><span class="sidebar-icon">🏢</span>Insp. Locativas</a>
+    <a class="sidebar-item" data-page="hojavida" onclick="window.navTo('hojavida')"><span class="sidebar-icon">📑</span>Hoja de vida</a></div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <!-- INICIO -->
+  <div class="page-section active" id="page-inicio">
+    <div class="hero fade-in"><div class="hero-pattern"></div><div class="hero-content"><div class="hero-tag">⚡ Sistema de Gestión de Mantenimiento</div><h1 class="hero-title">MM&E — <span>MOVA</span></h1><p class="hero-subtitle">Mantenimiento, Maquinaria y Equipos. Gestión integral del programa de mantenimiento preventivo y correctivo.</p><div class="hero-actions"><button class="hero-btn primary" onclick="window.navTo('preoperacionales')">✅ Preoperacional</button><button class="hero-btn secondary" onclick="window.navTo('equipos')">🚜 Equipos</button></div></div><div class="hero-visual"><div class="hero-stat fade-in delay-2"><div class="hero-stat-value green">92%</div><div class="hero-stat-label">Disponibilidad</div></div><div class="hero-stat fade-in delay-3"><div class="hero-stat-value yellow">87%</div><div class="hero-stat-label">Cumplimiento</div></div><div class="hero-stat fade-in delay-4"><div class="hero-stat-value blue">156h</div><div class="hero-stat-label">MTBF</div></div></div></div>
+    <div class="quick-access fade-in delay-1">
+      <a class="quick-item" onclick="window.navTo('preoperacionales')"><span class="qi-icon qi-blue">📝</span>Inspección Preoperacional</a>
+      <a class="quick-item" onclick="window.navTo('equipos')"><span class="qi-icon qi-green">🚜</span>Estado de Equipos</a>
+      <a class="quick-item" onclick="window.navTo('documentos')"><span class="qi-icon qi-yellow">📂</span>Documentos</a>
+    </div>
+    <div class="content">
+      <div class="content-left">
+        <div class="card fade-in delay-2"><div class="card-header"><div class="card-title"><span class="card-title-icon" style="background:rgba(46,117,182,.1);color:var(--blue)">📊</span>Indicadores — Marzo 2026</div><a class="card-action" onclick="window.navTo('dashboard')">Dashboard →</a></div><div class="card-body"><div class="kpi-grid"><div class="kpi-card good"><div class="kpi-label">Disponibilidad</div><div class="kpi-value">92.4%</div><div class="kpi-trend up">▲ +2.1%</div></div><div class="kpi-card good"><div class="kpi-label">Cumplimiento</div><div class="kpi-value">87%</div><div class="kpi-trend up">▲ +5%</div></div><div class="kpi-card warn"><div class="kpi-label">MTTR</div><div class="kpi-value">4.2h</div><div class="kpi-trend down">▼ Meta: 3.5h</div></div><div class="kpi-card good"><div class="kpi-label">Backlog OT</div><div class="kpi-value">8</div><div class="kpi-trend up">▲ Dentro meta</div></div></div></div></div>
+        <div class="card fade-in delay-3"><div class="card-header"><div class="card-title"><span class="card-title-icon" style="background:rgba(244,180,0,.1);color:var(--yellow)">📂</span>Documentos Recientes</div><a class="card-action" onclick="window.navTo('documentos')">Ver todos →</a></div><div class="card-body"><div class="docs-grid"><div class="doc-card"><span class="doc-card-tag tag-updated">Actualizado</span><div class="doc-card-icon prog">📘</div><div class="doc-card-title">Programa de Mtto. de Equipos</div><div class="doc-card-code">A4-PR-001 · v3.2</div></div><div class="doc-card"><span class="doc-card-tag tag-new">Nuevo</span><div class="doc-card-icon proc">🔧</div><div class="doc-card-title">Adquisición de Combustible</div><div class="doc-card-code">A4-P-003 · v1.0</div></div><div class="doc-card"><div class="doc-card-icon char">📑</div><div class="doc-card-title">Caracterización Proceso Mtto.</div><div class="doc-card-code">D1-CP-005 · v2.0</div></div></div></div></div>
+      </div>
+      <div class="content-right">
+        <div class="card fade-in delay-3"><div class="card-header"><div class="card-title"><span class="card-title-icon" style="background:rgba(46,117,182,.1);color:var(--blue)">📅</span>Próximos Mantenimientos</div></div><div class="card-body"><div class="cal-item"><div class="cal-date"><span class="cal-date-day">10</span><span class="cal-date-month">Abr</span></div><div class="cal-info"><div class="cal-info-title">Mtto. Preventivo — PC350</div><div class="cal-info-sub">Cambio aceite hidráulico · 4h</div><span class="cal-info-tag cal-tag-prev">Preventivo</span></div></div><div class="cal-item"><div class="cal-date" style="background:linear-gradient(135deg,var(--red),#EF5350)"><span class="cal-date-day">11</span><span class="cal-date-month">Abr</span></div><div class="cal-info"><div class="cal-info-title">Reparación — 120K</div><div class="cal-info-sub">Transmisión · Prioridad alta</div><span class="cal-info-tag cal-tag-corr">Correctivo</span></div></div></div></div>
+        <div class="card fade-in delay-4"><div class="card-header"><div class="card-title"><span class="card-title-icon" style="background:rgba(244,180,0,.1);color:var(--yellow)">📈</span>Avance del Programa</div></div><div class="card-body" id="progressBars"></div></div>
+        <div class="card fade-in delay-5"><div class="card-header"><div class="card-title"><span class="card-title-icon" style="background:rgba(46,117,182,.1);color:var(--blue)">💬</span>Actividad Reciente</div></div><div class="card-body"><div class="activity-item"><div class="activity-avatar" style="background:linear-gradient(135deg,#2E75B6,#3B8DD4)">CM</div><div><div class="activity-text"><strong>Carlos M.</strong> actualizó <strong>A4-PR-001</strong></div><div class="activity-time">Hace 2h</div></div></div><div class="activity-item"><div class="activity-avatar" style="background:linear-gradient(135deg,#4CAF50,#66BB6A)">LP</div><div><div class="activity-text"><strong>Laura P.</strong> completó inspección <strong>EQ-003</strong></div><div class="activity-time">Hace 4h</div></div></div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PREOPERACIONALES -->
+  <div class="page-section" id="page-preoperacionales"><div class="preop-container" id="preopContent"></div></div>
+
+  <!-- DASHBOARD -->
+  <div class="page-section" id="page-dashboard"><div class="page-header"><div><h1>📊 Dashboard KPIs</h1><div class="page-header-subtitle">Marzo 2026</div></div></div><div style="padding:28px 48px"><div class="kpi-grid"><div class="kpi-card good"><div class="kpi-label">Disponibilidad</div><div class="kpi-value">92.4%</div><div class="kpi-trend up">▲ +2.1%</div></div><div class="kpi-card good"><div class="kpi-label">Cumplimiento</div><div class="kpi-value">87%</div><div class="kpi-trend up">▲ +5%</div></div><div class="kpi-card warn"><div class="kpi-label">MTTR</div><div class="kpi-value">4.2h</div><div class="kpi-trend down">▼ Meta: 3.5h</div></div><div class="kpi-card good"><div class="kpi-label">MTBF</div><div class="kpi-value">156h</div><div class="kpi-trend up">▲ +12h</div></div><div class="kpi-card good"><div class="kpi-label">Backlog OT</div><div class="kpi-value">8</div><div class="kpi-trend up">▲ Dentro meta</div></div><div class="kpi-card good"><div class="kpi-label">Inspecciones</div><div class="kpi-value">95%</div><div class="kpi-trend up">▲ Excelente</div></div></div></div></div>
+
+  <!-- DOCUMENTOS -->
+  <div class="page-section" id="page-documentos"><div class="page-header"><div><h1>📂 Gestión Documental</h1></div></div><div style="padding:28px 48px"><div class="docs-grid" style="grid-template-columns:repeat(4,1fr)"><div class="doc-card"><span class="doc-card-tag tag-updated">Actualizado</span><div class="doc-card-icon prog">📘</div><div class="doc-card-title">Programa Mtto. Equipos</div><div class="doc-card-code">A4-PR-001 · v3.2</div></div><div class="doc-card"><span class="doc-card-tag tag-new">Nuevo</span><div class="doc-card-icon proc">🔧</div><div class="doc-card-title">Adquisición Combustible</div><div class="doc-card-code">A4-P-003 · v1.0</div></div><div class="doc-card"><div class="doc-card-icon proc">🔧</div><div class="doc-card-title">Selección Equipo Crítico</div><div class="doc-card-code">A4-P-002 · v4.0</div></div><div class="doc-card"><div class="doc-card-icon char">📑</div><div class="doc-card-title">Caracterización Proceso Mtto.</div><div class="doc-card-code">D1-CP-005 · v2.0</div></div><div class="doc-card"><span class="doc-card-tag tag-review">En Revisión</span><div class="doc-card-icon form">📋</div><div class="doc-card-title">Análisis Criticidad Equipos</div><div class="doc-card-code">XX-XX-XXX · borrador</div></div><div class="doc-card"><div class="doc-card-icon form">📋</div><div class="doc-card-title">Formato Inspección Preoperacional</div><div class="doc-card-code">A4-F-001 · v2.0</div></div><div class="doc-card"><span class="doc-card-tag tag-updated">Actualizado</span><div class="doc-card-icon form">📋</div><div class="doc-card-title">Formato Orden de Trabajo</div><div class="doc-card-code">A4-F-002 · v3.1</div></div></div></div></div>
+
+  <!-- EQUIPOS -->
+<div class="page-section" id="page-equipos">
+  <div class="page-header">
+    <div>
+      <h1>🚜 Equipos y Maquinaria</h1>
+      <div class="page-header-subtitle">Inventario por proyecto — Tiempo real desde Firestore</div>
+    </div>
+  </div>
+
+  <div style="padding:28px 48px">
+    <div class="dashboard-nav" id="projectSubmenu">
+      <div class="nav-card active" onclick="filtrarProyecto(this, 'todos')">
+        <div class="nav-icon all"><i class="bi bi-grid-fill"></i></div>
+        <div class="nav-info">
+          <span class="nav-label">Todos</span>
+          <h2 class="nav-value" id="stat-total">0</h2>
+        </div>
+      </div>
+
+      <div class="nav-card" onclick="filtrarProyecto(this, 'rubiales')">
+        <div class="nav-icon rubiales"><i class="bi bi-droplet-fill"></i></div>
+        <div class="nav-info">
+          <span class="nav-label">Rubiales</span>
+          <h2 class="nav-value" id="stat-rubiales">0</h2>
+        </div>
+      </div>
+
+      <div class="nav-card" onclick="filtrarProyecto(this, 'scatec')">
+        <div class="nav-icon scatec"><i class="bi bi-sun-fill"></i></div>
+        <div class="nav-info">
+          <span class="nav-label">Scatec</span>
+          <h2 class="nav-value" id="stat-scatec">0</h2>
+        </div>
+      </div>
+
+      <div class="nav-card" onclick="filtrarProyecto(this, 'guajira')">
+        <div class="nav-icon guajira"><i class="bi bi-wind"></i></div>
+        <div class="nav-info">
+          <span class="nav-label">Guajira</span>
+          <h2 class="nav-value" id="stat-guajira">0</h2>
+        </div>
+      </div>
+    </div>
+
+    <!-- Upload bar: sube Excel para el proyecto seleccionado -->
+    <div class="upload-bar" id="uploadBar">
+      <label><i class="bi bi-file-earmark-arrow-up"></i> Importar Excel
+        <input type="file" id="excelInput" accept=".xlsx,.xls,.csv">
+      </label>
+      <span class="upload-project-label" id="uploadProjectLabel">Proyecto: <strong>Todos</strong></span>
+      <span class="upload-info">El archivo se asigna al proyecto seleccionado arriba</span>
+    </div>
+
+    <div class="eq-count" id="eqCount"></div>
+
+    <div id="equipos-table-container">
+      <div class="eq-loading">Cargando equipos...</div>
+    </div>
+  </div>
+</div>
+
+
+
+  <!-- ORDENES -->
+  <div class="page-section" id="page-ordenes"><div class="page-header"><div><h1>🔧 Órdenes de Trabajo</h1></div></div><div style="padding:28px 48px"><div class="card"><div class="card-body" style="padding:0"><table class="eq-table"><thead><tr><th>OT #</th><th>Equipo</th><th>Tipo</th><th>Estado</th><th>Asignado</th></tr></thead><tbody><tr><td class="eq-name">OT-2026-042</td><td>Motoniveladora 120K</td><td>Correctivo</td><td><span class="eq-status down"><span class="eq-status-dot"></span>Abierta</span></td><td>Carlos M.</td></tr><tr><td class="eq-name">OT-2026-041</td><td>Retroexcavadora 420F</td><td>Preventivo</td><td><span class="eq-status maint"><span class="eq-status-dot"></span>En Proceso</span></td><td>Laura P.</td></tr><tr><td class="eq-name">OT-2026-039</td><td>Excavadora PC350</td><td>Preventivo</td><td><span class="eq-status active"><span class="eq-status-dot"></span>Cerrada</span></td><td>Carlos M.</td></tr></tbody></table></div></div></div></div>
+
+
+  <!-- INSPECCIONES BIMENSUALES -->
+  <div class="page-section" id="page-bimensuales">
+    <div class="preop-container" id="bimensualContent"></div>
+  </div>
+
+  <!-- INSPECCIONES LOCATIVAS -->
+  <div class="page-section" id="page-locativas">
+    <div class="preop-container" id="locativaContent"></div>
+  </div>
+
+  <!-- HOJA DE VIDA -->
+  <div class="page-section" id="page-hojavida">
+    <div class="page-header"><div><h1>📑 Hoja de Vida</h1><div class="page-header-subtitle">Certificado de integridad mecánica por equipo</div></div></div>
+    <div class="hv-container">
+      <div class="hv-toolbar">
+        <div class="hv-search-wrap">
+          <input type="text" id="hv-search" placeholder="Buscar por placa, marca o tipo..." autocomplete="off">
+          <div class="hv-suggest" id="hv-suggest"></div>
+        </div>
+        <div class="hv-actions">
+          <label class="hv-btn hv-btn-import"><i class="bi bi-file-earmark-arrow-up"></i> Importar Excel<input type="file" id="hv-excel-input" accept=".xlsx,.xls"></label>
+        </div>
+      </div>
+      <div class="hv-empty" id="hv-empty">
+        <div class="empty-icon">📑</div>
+        <h3>Selecciona un equipo para ver su hoja de vida</h3>
+        <p>Busca por placa en el campo de arriba o importa la base de datos desde Excel.<br>La hoja se actualizará automáticamente con los datos del equipo seleccionado.</p>
+      </div>
+      <div class="hv-cert" id="hv-cert" style="display:none;">
+        <div class="hv-cert-header">
+          <div class="cert-title"><small>Mantenimiento, Maquinaria & Equipos</small>Certificado de Integridad Mecánica</div>
+          <div class="cert-brand">MM&E MOVA</div>
+        </div>
+        <div class="hv-cert-meta">
+          <div class="hv-cert-meta-item"><div class="ml">Placa</div><div class="mv" id="hv-meta-placa">—</div></div>
+          <div class="hv-cert-meta-item"><div class="ml">Fecha Adquisición</div><div class="mv" id="hv-meta-fecha">—</div></div>
+          <div class="hv-cert-meta-item"><div class="ml">Estado</div><div class="mv" id="hv-meta-estado">—</div></div>
+        </div>
+        <div class="hv-cert-body">
+          <div style="display:flex;justify-content:flex-end;gap:8px;margin-bottom:20px;">
+            <button class="hv-btn hv-btn-edit" id="hv-btn-edit"><i class="bi bi-pencil"></i> Editar</button>
+            <button class="hv-btn hv-btn-save" id="hv-btn-save" style="display:none;"><i class="bi bi-check-lg"></i> Guardar</button>
+            <button class="hv-btn hv-btn-cancel" id="hv-btn-cancel" style="display:none;"><i class="bi bi-x-lg"></i> Cancelar</button>
+            <button class="hv-btn hv-btn-pdf" id="hv-btn-pdf"><i class="bi bi-file-earmark-pdf"></i> Exportar PDF</button>
+          </div>
+          <div class="hv-two-col">
+            <div>
+              <div class="hv-section">
+                <div class="hv-section-title"><i class="bi bi-info-circle"></i> Características Generales</div>
+                <div class="hv-grid">
+                  <div class="hv-field"><span class="fl">Matrícula</span><span class="fv" data-field="matricula">—</span></div>
+                  <div class="hv-field"><span class="fl">Tipo / Clase</span><span class="fv" data-field="tipo">—</span></div>
+                  <div class="hv-field"><span class="fl">Marca</span><span class="fv" data-field="marca">—</span></div>
+                  <div class="hv-field"><span class="fl">Línea</span><span class="fv" data-field="linea">—</span></div>
+                  <div class="hv-field"><span class="fl">Modelo (Año)</span><span class="fv" data-field="modelo">—</span></div>
+                  <div class="hv-field"><span class="fl">Serial</span><span class="fv" data-field="serial">—</span></div>
+                  <div class="hv-field"><span class="fl">Color</span><span class="fv" data-field="color">—</span></div>
+                  <div class="hv-field"><span class="fl">Propietario</span><span class="fv" data-field="propietario">—</span></div>
+                  <div class="hv-field"><span class="fl">Capacidad</span><span class="fv" data-field="capacidad">—</span></div>
+                  <div class="hv-field"><span class="fl">Servicio</span><span class="fv" data-field="servicio">—</span></div>
+                  <div class="hv-field"><span class="fl">Cilindraje</span><span class="fv" data-field="cilindraje">—</span></div>
+                </div>
+              </div>
+            </div>
+            <div>
+              <div class="hv-section">
+                <div class="hv-section-title"><i class="bi bi-camera"></i> Registro Fotográfico</div>
+                <div class="hv-photo" id="hv-photo">📷 Sin foto</div>
+              </div>
+            </div>
+          </div>
+          <div class="hv-two-col" style="margin-top:8px;">
+            <div class="hv-section">
+              <div class="hv-section-title"><i class="bi bi-gear"></i> Características Técnicas</div>
+              <div class="hv-grid">
+                <div class="hv-field"><span class="fl">N° Motor</span><span class="fv" data-field="nMotor">—</span></div>
+                <div class="hv-field"><span class="fl">N° Chasis</span><span class="fv" data-field="nChasis">—</span></div>
+                <div class="hv-field"><span class="fl">N° Llantas</span><span class="fv" data-field="nLlantas">—</span></div>
+                <div class="hv-field"><span class="fl">N° Velocidades</span><span class="fv" data-field="nVelocidades">—</span></div>
+                <div class="hv-field"><span class="fl">N° Cinturones</span><span class="fv" data-field="nCinturones">—</span></div>
+                <div class="hv-field"><span class="fl">N° Airbag</span><span class="fv" data-field="nAirbag">—</span></div>
+              </div>
+            </div>
+            <div class="hv-section">
+              <div class="hv-section-title"><i class="bi bi-file-text"></i> Documentación</div>
+              <div class="hv-grid">
+                <div class="hv-field"><span class="fl">Manifiesto Import.</span><span class="fv" data-field="manifiesto">—</span></div>
+                <div class="hv-field"><span class="fl">Rev. Tecnomecánica</span><span class="fv" data-field="tecnomecanica">—</span></div>
+                <div class="hv-field"><span class="fl">Licencia Tránsito</span><span class="fv" data-field="licencia">—</span></div>
+                <div class="hv-field"><span class="fl">Póliza</span><span class="fv" data-field="poliza">—</span></div>
+                <div class="hv-field"><span class="fl">SOAT</span><span class="fv" data-field="soat">—</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="hv-two-col" style="margin-top:8px;">
+            <div class="hv-section">
+              <div class="hv-section-title"><i class="bi bi-droplet"></i> Elementos de Consumo</div>
+              <div class="hv-grid">
+                <div class="hv-field"><span class="fl">Combustible</span><span class="fv" data-field="combustible">—</span></div>
+                <div class="hv-field"><span class="fl">Aceite Motor</span><span class="fv" data-field="aceiteMotor">—</span></div>
+                <div class="hv-field"><span class="fl">Aceite Hidráulico</span><span class="fv" data-field="aceiteHidraulico">—</span></div>
+                <div class="hv-field"><span class="fl">Refrigerante</span><span class="fv" data-field="refrigerante">—</span></div>
+              </div>
+            </div>
+            <div class="hv-section">
+              <div class="hv-section-title"><i class="bi bi-clipboard-check"></i> Control de Mantenimiento</div>
+              <div class="hv-grid">
+                <div class="hv-field"><span class="fl">Ficha Técnica</span><span class="fv" data-field="fichaTecnica">—</span></div>
+                <div class="hv-field"><span class="fl">Manual</span><span class="fv" data-field="manual">—</span></div>
+                <div class="hv-field"><span class="fl">Periodicidad Mtto.</span><span class="fv" data-field="periodicidad">—</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="hv-section">
+            <div class="hv-section-title"><i class="bi bi-tools" style="color:var(--green)"></i> Últimos 4 Mantenimientos Preventivos</div>
+            <table class="hv-mtto-table">
+              <thead><tr><th style="width:40px">N°</th><th style="width:110px">Fecha</th><th style="width:130px">Horómetro/Km</th><th>Descripción del Trabajo</th><th style="width:130px">Orden de Trabajo</th></tr></thead>
+              <tbody id="hv-mtto-prev"><tr class="empty-row"><td colspan="5">Sin registros de mantenimientos preventivos</td></tr></tbody>
+            </table>
+          </div>
+          <div class="hv-section">
+            <div class="hv-section-title"><i class="bi bi-wrench" style="color:var(--red)"></i> Últimos 4 Mantenimientos Correctivos</div>
+            <table class="hv-mtto-table">
+              <thead><tr><th style="width:40px">N°</th><th style="width:110px">Fecha</th><th style="width:130px">Horómetro/Km</th><th>Trabajo Realizado</th><th style="width:130px">Orden de Trabajo</th></tr></thead>
+              <tbody id="hv-mtto-corr"><tr class="empty-row"><td colspan="5">Sin registros de mantenimientos correctivos</td></tr></tbody>
+            </table>
+          </div>
+          <div class="hv-section">
+            <div class="hv-section-title"><i class="bi bi-chat-left-text"></i> Observaciones</div>
+            <div style="padding:14px;background:var(--gray-50);border-radius:8px;font-size:13px;color:var(--gray-600);min-height:60px;" data-field="observaciones">—</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+
+
+<!-- ===== FIREBASE MODULE ===== -->
+<script type="module">
+import{initializeApp}from"https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+import{getAuth,onAuthStateChanged,signInWithEmailAndPassword,createUserWithEmailAndPassword,signOut}from"https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
+// ALL imports needed: setDoc, writeBatch, onSnapshot
+import{collection,addDoc,setDoc,serverTimestamp,query,where,getDocs,doc,getDoc,getFirestore,orderBy,writeBatch,onSnapshot}from"https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+
+const app=initializeApp({apiKey:"AIzaSyDlO-XhUuitM6QN6cpam3SkeqpGcktFbWw",authDomain:"fir-app-tuto-d20d5.firebaseapp.com",projectId:"fir-app-tuto-d20d5",storageBucket:"fir-app-tuto-d20d5.firebasestorage.app",messagingSenderId:"754290122904",appId:"1:754290122904:web:d543ae6297e15f9f0930ed"});
+const auth=getAuth(app),db=getFirestore(app);
+
+window.operadorActivo=null;window.ipeActivo=null;window.tipoLinea=null;window.coleccion=null;
+window.inspeccionActualId=null;window.inspeccionActualData=null;window.itemsChecklist=[];
+
+// Checklist data
+const rawA=["Motor (Nivel de fluido, estado de soportes y correas, control de fugas)","Radiador (Nivel de liquido, estado de ventilador, control de fugas)","*Dirección (Nivel de fluido, estado de botellas hidráulicas, control de fugas)","Tanques de combustible (Estado de Abrazaderas y Soportes)","Tanque hidráulico (Nivel de aceite, estado de abrazaderas)","Baterías (Estado de Bornes y cables)","Exosto (Estado de Soportes y control de escapes)","*Llantas (Estado de labrado, presión de inflado, pernos)","*Luces (Frontales, traseras, direccionales, alarma reversa, cabina)","*Frenos (de Servicio y Parada, control de fugas)","Mandos de movimientos (articulación, cuchilla, marcha, timón, pedales)","Estado hoja vertedera","Estado giro circulo","Estado de la barra de tiro","Cilindros hidráulicos en buen estado","Estado de la transmisión","Ripper (Estado y ajuste)","Herramienta de trabajo (Escarificadores, cuchillas, cucharon, hoja, pala, balde)","Escaleras y pasamanos cabina","*Espejos retrovisores laterales y central cabina","**Silla con apoyacabezas (amortiguación y tapicería)","**Cinturones de seguridad","*Pitos (Delantero y alarma de Reverso)","**Limpia brisas (brazo y Plumillas)","*Botón de parada de emergencia","*Estado de cauchos amortiguadores cilindro","Oruga (zapatas, cadenas, tensión)","Mecanismo de bloque de mandos","Corona tornamesa (Ajuste y fugas)","Fugas hidráulicas","Estado pasadores","Mecanismo giro y ecualización cuba","Manguera de agua y alta presión","Dispositivo de agua","Bastidor conexión armazón soporte","**Cabina antivuelco (R.O.P.S)","**Vidrio panorámico laminado","*Tablero de Instrumentos","Timón (Estado y ajuste)","Cierre y Bloqueo puertas cabina","Estado puertas laterales motor","Radio FM","Aire Acondicionado","Latonería y pintura cabina","**Cinta reflectiva","Equipo prevención (Botiquín, Extintor, Kit Ambiental)","Desinfección interna"];
+const rawB=["Documentos (Licencia, SOAT, Revisión Tecnicomecánica)","Tarjeta Operación y Extracto Contrato","Certificado Prueba hidrostática Carrotanques","Motor (Nivel fluido, soportes, correas, fugas)","Radiador (Nivel líquido, ventilador, fugas)","* Dirección (Nivel fluido, terminales, Alineación)","Tanques combustible (Abrazaderas y Soportes)","Tanque hidraulico (Nivel aceite, abrazaderas, fugas)","Baterías (Bornes y cables)","Exosto (Soportes y escapes)","Suspensión (resortes, grapas, amortiguadores)","Transmisión (cardan, crucetas, Cadena seguridad)","Chasís (guardapolvos)","Carroceria (tablas y compuertas)","* Llantas (labrado, presión, pernos)","* Luces (Frontales, Direccionales, frenado, reversa, laterales, cabina)","* Frenos (Servicio, Parada, fugas)","Estribos, escaleras, pasamanos","Mangueras neumáticas y acoples trailer","Quinta rueda (tornillos y ajuste)","Volco y compuerta (corrosión, fisuras, pasadores)","Sistema levante volco (Gato hidráulico, fugas)","Sistema cierre compuerta (Ganchos)","Sistema Carpado (Carpa, cierre)","Tanque (corrosión, fisuras, grapas, anclajes)","Puesta a Tierra","Línea de Vida (tensores, guaya)","Arnés de seguridad con eslinga","Kit atención Derrames","Hoja seguridad y tarjeta emergencia ACPM","* Espejos (Retrovisores laterales y central)","** Silla con apoyacabezas (amortiguación, tapicería)","** Cinturones de seguridad","* Pitos (Delantero y Reverso)","** Limpia brisas (brazo y Plumillas)","** Vidrio panorámico laminado","* Tablero Instrumentos","* Airbag","Cierre y Bloqueo puertas","Radio FM","Aire Acondicionado","Latonería y pintura cabina","Amarres (Cadenas, tensores, bandas)","Platón (Corrosión, fisuras, ajuste)","Barra antivolco","Letreros y señalización","** Cinta reflectiva","Sistema cierre Compuerta","Kit Carretera (Llaves, Alicate, Gato, Chaleco, Linterna, Botiquín, Extintor, Conos, Tacos, Repuesto)","Desinfección interna"];
+function toItems(a){return a.map(t=>({text:t,required:t.includes('*')}))}
+const checklistAmarilla=toItems(rawA),checklistBlanca=toItems(rawB);
+function nameFromText(t){return t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^\w]+/g,"_").replace(/^_|_$/g,"")}
+
+// ===== AUTH =====
+onAuthStateChanged(auth, async user => {
+  const as = document.getElementById('authScreen');
+  if (user) {
+    as.classList.add('hidden');
+    window.operadorActivo = user.email;
+    window.nombreOperador = user.displayName || user.email.split("@")[0].replace(/\./g, " ").replace(/\b\w/g, l => l.toUpperCase());
+    
+    // ... (todo tu código de nombres y avatar igual) ...
+    document.getElementById('topbarUserName').textContent = window.nombreOperador;
+    document.getElementById('menuUserName').textContent = window.nombreOperador;
+    document.getElementById('avatarInitials').textContent = window.nombreOperador.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+
+    try {
+      const ud = await getDoc(doc(db, "usuarios", user.uid));
+      if (ud.exists() && ud.data().ipe) {
+        window.ipeActivo = ud.data().ipe;
+        showToast('success', `Bienvenido, ${window.nombreOperador}`);
+      } else {
+        window.ipeActivo = null;
+        mostrarModalIPE(user.uid);
+      }
+    } catch (e) {
+      window.ipeActivo = null;
+      mostrarModalIPE(user.uid);
+    }
+
+    // --- CARGA INICIAL ---
+    cargarEquipos('todos'); // Carga la tabla
+    window.activarContadoresGlobales(); // <--- AGREGADO: Activa los números de las tarjetas
+
+  } else {
+    as.classList.remove('hidden');
+    window.operadorActivo = null;
+    window.ipeActivo = null;
+  }
+});
+
+function mostrarModalIPE(uid){
+  document.getElementById('ipeOverlay').classList.add('show');
+  document.getElementById('ipeModalSave').onclick=async()=>{
+    const ipe=document.getElementById('ipe-modal-select').value;
+    if(!ipe){showToast('error','Selecciona un IPE');return}
+    try{await setDoc(doc(db,"usuarios",uid),{email:window.operadorActivo,ipe,updatedAt:serverTimestamp()},{merge:true});window.ipeActivo=ipe;document.getElementById('ipeOverlay').classList.remove('show');showToast('success','IPE asignado: '+ipe)}
+    catch(e){showToast('error','Error: '+e.message)}
+  };
+}
+
+document.getElementById('loginForm').addEventListener('submit',async e=>{e.preventDefault();document.getElementById('loginError').textContent='';try{await signInWithEmailAndPassword(auth,document.getElementById('login-email').value,document.getElementById('login-password').value)}catch(err){document.getElementById('loginError').textContent=err.code==='auth/wrong-password'?'Contraseña incorrecta':err.code==='auth/user-not-found'?'Usuario no encontrado':'Error: '+err.message}});
+document.getElementById('registerForm').addEventListener('submit',async e=>{e.preventDefault();const em=document.getElementById('reg-email').value,pw=document.getElementById('reg-password').value,ipe=document.getElementById('reg-ipe').value,re=document.getElementById('regError');re.textContent='';if(!ipe){re.textContent='El IPE es obligatorio';return}try{const c=await createUserWithEmailAndPassword(auth,em,pw);await setDoc(doc(db,"usuarios",c.user.uid),{email:em,ipe,createdAt:serverTimestamp()});showToast('success','Cuenta creada')}catch(err){re.textContent=err.code==='auth/email-already-in-use'?'Ya registrado':err.code==='auth/weak-password'?'Contraseña 6+ caracteres':'Error: '+err.message}});
+window.cerrarSesion=()=>signOut(auth);
+
+// ===== EQUIPOS: UN SOLO FLUJO LIMPIO =====
+// onSnapshot escucha en tiempo real. Al subir Excel → writeBatch → Firestore → onSnapshot actualiza la tabla automáticamente.
+let unsubEquipos=null; // Para desuscribirse al cambiar filtro
+let proyectoActual='todos';
+
+function cargarEquipos(proyecto){
+  proyectoActual=proyecto;
+  const container=document.getElementById('equipos-table-container');
+  const countEl=document.getElementById('eqCount');
+  const labelEl=document.getElementById('uploadProjectLabel');
+  if(labelEl)labelEl.innerHTML=`Proyecto: <strong>${proyecto==='todos'?'Todos':proyecto}</strong>`;
+  container.innerHTML='<div class="eq-loading"><i class="bi bi-arrow-repeat" style="animation:spin 1s linear infinite;display:inline-block"></i> Cargando equipos...</div>';
+
+  // Desuscribir listener anterior
+  if(unsubEquipos)unsubEquipos();
+
+  let q;
+  if(proyecto==='todos'){q=query(collection(db,"equipos"),orderBy("nombre","asc"))}
+  else { q = query(collection(db, "equipos"), where("proyecto", "==", proyecto.toLowerCase())) }
+
+  // onSnapshot: tiempo real
+  unsubEquipos=onSnapshot(q,(snap)=>{
+    if(snap.empty){
+      container.innerHTML=`<div class="eq-empty"><i class="bi bi-inbox"></i><p>No hay equipos${proyecto!=='todos'?' en <strong>'+proyecto+'</strong>':''}.<br>Sube un Excel con la pestaña de arriba.</p></div>`;
+      if(countEl)countEl.textContent='';
+      return;
+    }
+    const equipos=snap.docs.map(d=>({id:d.id,...d.data()}));
+    if(countEl)countEl.textContent=`${equipos.length} equipo${equipos.length!==1?'s':''}`;
+    const stMap={operativo:'active',mantenimiento:'maint',fuera_servicio:'down'};
+    const stLabel={operativo:'Operativo',mantenimiento:'En Mtto.',fuera_servicio:'Fuera Servicio'};
+    container.innerHTML=`<div class="card"><div class="card-body" style="padding:0"><table class="eq-table"><thead><tr><th>Equipo</th><th>Código</th><th>Estado</th><th>Proyecto</th></tr></thead><tbody>${equipos.map(eq=>{
+      const st=stMap[eq.estado]||'active';const sl=stLabel[eq.estado]||eq.estado||'—';
+      return`<tr><td class="eq-name">${eq.nombre||'—'}</td><td>${eq.codigo||'—'}</td><td><span class="eq-status ${st}"><span class="eq-status-dot"></span>${sl}</span></td><td style="text-transform:capitalize">${eq.proyecto||'—'}</td></tr>`}).join('')}</tbody></table></div></div>`;
+  },(error)=>{
+    console.error("Error onSnapshot:",error);
+    if(error.code==='failed-precondition'){container.innerHTML='<div class="eq-empty"><i class="bi bi-exclamation-triangle"></i><p>Se requiere un índice en Firebase Console.<br>Revisa la consola del navegador para el enlace.</p></div>'}
+    else{container.innerHTML=`<div class="eq-empty"><i class="bi bi-exclamation-triangle"></i><p>Error: ${error.message}</p></div>`}
+  });
+}
+window.cargarEquipos=cargarEquipos;
+
+// ===== SUBIR EXCEL: un solo handler, asigna proyecto automáticamente =====
+document.getElementById('excelInput').addEventListener('change',async(event)=>{
+  const file=event.target.files[0];
+  if(!file)return;
+  // El proyecto se toma del tab activo
+  let proyecto=proyectoActual;
+  if(proyecto==='todos'){
+    showToast('error','Selecciona un proyecto específico (Rubiales, Scatec o Guajira) antes de importar.');
+    event.target.value='';return;
+  }
+  showToast('info',`Importando equipos para ${proyecto}...`);
+
+  const reader=new FileReader();
+  reader.onload=async(e)=>{
+    try{
+      const data=new Uint8Array(e.target.result);
+      const wb=XLSX.read(data,{type:'array'});
+      const raw=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
+      if(raw.length===0){showToast('error','El archivo está vacío');return}
+
+      const batch=writeBatch(db);
+      let count=0;
+      raw.forEach(item=>{
+        // Buscar campos flexibles
+        const getVal=(keys)=>{const found=Object.keys(item).find(k=>keys.includes(k.toLowerCase().trim()));return found?String(item[found]).trim():null};
+        const cod=getVal(['codigo','id','cod','comeq'])||'sin-codigo-'+count;
+        const nom=getVal(['equipo','nombre','descripcion','cema'])||'N/A';
+        const est=(getVal(['estado','condicion'])||'operativo').toLowerCase();
+        // ID único basado en código para evitar duplicados
+        const idDoc=cod.replace(/[^\w]/g,'_').toLowerCase();
+        batch.set(doc(db,"equipos",idDoc),{nombre:nom,codigo:cod,estado:est,proyecto:proyecto.toLowerCase(),actualizado:serverTimestamp()},{merge:true});
+        count++;
+      });
+      await batch.commit();
+      showToast('success',`✅ ${count} equipos importados a ${proyecto}`);
+      event.target.value=''; // Reset input
+    }catch(err){console.error("Error Excel:",err);showToast('error','Error: '+err.message)}
+  };
+  reader.readAsArrayBuffer(file);
+});
+
+// ===== PREOPERACIONAL =====
+window.mostrarMenuPreop=function(){document.getElementById('preopContent').innerHTML=`<button class="back-btn" onclick="window.navTo('inicio')"><i class="bi bi-arrow-left"></i> Inicio</button><div style="text-align:center;margin-bottom:16px"><h2 style="font-family:'Space Grotesk',sans-serif;font-weight:700;color:var(--navy);font-size:22px">✅ Inspección Preoperacional</h2><p style="color:var(--gray-500);font-size:14px">Seleccione tipo de línea</p></div><div class="preop-menu"><div class="preop-card amarilla" onclick="window.iniciarPreop('amarilla')"><div class="preop-icon">🏗️</div><h3>Línea Amarilla</h3><p>Maquinaria pesada</p></div><div class="preop-card blanca" onclick="window.iniciarPreop('blanca')"><div class="preop-icon">🚛</div><h3>Línea Blanca</h3><p>Vehículos</p></div></div>`};
+window.iniciarPreop=function(tipo){window.tipoLinea=tipo;window.coleccion=tipo==="amarilla"?"inspecciones_linea_amarilla":"inspecciones_linea_blanca";renderFormPreop(tipo,tipo==="amarilla"?checklistAmarilla:checklistBlanca)};
+
+function renderFormPreop(tipo,items){
+  window.itemsChecklist=items;const titulo=tipo==="amarilla"?"Línea Amarilla":"Línea Blanca";const c=document.getElementById('preopContent');
+  let html=items.map(item=>{const n=nameFromText(item.text);return`<div class="checklist-row"><div class="checklist-text">${item.text}</div><div class="checklist-actions"><input type="radio" name="${n}" id="${n}_b" value="B"><label for="${n}_b"><i class="bi bi-check-lg"></i> B</label><input type="radio" name="${n}" id="${n}_m" value="M"><label for="${n}_m"><i class="bi bi-x-lg"></i> M</label><input type="radio" name="${n}" id="${n}_na" value="NA"><label for="${n}_na">N/A</label></div></div>`}).join('');
+  c.innerHTML=`<button class="back-btn" onclick="window.mostrarMenuPreop()"><i class="bi bi-arrow-left"></i> Volver</button><h2 style="font-family:'Space Grotesk',sans-serif;font-weight:700;color:var(--navy);font-size:20px;margin-bottom:20px">✅ Preoperacional — ${titulo}</h2><div class="preop-status-bar"><div class="preop-status-item"><i class="bi bi-person-circle"></i><div><div class="ps-label">Operador</div><div class="ps-value">${window.nombreOperador||'—'}</div></div></div><div class="preop-status-item"><i class="bi bi-tools"></i><div><div class="ps-label">IPE</div><div class="ps-value">${window.ipeActivo||'—'}</div></div></div></div><div class="preop-form-section"><h4><i class="bi bi-info-circle"></i> Datos del Equipo</h4><div class="form-row" style="margin-bottom:12px"><div class="form-group"><label class="form-label">CEMA *</label><input class="form-input" id="preop-cema" placeholder="Código CEMA" required></div><div class="form-group"><label class="form-label">COMEQ</label><input class="form-input" id="preop-comeq" placeholder="Código COMEQ"></div></div><div class="form-row" style="margin-bottom:12px"><div class="form-group"><label class="form-label">Tipo Equipo *</label><select class="form-select" id="preop-tipo"><option value="">Seleccionar...</option><option>Excavadora</option><option>Camión</option><option>Motoniveladora</option><option>Volqueta</option><option>Retroexcavadora</option><option>Compactador</option><option>Cargador</option><option>Grúa</option></select></div><div class="form-group"><label class="form-label">Horómetro</label><input class="form-input" id="preop-horometro" type="number" placeholder="Ej: 3245"></div></div><div class="form-group"><label class="form-label">Ubicación</label><input class="form-input" id="preop-ubicacion" placeholder="Frente de obra, taller..."></div></div><div class="preop-form-section"><h4><i class="bi bi-list-check" style="color:var(--yellow)"></i> Checklist — * Seg. Activa · ** Seg. Pasiva</h4><div style="max-height:500px;overflow-y:auto" id="preop-checklist">${html}</div></div><div class="preop-form-section"><h4><i class="bi bi-chat-text"></i> Observaciones</h4><textarea class="form-textarea" id="preop-obs" placeholder="Observaciones..."></textarea></div><div id="preop-post-actions" style="display:none"><div class="preop-post-actions"><div class="preop-post-btn" onclick="window.exportarPDF()"><i class="bi bi-file-earmark-pdf"></i>Exportar PDF</div><div class="preop-post-btn" onclick="window.verHistorial()"><i class="bi bi-clock-history"></i>Historial</div></div></div><button class="preop-save-btn disabled" id="preop-guardar" disabled onclick="window.guardarInspeccion()"><i class="bi bi-save"></i> Guardar Inspección</button>`;
+  document.querySelectorAll('#preop-checklist input[type="radio"]').forEach(r=>r.addEventListener('change',validarChecklist));
+}
+// Pégalo así al final de tu script
+window.filtrarProyecto = function(elemento, nombreProyecto) {
+    console.log("Cambiando al proyecto:", nombreProyecto);
+
+    // 1. Marcar visualmente la tarjeta como activa
+    document.querySelectorAll('.nav-card').forEach(card => card.classList.remove('active'));
+    elemento.classList.add('active');
+
+    // 2. Actualizar la variable de control (importante para que el Excel sepa a qué proyecto subir)
+    if (typeof proyectoActual !== 'undefined') {
+        proyectoActual = nombreProyecto;
+    }
+
+    // 3. Actualizar el texto visual de la barra de carga
+    const labelEl = document.getElementById('uploadProjectLabel');
+    if (labelEl) {
+        labelEl.innerHTML = `Proyecto: <strong>${nombreProyecto === 'todos' ? 'Todos' : nombreProyecto.toUpperCase()}</strong>`;
+    }
+
+    // 4. Llamar a la función que ya tienes y que carga los datos de Firebase
+    if (typeof window.cargarEquipos === 'function') {
+        window.cargarEquipos(nombreProyecto);
+    } else {
+        console.error("Error: La función cargarEquipos no se encontró. Verifica el nombre.");
+    }
+};
+window.activarContadoresGlobales = function() {
+    console.log("Iniciando conteo de flota...");
+    
+    // Escuchamos la colección completa de equipos
+    onSnapshot(collection(db, "equipos"), (snap) => {
+        // Inicializamos los contadores en cero
+        let counts = {
+            total: 0,
+            rubiales: 0,
+            scatec: 0,
+            guajira: 0
+        };
+
+        snap.forEach(doc => {
+            const data = doc.data();
+            counts.total++; // Suma al total general
+
+            // Verificamos a qué proyecto pertenece (en minúsculas para evitar errores)
+            if (data.proyecto) {
+                const proy = data.proyecto.toLowerCase().trim();
+                if (counts.hasOwnProperty(proy)) {
+                    counts[proy]++;
+                }
+            }
+        });
+
+        // Actualizamos los elementos HTML con los nuevos valores
+        // Asegúrate de que los IDs coincidan con tu HTML
+        if(document.getElementById('stat-total')) document.getElementById('stat-total').textContent = counts.total;
+        if(document.getElementById('stat-rubiales')) document.getElementById('stat-rubiales').textContent = counts.rubiales;
+        if(document.getElementById('stat-scatec')) document.getElementById('stat-scatec').textContent = counts.scatec;
+        if(document.getElementById('stat-guajira')) document.getElementById('stat-guajira').textContent = counts.guajira;
+        
+        console.log("Contadores actualizados:", counts);
+    }, (error) => {
+        console.error("Error en contadores:", error);
+    });
+};
+
+
+// No olvides llamar a la función cuando el usuario inicie sesión
+// activarContadoresGlobales();
+function validarChecklist(){const ch={};document.querySelectorAll('#preop-checklist input[type="radio"]:checked').forEach(r=>ch[r.name]=r.value);const f=window.itemsChecklist.filter(i=>i.required).map(i=>nameFromText(i.text)).filter(n=>!["B","M","NA"].includes(ch[n]));const btn=document.getElementById('preop-guardar');if(f.length===0){btn.disabled=false;btn.className='preop-save-btn ready'}else{btn.disabled=true;btn.className='preop-save-btn disabled';btn.title=`Faltan ${f.length} ítems`}}
+
+window.guardarInspeccion=async function(){const btn=document.getElementById('preop-guardar');btn.innerHTML='<span style="display:inline-block;width:16px;height:16px;border:2px solid white;border-top-color:transparent;border-radius:50%;animation:spin .6s linear infinite"></span> Guardando...';btn.disabled=true;try{const cema=document.getElementById('preop-cema').value.trim(),tipo=document.getElementById('preop-tipo').value;if(!cema){showToast('error','CEMA obligatorio');throw new Error('CEMA')}if(!tipo){showToast('error','Seleccione tipo');throw new Error('Tipo')}if(!window.ipeActivo){showToast('error','IPE no definido');throw new Error('IPE')}const cl={};document.querySelectorAll('#preop-checklist input[type="radio"]:checked').forEach(r=>cl[r.name]=r.value);const data={equipo:{cema,comeq:document.getElementById('preop-comeq').value.trim()||"—",tipo,horometro:document.getElementById('preop-horometro').value.trim()||"—",ubicacion:document.getElementById('preop-ubicacion').value.trim()||"—"},operador:window.operadorActivo,ipe:window.ipeActivo,checklist:cl,observaciones:document.getElementById('preop-obs').value.trim()||"Sin observaciones",fecha:serverTimestamp(),tipoLinea:window.tipoLinea};const ref=await addDoc(collection(db,window.coleccion),data);window.inspeccionActualId=ref.id;window.inspeccionActualData=data;window._lastCema=cema;document.querySelectorAll('.preop-form-section').forEach(s=>s.style.display='none');btn.style.display='none';document.getElementById('preop-post-actions').style.display='block';showToast('success','✅ Inspección guardada')}catch(err){console.error(err);showToast('error','Error: '+err.message);btn.innerHTML='<i class="bi bi-save"></i> Guardar Inspección';validarChecklist()}};
+
+// PDF
+window.exportarPDF=async function(id=null,colEx=null){let col=colEx||window.coleccion;if(!col){showToast('error','Colección no determinada');return}try{const{jsPDF}=window.jspdf;const pdf=new jsPDF("landscape","mm","a4");function nf(d){const dt=new Date(d);return new Date(Date.UTC(dt.getFullYear(),dt.getMonth(),dt.getDate()))}let db2;if(id){const s=await getDoc(doc(db,col,id));db2=s.data()}else{db2=window.inspeccionActualData}if(!db2?.equipo?.cema){showToast('error','Datos no válidos');return}const cema=db2.equipo.cema,fi=nf(db2.fecha?.toDate?db2.fecha.toDate():new Date());function gS(f){const b=nf(f),l=new Date(b);l.setUTCDate(b.getUTCDate()-b.getUTCDay()+1);l.setUTCHours(0,0,0,0);return Array.from({length:7},(_,i)=>{const d=new Date(l);d.setUTCDate(l.getUTCDate()+i);d.setUTCHours(0,0,0,0);return d})}function ff(d){return d.toLocaleDateString("es-CO")}const sem=gS(fi);const q2=query(collection(db,col),where("equipo.cema","==",cema));const sn=await getDocs(q2);const is=sn.docs.map(dc=>({id:dc.id,data:dc.data(),fecha:nf(dc.data().fecha?.toDate()||new Date())})).filter(i=>Math.abs((fi-i.fecha)/864e5)<=7).sort((a,b)=>b.fecha-a.fecha);if(!id&&window.inspeccionActualData)is.unshift({id:'actual',data:db2,fecha:fi});sem.forEach(dia=>{if(!is.some(i=>i.fecha.getTime()===dia.getTime()))is.push({id:'vacio',data:{checklist:{},operador:''},fecha:dia})});is.sort((a,b)=>b.fecha-a.fecha);const tl=(db2.tipoLinea||window.tipoLinea||"DESCONOCIDA").toUpperCase();pdf.setFont("helvetica","bold");pdf.setFontSize(22);pdf.text("INSPECCION PREOPERACIONAL",148,18,{align:"center"});pdf.setFontSize(18);pdf.text(tl,148,25,{align:"center"});pdf.setFontSize(14);pdf.text(`EQUIPO: ${cema}`,148,35,{align:"center"});pdf.setFontSize(12);pdf.text(`SEMANA | ${ff(sem[0])} - ${ff(sem[6])}`,148,43,{align:"center"});const eq=db2.equipo||{};pdf.autoTable({startY:55,theme:"grid",styles:{font:"helvetica",fontSize:10,cellPadding:4},head:[[{content:"DATOS DEL EQUIPO",colSpan:5,styles:{halign:"center",fontSize:13,fontStyle:"bold",fillColor:[40,40,40],textColor:255}}]],body:[[`CEMA: ${eq.cema}`,`COMEQ: ${eq.comeq}`,`TIPO: ${eq.tipo}`,`HORÓMETRO: ${eq.horometro}`,`UBICACIÓN: ${eq.ubicacion}`],[`OPERADOR: ${db2.operador?db2.operador.split("@")[0]:"---"}`,`IPE: ${db2.ipe}`,"","",""]]});let yP=pdf.lastAutoTable.finalY+10;if(!db2.checklist){showToast('error','Checklist no encontrado');return}const ES={B:{text:"X",bg:[39,174,96],color:255},M:{text:"X",bg:[192,57,43],color:255},NA:{text:"X",bg:[189,195,199],color:0}};const h1=[{content:"ITEM",rowSpan:2}];sem.forEach(d=>h1.push({content:ff(d),colSpan:3,styles:{halign:"center"}}));const h2=sem.flatMap(()=>["B","M","NA"]);const items=Object.keys(db2.checklist);const rows=items.map(item=>{const row=[item.replace(/_/g," ").toUpperCase()];sem.forEach(dia=>{const insp=is.find(i=>i.fecha.getTime()===dia.getTime());const est=insp?insp.data.checklist[item]:null;["B","M","NA"].forEach(k=>{row.push(est===k?{content:ES[k].text,styles:{fillColor:ES[k].bg,textColor:ES[k].color,fontStyle:"bold"}}:"")})});return row});pdf.autoTable({startY:yP+15,theme:"grid",head:[h1,h2],body:rows,styles:{fontSize:7,halign:"center",valign:"middle",lineWidth:.5,cellPadding:2,overflow:"linebreak"},headStyles:{fillColor:[41,128,185],textColor:255,fontStyle:"bold",fontSize:8},columnStyles:{0:{cellWidth:42,halign:"left"}}});pdf.save(`MOVA_${cema}_${ff(sem[0])}.pdf`);showToast('success','PDF generado')}catch(err){console.error("PDF Error:",err);showToast('error','Error PDF: '+err.message)}};
+
+// Historial
+window.verHistorial=async function(){let cema=window._lastCema;const ci=document.getElementById('preop-cema');if(ci&&ci.value.trim())cema=ci.value.trim();if(!cema){showToast('error','No hay equipo');return}const c=document.getElementById('preopContent');c.innerHTML=`<button class="back-btn" onclick="window.mostrarMenuPreop()"><i class="bi bi-arrow-left"></i> Volver</button><h2 style="font-family:'Space Grotesk',sans-serif;font-weight:700;color:var(--navy);font-size:20px;margin-bottom:20px">📚 Historial — ${cema}</h2><div id="historial-lista">Cargando...</div>`;try{const q2=query(collection(db,window.coleccion),where("equipo.cema","==",cema));const snap=await getDocs(q2);const lista=document.getElementById('historial-lista');if(snap.empty){lista.innerHTML='<p style="color:var(--gray-400);text-align:center;padding:40px">No hay historial</p>';return}const insp=Array.from(snap.docs).map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.fecha?.toDate()||0)-(a.fecha?.toDate()||0));lista.innerHTML=`<div class="historial-grid">${insp.map(i=>{const f=i.fecha?.toDate?i.fecha.toDate().toLocaleDateString("es-CO"):"Sin fecha";return`<div class="historial-card"><div class="h-date">${f}</div><div class="h-type">${i.equipo?.tipo||'—'} · ${i.tipoLinea||'—'}</div><button class="h-btn" onclick="window.exportarPDF('${i.id}','${window.coleccion}')"><i class="bi bi-download"></i> PDF</button></div>`}).join('')}</div>`}catch(err){document.getElementById('historial-lista').innerHTML=`<p style="color:var(--red)">Error: ${err.message}</p>`}};
+
+window.initPreopPage=function(){window.mostrarMenuPreop()};
+
+// ===== HOJA DE VIDA =====
+let hvEquipos=[],hvEquipoActual=null,hvUnsub=null,hvEditMode=false;
+const HV_FIELD_MAP={'placa':'placa','matricula':'matricula','tipo/clase':'tipo','tipoclase':'tipo','tipo':'tipo','marca':'marca','linea':'linea','modelo (ano)':'modelo','modelo':'modelo','serial':'serial','color':'color','propietario':'propietario','capacidad':'capacidad','servicio':'servicio','cilindraje':'cilindraje','fecha adquisicion':'fechaAdquisicion','n° motor':'nMotor','n motor':'nMotor','n° chasis':'nChasis','n chasis':'nChasis','n° llantas':'nLlantas','n llantas':'nLlantas','n° velocidades':'nVelocidades','n velocidades':'nVelocidades','n° cinturones':'nCinturones','n cinturones':'nCinturones','n° airbag':'nAirbag','n airbag':'nAirbag','combustible':'combustible','aceite motor':'aceiteMotor','aceite hidraulico':'aceiteHidraulico','refrigerante':'refrigerante','manifiesto import.':'manifiesto','manifiesto import':'manifiesto','rev. tecnomecanica':'tecnomecanica','rev tecnomecanica':'tecnomecanica','licencia transito':'licencia','poliza':'poliza','soat':'soat','ficha tecnica':'fichaTecnica','manual':'manual','periodicidad mtto.':'periodicidad','periodicidad mtto':'periodicidad','estado':'estado','observaciones':'observaciones'};
+function hvNormKey(s){return String(s||'').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").trim()}
+function hvFormatFecha(f){if(!f)return '—';if(f.toDate)f=f.toDate();const d=new Date(f);if(isNaN(d))return String(f);return d.toLocaleDateString("es-CO",{year:'numeric',month:'short',day:'numeric'})}
+
+function hvSubscribir(){
+  if(hvUnsub)return;
+  hvUnsub=onSnapshot(query(collection(db,"hojas_vida"),orderBy("placa","asc")),(snap)=>{
+    hvEquipos=snap.docs.map(d=>({id:d.id,...d.data()}));
+    console.log(`Hojas de vida: ${hvEquipos.length}`);
+  },(err)=>console.error("Error hojas_vida:",err));
+}
+
+function hvSetupSearch(){
+  const input=document.getElementById('hv-search'),sug=document.getElementById('hv-suggest');
+  if(!input||input.dataset.bound)return;
+  input.dataset.bound='1';
+  input.addEventListener('input',()=>{
+    const term=input.value.toLowerCase().trim();
+    if(!term){sug.classList.remove('show');return}
+    const matches=hvEquipos.filter(eq=>(eq.placa||'').toLowerCase().includes(term)||(eq.marca||'').toLowerCase().includes(term)||(eq.tipo||'').toLowerCase().includes(term)||(eq.linea||'').toLowerCase().includes(term)).slice(0,8);
+    if(matches.length===0){sug.innerHTML='<div class="hv-suggest-item" style="color:var(--gray-400);text-align:center;">Sin resultados</div>'}
+    else{
+      sug.innerHTML=matches.map(eq=>`<div class="hv-suggest-item" data-placa="${eq.placa}"><strong>${eq.placa||'—'}</strong> ${eq.marca||''} ${eq.linea||''}<span class="sg-meta">${eq.tipo||''} · ${eq.propietario||''}</span></div>`).join('');
+      sug.querySelectorAll('.hv-suggest-item').forEach(it=>{it.addEventListener('click',()=>{hvSeleccionar(it.dataset.placa);input.value=it.dataset.placa;sug.classList.remove('show')})});
+    }
+    sug.classList.add('show');
+  });
+  document.addEventListener('click',e=>{if(!e.target.closest('.hv-search-wrap'))sug.classList.remove('show')});
+}
+
+function hvSeleccionar(placa){
+  const eq=hvEquipos.find(e=>e.placa===placa);
+  if(!eq){showToast('error','Equipo no encontrado');return}
+  hvEquipoActual=eq;hvEditMode=false;hvRender(eq);
+}
+
+function hvRender(eq){
+  document.getElementById('hv-empty').style.display='none';
+  document.getElementById('hv-cert').style.display='block';
+  document.getElementById('hv-meta-placa').textContent=eq.placa||'—';
+  document.getElementById('hv-meta-fecha').textContent=hvFormatFecha(eq.fechaAdquisicion);
+  const estadoEl=document.getElementById('hv-meta-estado');
+  const estado=(eq.estado||'').toLowerCase();
+  estadoEl.innerHTML=`<span class="hv-estado ${estado==='activo'?'activo':estado==='inactivo'?'inactivo':'mantenimiento'}">${eq.estado||'—'}</span>`;
+  document.querySelectorAll('#hv-cert [data-field]').forEach(el=>{
+    const field=el.dataset.field;const val=eq[field];
+    el.textContent=val||'—';el.classList.toggle('empty',!val);
+  });
+  const photoEl=document.getElementById('hv-photo');
+  if(eq.foto&&String(eq.foto).startsWith('http')){photoEl.innerHTML=`<img src="${eq.foto}" alt="Foto" onerror="this.parentElement.innerHTML='📷 Sin foto'">`}
+  else{photoEl.innerHTML='📷 Sin foto'}
+  hvToggleEditButtons(false);
+}
+
+function hvToggleEditButtons(editing){
+  document.getElementById('hv-btn-edit').style.display=editing?'none':'inline-flex';
+  document.getElementById('hv-btn-save').style.display=editing?'inline-flex':'none';
+  document.getElementById('hv-btn-cancel').style.display=editing?'inline-flex':'none';
+}
+
+function hvToggleEdit(){
+  hvEditMode=!hvEditMode;hvToggleEditButtons(hvEditMode);
+  document.querySelectorAll('#hv-cert [data-field]').forEach(el=>{
+    if(el.dataset.field==='fechaAdquisicion')return;
+    if(hvEditMode){
+      const val=hvEquipoActual[el.dataset.field]||'';
+      el.innerHTML=`<input type="text" class="fv-edit" value="${String(val).replace(/"/g,'&quot;')}" data-edit="${el.dataset.field}">`;
+    }else{
+      const val=hvEquipoActual[el.dataset.field];
+      el.textContent=val||'—';el.classList.toggle('empty',!val);
+    }
+  });
+}
+
+async function hvGuardarEdicion(){
+  const updates={};
+  document.querySelectorAll('#hv-cert input[data-edit]').forEach(inp=>{updates[inp.dataset.edit]=inp.value.trim()});
+  try{
+    const id=String(hvEquipoActual.placa).replace(/[^\w]/g,'_');
+    await setDoc(doc(db,"hojas_vida",id),{...updates,actualizado:serverTimestamp()},{merge:true});
+    Object.assign(hvEquipoActual,updates);hvEditMode=false;hvRender(hvEquipoActual);
+    showToast('success','Hoja de vida actualizada');
+  }catch(err){console.error(err);showToast('error','Error: '+err.message)}
+}
+
+function hvCancelarEdicion(){hvEditMode=false;hvRender(hvEquipoActual)}
+
+function hvSetupImport(){
+  const input=document.getElementById('hv-excel-input');
+  if(!input||input.dataset.bound)return;
+  input.dataset.bound='1';
+  input.addEventListener('change',async(e)=>{
+    const file=e.target.files[0];if(!file)return;
+    showToast('info','Procesando archivo...');
+    const reader=new FileReader();
+    reader.onload=async(ev)=>{
+      try{
+        const data=new Uint8Array(ev.target.result);
+        const wb=XLSX.read(data,{type:'array',cellDates:true});
+        const sheetName=wb.SheetNames.includes('BD')?'BD':wb.SheetNames[0];
+        const ws=wb.Sheets[sheetName];
+        const json=XLSX.utils.sheet_to_json(ws,{range:1,defval:''});
+        if(!json.length){showToast('error','Sin datos');return}
+        const batch=writeBatch(db);let count=0;
+        json.forEach(row=>{
+          const eq={};
+          Object.keys(row).forEach(k=>{
+            const norm=hvNormKey(k);const target=HV_FIELD_MAP[norm];
+            if(target){
+              let val=row[k];
+              if(val instanceof Date)val=val.toISOString().slice(0,10);
+              if(typeof val==='number'&&target==='modelo')val=String(Math.floor(val));
+              eq[target]=val!==''&&val!=null?String(val).trim():'';
+            }
+          });
+          if(!eq.placa)return;
+          const id=String(eq.placa).replace(/[^\w]/g,'_');
+          batch.set(doc(db,"hojas_vida",id),{...eq,actualizado:serverTimestamp()},{merge:true});
+          count++;
+        });
+        await batch.commit();
+        showToast('success',`${count} hojas de vida importadas`);
+        e.target.value='';
+      }catch(err){console.error("Import:",err);showToast('error','Error: '+err.message)}
+    };
+    reader.readAsArrayBuffer(file);
+  });
+}
+
+function hvExportarPDF(){
+  if(!hvEquipoActual){showToast('error','Selecciona un equipo');return}
+  try{
+    const{jsPDF}=window.jspdf;const pdf=new jsPDF("portrait","mm","a4");const eq=hvEquipoActual;
+    pdf.setFillColor(15,33,55);pdf.rect(0,0,210,25,'F');
+    pdf.setTextColor(255,255,255);pdf.setFont("helvetica","bold");pdf.setFontSize(14);
+    pdf.text("CERTIFICADO DE INTEGRIDAD MECÁNICA",105,12,{align:"center"});
+    pdf.setFontSize(9);pdf.setTextColor(244,180,0);
+    pdf.text("MM&E MOVA — Mantenimiento, Maquinaria & Equipos",105,19,{align:"center"});
+    pdf.setTextColor(0,0,0);pdf.setFontSize(11);
+    pdf.text(`PLACA: ${eq.placa||'—'}`,14,35);
+    pdf.text(`FECHA ADQUISICIÓN: ${hvFormatFecha(eq.fechaAdquisicion)}`,130,35);
+    const sec=(title,rows,startY)=>{
+      pdf.autoTable({startY,theme:"grid",head:[[{content:title,colSpan:2,styles:{fillColor:[40,40,40],textColor:255,fontStyle:'bold',fontSize:10,halign:'center'}}]],body:rows,styles:{fontSize:9,cellPadding:2.5},columnStyles:{0:{cellWidth:55,fontStyle:'bold',fillColor:[245,247,250]},1:{cellWidth:'auto'}}});
+      return pdf.lastAutoTable.finalY;
+    };
+    let y=42;
+    y=sec("CARACTERÍSTICAS GENERALES",[["Matrícula",eq.matricula||"—"],["Tipo/Clase",eq.tipo||"—"],["Marca",eq.marca||"—"],["Línea",eq.linea||"—"],["Modelo",eq.modelo||"—"],["Serial",eq.serial||"—"],["Color",eq.color||"—"],["Propietario",eq.propietario||"—"],["Capacidad",eq.capacidad||"—"],["Servicio",eq.servicio||"—"],["Cilindraje",eq.cilindraje||"—"]],y+4);
+    y=sec("CARACTERÍSTICAS TÉCNICAS",[["N° Motor",eq.nMotor||"—"],["N° Chasis",eq.nChasis||"—"],["N° Llantas",eq.nLlantas||"—"],["N° Velocidades",eq.nVelocidades||"—"],["N° Cinturones",eq.nCinturones||"—"],["N° Airbag",eq.nAirbag||"—"]],y+4);
+    y=sec("ELEMENTOS DE CONSUMO",[["Combustible",eq.combustible||"—"],["Aceite Motor",eq.aceiteMotor||"—"],["Aceite Hidráulico",eq.aceiteHidraulico||"—"],["Refrigerante",eq.refrigerante||"—"]],y+4);
+    if(y>230){pdf.addPage();y=14}
+    y=sec("DOCUMENTACIÓN",[["Manifiesto Import.",eq.manifiesto||"—"],["Rev. Tecnomecánica",eq.tecnomecanica||"—"],["Licencia Tránsito",eq.licencia||"—"],["Póliza",eq.poliza||"—"],["SOAT",eq.soat||"—"]],y+4);
+    y=sec("CONTROL DE MANTENIMIENTO",[["Ficha Técnica",eq.fichaTecnica||"—"],["Manual",eq.manual||"—"],["Periodicidad Mtto.",eq.periodicidad||"—"],["Estado",eq.estado||"—"]],y+4);
+    pdf.save(`HojaVida_${eq.placa}.pdf`);
+    showToast('success','PDF generado');
+  }catch(err){console.error(err);showToast('error','Error PDF: '+err.message)}
+}
+
+
+// ===== INSPECCIONES BIMENSUALES =====
+const bimAmarillaItems = [
+  // DISPOSITIVOS DE SEGURIDAD
+  {text:"Kit ambiental",cat:"DISPOSITIVOS DE SEGURIDAD"},
+  {text:"Extintor con soporte",cat:"DISPOSITIVOS DE SEGURIDAD"},
+  {text:"Orden y aseo",cat:"DISPOSITIVOS DE SEGURIDAD"},
+  {text:"Botiquín",cat:"DISPOSITIVOS DE SEGURIDAD"},
+  // LLANTAS
+  {text:"Delanteras",cat:"LLANTAS"},
+  {text:"Traseras",cat:"LLANTAS"},
+  // LUCES
+  {text:"Posición Delanteras y Traseras",cat:"LUCES"},
+  {text:"De Emergencia y de Retroceso",cat:"LUCES"},
+  {text:"Interior de la cabina y tablero",cat:"LUCES"},
+  // MECANISMOS DE CONTROL
+  {text:"Alarma de Retroceso - Pito",cat:"MECANISMOS DE CONTROL"},
+  {text:"Indicadores de Tablero",cat:"MECANISMOS DE CONTROL"},
+  {text:"Seguro - manijas puertas",cat:"MECANISMOS DE CONTROL"},
+  {text:"Cinta reflectiva",cat:"MECANISMOS DE CONTROL"},
+  {text:"Fugas de aceite",cat:"MECANISMOS DE CONTROL"},
+  {text:"Fugas de combustible",cat:"MECANISMOS DE CONTROL"},
+  {text:"Control salida humo - Exosto",cat:"MECANISMOS DE CONTROL"},
+  {text:"Caja de cambios - palanca",cat:"MECANISMOS DE CONTROL"},
+  {text:"Corona de tornamesa",cat:"MECANISMOS DE CONTROL"},
+  // MANDOS
+  {text:"Avance - Traslación",cat:"MANDOS"},
+  {text:"Desplazamiento del Brazo y Balde",cat:"MANDOS"},
+  {text:"Giro de la Tornamesa",cat:"MANDOS"},
+  {text:"Desplazamiento de la Cuchilla o Pala",cat:"MANDOS"},
+  {text:"Estacionamiento y/o freno",cat:"MANDOS"},
+  {text:"Ajuste General de Mandos",cat:"MANDOS"},
+  {text:"Etiquetado, letreros, rótulos legibles",cat:"MANDOS"},
+  {text:"Interruptores",cat:"MANDOS"},
+  // EQUIPAMIENTO DE TRABAJO
+  {text:"Bases - Refuerzos del balde o Pala",cat:"EQUIPAMIENTO DE TRABAJO"},
+  {text:"Cuchillas de la pala",cat:"EQUIPAMIENTO DE TRABAJO"},
+  {text:"Dientes o uñas del balde",cat:"EQUIPAMIENTO DE TRABAJO"},
+  {text:"Esquineras de la Pala o el balde",cat:"EQUIPAMIENTO DE TRABAJO"},
+  {text:"\"U\" de la pala",cat:"EQUIPAMIENTO DE TRABAJO"},
+  {text:"Brazos de la pala",cat:"EQUIPAMIENTO DE TRABAJO"},
+  {text:"Sistema Ripper",cat:"EQUIPAMIENTO DE TRABAJO"},
+  {text:"Gato Ripper",cat:"EQUIPAMIENTO DE TRABAJO"},
+  {text:"Cilindro para Vibro compactador",cat:"EQUIPAMIENTO DE TRABAJO"},
+  {text:"Ajuste general Equipamiento de Trabajo",cat:"EQUIPAMIENTO DE TRABAJO"},
+  // EQUIPAMIENTO DE TRASLACION
+  {text:"Bastidor",cat:"EQUIPAMIENTO DE TRASLACIÓN"},
+  {text:"Carriles",cat:"EQUIPAMIENTO DE TRASLACIÓN"},
+  {text:"Tensoras",cat:"EQUIPAMIENTO DE TRASLACIÓN"},
+  {text:"Zapatas",cat:"EQUIPAMIENTO DE TRASLACIÓN"},
+  {text:"Cadena",cat:"EQUIPAMIENTO DE TRASLACIÓN"},
+  {text:"Segmentos o Splocker",cat:"EQUIPAMIENTO DE TRASLACIÓN"},
+  {text:"Ajuste general Equipamiento de Traslación",cat:"EQUIPAMIENTO DE TRASLACIÓN"},
+  {text:"Estado terminales",cat:"EQUIPAMIENTO DE TRASLACIÓN"},
+  // GATOS HIDRAULICOS
+  {text:"Alce equipo",cat:"GATOS HIDRÁULICOS"},
+  {text:"Dirección",cat:"GATOS HIDRÁULICOS"},
+  {text:"Mangueras y acoples",cat:"GATOS HIDRÁULICOS"},
+  {text:"Ajuste General de Bujes y Pasadores",cat:"GATOS HIDRÁULICOS"},
+  {text:"Sistema de Pesaje",cat:"GATOS HIDRÁULICOS"},
+  // TOLVA
+  {text:"Estado tolva",cat:"TOLVA"},
+  {text:"Compuerta",cat:"TOLVA"},
+  // BANDA TRANSPORTADORA
+  {text:"Banda (Centrada, tensionada y en buen estado)",cat:"BANDA TRANSPORTADORA"},
+  // CHASIS
+  {text:"Estado del chasis",cat:"CHASIS"},
+  {text:"Latonería y Pintura",cat:"CHASIS"},
+  // CABINA
+  {text:"Ventanas",cat:"CABINA"},
+  {text:"Aire Acondicionado",cat:"CABINA"},
+  {text:"Puerta de Acceso",cat:"CABINA"},
+  {text:"Cubierta",cat:"CABINA"},
+  {text:"Silla - cojinería",cat:"CABINA"}
+].map(i=>({...i,required:false}));
+
+const bimBlancaItems = [
+  // ESTADO MECÁNICO
+  {text:"*Niveles de fluidos",cat:"ESTADO MECÁNICO"},
+  {text:"*Estado y sujeción de las mangueras",cat:"ESTADO MECÁNICO"},
+  {text:"*Freno de servicio",cat:"ESTADO MECÁNICO"},
+  {text:"*Freno de emergencia",cat:"ESTADO MECÁNICO"},
+  {text:"*Freno del motor (Acelerador y embrague)",cat:"ESTADO MECÁNICO"},
+  {text:"Freno de pivote",cat:"ESTADO MECÁNICO"},
+  {text:"Fuga de los fluidos",cat:"ESTADO MECÁNICO"},
+  {text:"Estado y tensión de correas",cat:"ESTADO MECÁNICO"},
+  {text:"Estado y sujeción de la batería (bornes y cables)",cat:"ESTADO MECÁNICO"},
+  {text:"Estado de la dirección",cat:"ESTADO MECÁNICO"},
+  {text:"Fugas de aire en acoples o mangueras",cat:"ESTADO MECÁNICO"},
+  {text:"Estado de suspensión",cat:"ESTADO MECÁNICO"},
+  {text:"Mecanismo de encendido",cat:"ESTADO MECÁNICO"},
+  {text:"Estado Bujía",cat:"ESTADO MECÁNICO"},
+  {text:"Estado Acelerador",cat:"ESTADO MECÁNICO"},
+  {text:"Estado Embrague",cat:"ESTADO MECÁNICO"},
+  {text:"Estado Kit de arrastre",cat:"ESTADO MECÁNICO"},
+  // CARROCERÍA
+  {text:"Soportes y grapas",cat:"CARROCERÍA"},
+  {text:"Ajuste y envarillado",cat:"CARROCERÍA"},
+  {text:"Barra antivolco con malla de seguridad",cat:"CARROCERÍA"},
+  {text:"Corrosión y fisuras",cat:"CARROCERÍA"},
+  {text:"Ajuste del sistema de cierre para la Compuerta",cat:"CARROCERÍA"},
+  {text:"Fugas y funcionamiento sistema de levante del Volco",cat:"CARROCERÍA"},
+  {text:"Estado de mangueras sistema de levante Volco",cat:"CARROCERÍA"},
+  {text:"Estado de Plataforma",cat:"CARROCERÍA"},
+  {text:"Estribo o Escalerilla sin partiduras",cat:"CARROCERÍA"},
+  {text:"Bastidor sin fisuras",cat:"CARROCERÍA"},
+  {text:"Funcionamiento del sistema de Carpado",cat:"CARROCERÍA"},
+  {text:"Estado Chasis",cat:"CARROCERÍA"},
+  {text:"Guardapolvos en buenas condiciones",cat:"CARROCERÍA"},
+  {text:"Estribos y pasamanos (Sujeción y estado)",cat:"CARROCERÍA"},
+  // PARTE EXTERNA
+  {text:"Estado general de latonería y pintura",cat:"PARTE EXTERNA"},
+  {text:"Vidrio parabrisas / ventanas (Sin roturas, no polarizados)",cat:"PARTE EXTERNA"},
+  {text:"Puertas en buen estado (cierre y bloqueo)",cat:"PARTE EXTERNA"},
+  {text:"Espejo retrovisor (izq/der) sin roturas, bien ajustado",cat:"PARTE EXTERNA"},
+  {text:"Tanque de combustible (Sujeción y estado)",cat:"PARTE EXTERNA"},
+  {text:"Cardan (crucetas en buen estado, cadena de seguridad)",cat:"PARTE EXTERNA"},
+  {text:"Placas (Ubicadas, fijadas, fácil identificación)",cat:"PARTE EXTERNA"},
+  {text:"Estado del Exosto sin resonadores y bien ajustados",cat:"PARTE EXTERNA"},
+  // PARTE INTERNA
+  {text:"*Cinturón de seguridad en todos los asientos",cat:"PARTE INTERNA"},
+  {text:"Parasoles sujeción y estado",cat:"PARTE INTERNA"},
+  {text:"Plumillas limpiavidrios / motor lavaparabrisa",cat:"PARTE INTERNA"},
+  {text:"Estado de Tapicería",cat:"PARTE INTERNA"},
+  {text:"Estado, ajuste y funcionamiento de Sillas",cat:"PARTE INTERNA"},
+  {text:"Luz de techo",cat:"PARTE INTERNA"},
+  {text:"Pedales y mandos",cat:"PARTE INTERNA"},
+  {text:"Funcionamiento de Indicadores de tablero",cat:"PARTE INTERNA"},
+  {text:"Funcionamiento del Aire Acondicionado",cat:"PARTE INTERNA"},
+  {text:"Pito Sonoro (No corneta)",cat:"PARTE INTERNA"},
+  {text:"Pito de Reversa",cat:"PARTE INTERNA"},
+  // LUCES
+  {text:"*Frontales (Lentes sin roturas / funcionando)",cat:"LUCES"},
+  {text:"*Direccionales delanteras y de parqueo",cat:"LUCES"},
+  {text:"*Direccionales trasera y de parqueo",cat:"LUCES"},
+  {text:"*De Stop y señal trasera o frenado",cat:"LUCES"},
+  {text:"Luz y alarma de reversa",cat:"LUCES"},
+  {text:"Luces laterales",cat:"LUCES"},
+  {text:"Luz Rutilante de cabina",cat:"LUCES"},
+  // LLANTAS
+  {text:"*Sin cortaduras profundas y sin abultamientos",cat:"LLANTAS"},
+  {text:"*Labrado tipo A/T (más de 5 mm)",cat:"LLANTAS"},
+  {text:"*Rines, pernos completos y ajustados",cat:"LLANTAS"},
+  {text:"*Llanta de repuesto / Rin (Buen estado e inflada)",cat:"LLANTAS"},
+  // EQUIPO DE PREVENCIÓN
+  {text:"*Gato, Cruceta, señales de carretera, tacos para bloqueo",cat:"EQUIPO DE PREVENCIÓN"},
+  {text:"Linterna en funcionamiento",cat:"EQUIPO DE PREVENCIÓN"},
+  {text:"Caja de herramienta completa",cat:"EQUIPO DE PREVENCIÓN"}
+].map(i=>({...i,required:i.text.startsWith('*')}));
+
+// ===== LOCATIVAS — 6 FORMATOS =====
+const locInstalaciones = [
+  "Zonas de parqueadero señalizadas e iluminadas","Parqueaderos separados de zonas de cargue","Parqueaderos por tipo de vehículo","Señalización rutas de desplazamiento peatones","Zonas demarcadas e iluminadas para peatones","Zonas de peatones separadas de vehículos","Velocidades máximas definidas y socializadas","Control de velocidad en vía","Zonas de cargue y descargue delimitadas y demarcadas","Acceso controlado a zonas de cargue y descargue","Espacio para ubicación segura de vehículos","Disposición de materiales y elementos en estantes","Pisos sin grietas, perforaciones, desniveles o roturas","Paredes sin grietas, perforaciones o desniveles","Ventanas en buen estado (marcos, vidrios y pintura)","Puertas en buen estado (marcos, cerraduras, pintura)","Pasillos libres de cables, equipos, materiales","Cielo raso sin grietas, perforaciones o roturas","Escalera de acceso con barandas, debidamente anclada","Escaleras limpias y secas","Pasamanos se extiende al menos hasta el último escalón","Escalones y peldaños con tamaño uniforme","Cinta antideslizante en escaleras","Sustancias químicas identificadas y rotuladas","Estado de sistemas de ventilación y/o extracción","Tomas, interruptores, cableado eléctrico protegidos","Cables de computadoras atados y ordenados","Estado de tableros, tacos, fusibles","Estado de llaves y tubos de agua (sin fugas)","Piso seco, libre de agua en los baños","Vías de acceso despejadas y seguras",
+  "Rutas de evacuación y salidas de emergencia señalizadas","Avisos de peligro","Demarcación de vías de evacuación con flechas","Mapa de evacuación","Escaleras señalizadas","Señalización de extintores y botiquines",
+  "Suficiente número de luminarias","Luminarias perpendiculares al plano de trabajo","Luminarias limpias y en buen estado","Persianas o cortinas para controlar luz natural",
+  "Pisos, paredes y techos lisos y de fácil limpieza","Iluminación, ventilación y temperatura adecuada","Elementos limpios, suficientes y en buen estado","Se usan elementos de protección personal",
+  "Escritorios estables sin moverse","Sillas con apoyos en los brazos","Espacio debajo del escritorio suficiente","Diseño del asiento permite libertad de movimiento","Altura de la silla regulable","Respaldo reclinable y regulable",
+  "Pisos libres de desperdicios y regueros","Salidas de emergencia y vías de circulación libres","Estantes en condiciones seguras de almacenamiento","Recipientes para disposición de residuos según clasificación","Alrededores libres de maleza, basuras y aguas estancadas","Tanque de almacenamiento de agua cuenta con tapa"
+];
+
+const locRedesItems = ["Estado y funcionamiento de luminarias","Estado y Señalización Tableros","Estado y señalización de Tomacorrientes","Estado y señalización de Interruptor Termomagnético","Estado y señalización de Interruptores","Puesto a Tierra","Estado de Cableado"];
+const locRedesAreas = ["RECEPCIÓN","SALA DE JUNTAS","GERENCIA","ADMINISTRATIVO","SERVIDOR"];
+
+const locTalleresEquipos = [
+  "El Motosoldador cuenta con bandeja para contención","Perilla de intensidad de corriente en buenas condiciones","Cables de alimentación eléctrica sin añadiduras ni enmiendas","Motosoldador protegido con puesta a tierra","Pinzas portaelectrodo y masa en buenas condiciones","Cables de soldadura sin remiendos y con terminales ajustados","Careta para soldar en buenas condiciones, visor sin rayones","Equipo de soldadura en buenas condiciones de operación",
+  "Cuerpo del cilindro de oxígeno y acetileno sin abolladuras","Cilindros asegurados a la carretilla vertical para transporte","Cilindros rotulados de acuerdo al sistema de manejo de sustancias","Carretillas verticales en buen estado con llantas en buen estado","Manómetros y reguladores en buen estado de funcionamiento","Válvulas antiretroceso de llama instaladas y sin alteraciones","Válvulas de los cilindros en buen estado y sin fugas de gases","Soplete en buenas condiciones y válvulas de regulación funcionando","Boquilla del soplete sin fisuras ni agrietamientos","Chispero y limpiaboquillas en buen estado, sin roturas","Equipo de oxicorte en buenas condiciones de operación",
+  "Tronzadora anclada, sin vibraciones durante corte","Guardas de protección adecuada","Cables de alimentación eléctrica sin añadiduras y enchufes en buen estado","Equipos con mango de seguridad, buenas condiciones y aislamiento","Equipo de corte/esmerilado en buenas condiciones de operación",
+  "Tanque de almacenamiento de aire sin abolladuras ni fisuras","Tanque rotulado indicando capacidad de carga en PSI","Guardas de protección en compresor","Termómetro del tanque en buen estado de funcionamiento","Manómetros funcionando, vidrios sin rayones ni quebraduras","Válvulas de seguridad del equipo en buen funcionamiento","Válvula de vaciado de agua en buen estado","Válvula de cierre de aire comprimido en buen estado","Tubería principal de distribución de aire señalizada","Válvula antiretorno en buen estado y funciona","Guayas antilatigo en válvula de salida y terminales de pistolas","Compresor en buenas condiciones de operación",
+  "Cuerpo del gato y base de estabilidad en buenas condiciones","El gato presenta fugas de aceite","Cabeza maquinada en buen estado","Tornillo de extensión ajustable en buenas condiciones","Niveles de hidráulico y funcionamiento correcto","Vástago completo sin fisura ni soldaduras","Gato rotulado indicando capacidad de carga","Gato en buenas condiciones de operación",
+  "Herramientas manuales sin fallas o cortaduras","Herramientas con puntos de contacto sin roturas ni desgaste","Llaves de boca ajustable con bocas fijas","Herramientas libres de suciedad, grasa o material","Mangos de herramientas en buen estado, no retirados ni modificados","Se identifican herramientas adaptadas o acondicionadas","Herramientas almacenadas en cajas destinadas para ello","Cajas sin elementos personales ni comida","Caja de herramientas con tres asas y de material resistente","Martillos, mazos y macetas bien encabados, sin fisuras","Herramientas en buenas condiciones de operación",
+  "Jaula de contención de llantas en buen estado","Rodachines de la carevaca funcionando correctamente","Palanca de fuerza sin fisuras ni enmendaduras","Ganchos de la carevaca sin enmendados ni fisuras","Plancha neumática o vulcanizadora en buen funcionamiento","Planchas superior e inferior sin añadiduras ni cables en mal estado","Switch, fusible o regulador de temperatura en buen estado","Bombaso o petardo sin fisuras ni abolladuras, manómetro funcionando","Válvulas de seguridad y de llenado en buenas condiciones","Tubo de salida del bombaso sin abolladuras ni fisuras","Barras, barretas y palancas en buen estado, sin fisuras"
+];
+const locTalleresEquiposCats = ["EQUIPOS PARA SOLDADURA","EQUIPOS PARA SOLDADURA","EQUIPOS PARA SOLDADURA","EQUIPOS PARA SOLDADURA","EQUIPOS PARA SOLDADURA","EQUIPOS PARA SOLDADURA","EQUIPOS PARA SOLDADURA","EQUIPOS PARA SOLDADURA",
+  "EQUIPOS OXICORTE","EQUIPOS OXICORTE","EQUIPOS OXICORTE","EQUIPOS OXICORTE","EQUIPOS OXICORTE","EQUIPOS OXICORTE","EQUIPOS OXICORTE","EQUIPOS OXICORTE","EQUIPOS OXICORTE","EQUIPOS OXICORTE","EQUIPOS OXICORTE",
+  "EQUIPOS DE CORTE Y ESMERILADO","EQUIPOS DE CORTE Y ESMERILADO","EQUIPOS DE CORTE Y ESMERILADO","EQUIPOS DE CORTE Y ESMERILADO","EQUIPOS DE CORTE Y ESMERILADO",
+  "COMPRESORES DE AIRE","COMPRESORES DE AIRE","COMPRESORES DE AIRE","COMPRESORES DE AIRE","COMPRESORES DE AIRE","COMPRESORES DE AIRE","COMPRESORES DE AIRE","COMPRESORES DE AIRE","COMPRESORES DE AIRE","COMPRESORES DE AIRE","COMPRESORES DE AIRE","COMPRESORES DE AIRE",
+  "GATOS HIDRÁULICOS","GATOS HIDRÁULICOS","GATOS HIDRÁULICOS","GATOS HIDRÁULICOS","GATOS HIDRÁULICOS","GATOS HIDRÁULICOS","GATOS HIDRÁULICOS","GATOS HIDRÁULICOS",
+  "HERRAMIENTAS MANUALES","HERRAMIENTAS MANUALES","HERRAMIENTAS MANUALES","HERRAMIENTAS MANUALES","HERRAMIENTAS MANUALES","HERRAMIENTAS MANUALES","HERRAMIENTAS MANUALES","HERRAMIENTAS MANUALES","HERRAMIENTAS MANUALES","HERRAMIENTAS MANUALES","HERRAMIENTAS MANUALES",
+  "MONTAJE DE LLANTAS","MONTAJE DE LLANTAS","MONTAJE DE LLANTAS","MONTAJE DE LLANTAS","MONTAJE DE LLANTAS","MONTAJE DE LLANTAS","MONTAJE DE LLANTAS","MONTAJE DE LLANTAS","MONTAJE DE LLANTAS","MONTAJE DE LLANTAS","MONTAJE DE LLANTAS"];
+
+const locTalleresAreas = ["Limpieza de pisos","Limpieza de Herramienta y Equipos","Almacenar Herramientas y Equipos en el sitio indicado","Disposición de Residuos","Lavado y limpieza de Carpas","Lavado y Limpieza de EPP","Lavado y Limpieza de pisos","Organizar sustancias y Materiales en el sitio indicado","Ordenar y limpiar el área de Aceites contaminados","Ordenar y limpiar el área de baterías","Ordenar el área de chatarra","Entregar o disponer Elementos que no se requieren","Ubicación de Extintores","Ubicación de Camillas","Ubicación de puntos ecológicos (Kit para residuos)","Zonas de Parqueo","Ruta de evacuación","Lavamanos con jabón y toallas de papel","Trabajos con maquinaria","Senderos peatonales / vías acceso peatonal","Tomas y tableros eléctricos","Zona para almacenamiento de filtros y aceites","Carpas aterrizadas","Estado Alarma de emergencia","Estado de Botiquín, Camilla e Inmovilizadores","Estado de Extintores","Estado Kit Ambiental","Estado de Dique para contención de productos químicos","Fichas de datos de seguridad de productos químicos","Pisos libres de desperdicios y regueros","Salidas de emergencia libres de obstáculos","Estantes en condiciones seguras de almacenamiento","Recipientes para residuos según clasificación","Alrededores libres de maleza y aguas estancadas","Suficiente número de luminarias","Luminarias perpendiculares al plano de trabajo","Luminarias limpias y en buen estado","Uso de persianas o cortinas para controlar luz natural"];
+
+const locOficinas = [
+  {text:"Pisos, cestas",freq:"Diaria",area:"OFICINAS"},
+  {text:"Puertas, Ventanas, Persianas y vidrios",freq:"Semanal",area:"OFICINAS"},
+  {text:"Muebles, sillas, divisiones y mesas",freq:"Diaria",area:"OFICINAS"},
+  {text:"Dispensadores de agua",freq:"Quincenal",area:"OFICINAS"},
+  {text:"Desinfección de área",freq:"Diaria",area:"OFICINAS"},
+  {text:"Techo",freq:"Semanal",area:"OFICINAS"},
+  {text:"Pisos, cestas",freq:"Diaria",area:"RECEPCIÓN"},
+  {text:"Puertas, Ventanas, Persianas y vidrios",freq:"Semanal",area:"RECEPCIÓN"},
+  {text:"Muebles, sillas, divisiones y mesas",freq:"Diaria",area:"RECEPCIÓN"},
+  {text:"Dispensadores de agua",freq:"Quincenal",area:"RECEPCIÓN"},
+  {text:"Desinfección de área",freq:"Diaria",area:"RECEPCIÓN"},
+  {text:"Techo",freq:"Semanal",area:"RECEPCIÓN"},
+  {text:"Pisos, cestas",freq:"Diaria",area:"CAFETERÍA"},
+  {text:"Puertas, Ventanas, Persianas y vidrios",freq:"Semanal",area:"CAFETERÍA"},
+  {text:"Muebles, sillas, divisiones y mesas",freq:"Diaria",area:"CAFETERÍA"},
+  {text:"Dispensadores de agua",freq:"Quincenal",area:"CAFETERÍA"},
+  {text:"Desinfección de área",freq:"Diaria",area:"CAFETERÍA"},
+  {text:"Techo",freq:"Semanal",area:"CAFETERÍA"}
+];
+
+const locHabitaciones = [
+  {text:"Tendido de camas",freq:"Diaria",area:"HABITACIÓN"},
+  {text:"Cambio de tendidos",freq:"Según necesidad",area:"HABITACIÓN"},
+  {text:"Limpieza de pisos, cestas y puertas",freq:"Diaria",area:"HABITACIÓN"},
+  {text:"Limpieza de polvo en muebles y equipos",freq:"Diaria",area:"HABITACIÓN"},
+  {text:"Entrega ropa a la habitación",freq:"Diaria",area:"HABITACIÓN"},
+  {text:"Inventario de tapetes",freq:"Diaria",area:"HABITACIÓN"},
+  {text:"Verificación de cajas eléctricas (A/C, tarjetas, etiquetado)",freq:"Diaria",area:"HABITACIÓN"},
+  {text:"Limpieza de paredes, techos y ventanas",freq:"Semanal",area:"HABITACIÓN"},
+  {text:"Lavado de tapetes",freq:"Según necesidad",area:"HABITACIÓN"},
+  {text:"Lavado de cobijas y edredones",freq:"Según necesidad",area:"HABITACIÓN"},
+  {text:"Desinfección de área y superficies",freq:"Diaria",area:"HABITACIÓN"},
+  {text:"Revisar / Dotar de jabón",freq:"Según necesidad",area:"BAÑOS"},
+  {text:"Revisar / Dotar papel higiénico",freq:"Según necesidad",area:"BAÑOS"},
+  {text:"Limpieza de puertas, paredes y pisos",freq:"Diaria",area:"BAÑOS"},
+  {text:"Limpieza de Espejos y lavamanos",freq:"Diaria",area:"BAÑOS"},
+  {text:"Limpieza de Duchas",freq:"Diaria",area:"BAÑOS"},
+  {text:"Limpieza de Inodoros y/o orinales",freq:"Diaria",area:"BAÑOS"},
+  {text:"Lavado General de baños",freq:"Semanal",area:"BAÑOS"},
+  {text:"Desinfección de área y superficies",freq:"Diaria",area:"BAÑOS"}
+];
+
+// ===== GENERIC INSPECTION ENGINE =====
+function inspGenericMenu(containerId, title, subtitle, cards) {
+  const c = document.getElementById(containerId);
+  c.innerHTML = `<button class="back-btn" onclick="window.navTo('inicio')"><i class="bi bi-arrow-left"></i> Inicio</button>
+    <div style="text-align:center;margin-bottom:16px"><h2 style="font-family:'Space Grotesk',sans-serif;font-weight:700;color:var(--navy);font-size:22px">${title}</h2><p style="color:var(--gray-500);font-size:14px">${subtitle}</p></div>
+    <div class="preop-menu" style="grid-template-columns:repeat(auto-fill,minmax(200px,1fr));max-width:900px">${cards.map(cd => `<div class="preop-card ${cd.cls||''}" onclick="${cd.onclick}" style="cursor:pointer"><div class="preop-icon">${cd.icon}</div><h3 style="font-size:16px">${cd.label}</h3><p style="font-size:12px">${cd.sub}</p></div>`).join('')}</div>`;
+}
+
+function inspGenericForm(containerId, title, codigo, items, options, coleccion, backFn, extraFields) {
+  const c = document.getElementById(containerId);
+  window._inspItems = items;
+  window._inspCol = coleccion;
+  window._inspBackFn = backFn;
+  window._inspOpts = options;
+  window._inspContainerId = containerId;
+  let catHtml = '';
+  let lastCat = '';
+  items.forEach((item, i) => {
+    const n = 'insp_' + i;
+    const cat = item.cat || item.area || '';
+    if (cat && cat !== lastCat) {
+      catHtml += `<div style="background:var(--navy);color:var(--white);padding:8px 14px;border-radius:6px;margin-top:14px;font-size:12px;font-weight:700;letter-spacing:.5px">${cat}</div>`;
+      lastCat = cat;
+    }
+    const freq = item.freq ? `<span style="font-size:10px;color:var(--gray-400);margin-left:6px">(${item.freq})</span>` : '';
+    catHtml += `<div class="checklist-row"><div class="checklist-text">${item.text}${freq}</div><div class="checklist-actions">${options.map(o => `<input type="radio" name="${n}" id="${n}_${o.v}" value="${o.v}"><label for="${n}_${o.v}">${o.icon||''} ${o.l}</label>`).join('')}</div></div>`;
+  });
+
+  const ef = extraFields || `<div class="form-row" style="margin-bottom:12px"><div class="form-group"><label class="form-label">CEMA / Equipo *</label><input class="form-input" id="insp-cema" placeholder="Código CEMA o identificación" required></div><div class="form-group"><label class="form-label">Ubicación / Obra</label><input class="form-input" id="insp-ubicacion" placeholder="Localización actual"></div></div>`;
+
+  c.innerHTML = `<button class="back-btn" onclick="${backFn}"><i class="bi bi-arrow-left"></i> Volver</button>
+    <h2 style="font-family:'Space Grotesk',sans-serif;font-weight:700;color:var(--navy);font-size:20px;margin-bottom:6px">${title}</h2>
+    <p style="font-size:11px;color:var(--gray-400);margin-bottom:16px">${codigo}</p>
+    <div class="preop-status-bar"><div class="preop-status-item"><i class="bi bi-person-circle"></i><div><div class="ps-label">Inspector</div><div class="ps-value">${window.nombreOperador||'—'}</div></div></div></div>
+    <div class="preop-form-section"><h4><i class="bi bi-info-circle"></i> Identificación</h4>${ef}</div>
+    <div class="preop-form-section"><h4><i class="bi bi-list-check" style="color:var(--yellow)"></i> Checklist</h4><div style="max-height:500px;overflow-y:auto" id="insp-checklist">${catHtml}</div></div>
+    <div class="preop-form-section"><h4><i class="bi bi-chat-text"></i> Observaciones</h4><textarea class="form-textarea" id="insp-obs" placeholder="Observaciones..."></textarea></div>
+    <div id="insp-post-actions" style="display:none"><div class="preop-post-actions"><div class="preop-post-btn" onclick="window.inspExportarPDF()"><i class="bi bi-file-earmark-pdf"></i>Exportar PDF</div><div class="preop-post-btn" onclick="window.inspVerHistorial()"><i class="bi bi-clock-history"></i>Historial</div></div></div>
+    <button class="preop-save-btn ready" id="insp-guardar" onclick="window.inspGuardar()"><i class="bi bi-save"></i> Guardar Inspección</button>`;
+}
+
+window.inspGuardar = async function() {
+  const btn = document.getElementById('insp-guardar');
+  btn.innerHTML = '<span style="display:inline-block;width:16px;height:16px;border:2px solid white;border-top-color:transparent;border-radius:50%;animation:spin .6s linear infinite"></span> Guardando...';
+  btn.disabled = true;
+  try {
+    const cema = document.getElementById('insp-cema')?.value.trim() || '';
+    if (!cema) { showToast('error', 'Complete el campo de identificación'); throw new Error('ID'); }
+    const checklist = {};
+    window._inspItems.forEach((item, i) => {
+      const r = document.querySelector(`input[name="insp_${i}"]:checked`);
+      checklist['item_' + i] = r ? r.value : '';
+    });
+    // Capture all extra fields dynamically
+    const extras = {};
+    const extraIds = ['insp-horometro','insp-operador','insp-cema2','insp-comeq','insp-odometro','insp-tipo-vehiculo','insp-propietario','insp-conductor','insp-inspector','insp-lugar'];
+    extraIds.forEach(id => { const el = document.getElementById(id); if (el && el.value.trim()) extras[id.replace('insp-','').replace(/-/g,'')] = el.value.trim(); });
+    // Radio buttons
+    const tipoBim = document.querySelector('input[name="insp-tipo-bim"]:checked');
+    if (tipoBim) extras.tipoInspeccion = tipoBim.value;
+    const alquilado = document.querySelector('input[name="insp-alquilado"]:checked');
+    if (alquilado) extras.alquilado = alquilado.value;
+
+    const data = {
+      identificacion: cema,
+      ubicacion: document.getElementById('insp-ubicacion')?.value.trim() || '—',
+      inspector: window.operadorActivo,
+      ipe: window.ipeActivo,
+      checklist,
+      ...extras,
+      observaciones: document.getElementById('insp-obs')?.value.trim() || 'Sin observaciones',
+      fecha: serverTimestamp(),
+      totalItems: window._inspItems.length,
+      completados: Object.values(checklist).filter(v => v).length
+    };
+    await addDoc(collection(db, window._inspCol), data);
+    window._lastInspCema = cema;
+    document.querySelectorAll('.preop-form-section').forEach(s => s.style.display = 'none');
+    btn.style.display = 'none';
+    document.getElementById('insp-post-actions').style.display = 'block';
+    showToast('success', '✅ Inspección guardada');
+  } catch(err) {
+    if (err.message !== 'ID') console.error(err);
+    showToast('error', 'Error: ' + err.message);
+    btn.innerHTML = '<i class="bi bi-save"></i> Guardar Inspección';
+    btn.disabled = false;
+  }
+};
+
+// ===== PDF EXPORT para inspecciones genéricas =====
+window.inspExportarPDF = async function(docId) {
+  try {
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF("portrait", "mm", "a4");
+    let data;
+    if (docId) {
+      const snap = await getDoc(doc(db, window._inspCol, docId));
+      if (!snap.exists()) { showToast('error', 'Documento no encontrado'); return; }
+      data = snap.data();
+    } else {
+      // Reconstruir datos de la inspección actual desde el DOM
+      const cema = window._lastInspCema || '—';
+      const checklist = {};
+      window._inspItems.forEach((item, i) => {
+        const r = document.querySelector(`input[name="insp_${i}"]:checked`);
+        checklist['item_' + i] = r ? r.value : '';
+      });
+      data = { identificacion: cema, checklist, totalItems: window._inspItems.length, observaciones: document.getElementById('insp-obs')?.value || '—' };
+    }
+
+    // Header
+    pdf.setFillColor(15, 33, 55);
+    pdf.rect(0, 0, 210, 22, 'F');
+    pdf.setTextColor(255, 255, 255);
+    pdf.setFont("helvetica", "bold");
+    pdf.setFontSize(13);
+    pdf.text("INSPECCIÓN — " + (data.identificacion || '—').toUpperCase(), 105, 10, { align: "center" });
+    pdf.setFontSize(8);
+    pdf.setTextColor(244, 180, 0);
+    pdf.text("MM&E MOVA — Moreno Vargas S.A.", 105, 17, { align: "center" });
+
+    // Info
+    pdf.setTextColor(0, 0, 0);
+    pdf.setFontSize(10);
+    let y = 30;
+    const fecha = data.fecha?.toDate ? data.fecha.toDate().toLocaleDateString("es-CO") : new Date().toLocaleDateString("es-CO");
+    pdf.text(`Fecha: ${fecha}`, 14, y);
+    pdf.text(`Inspector: ${data.inspector || '—'}`, 110, y);
+    y += 6;
+    pdf.text(`Identificación: ${data.identificacion || '—'}`, 14, y);
+    pdf.text(`Ubicación: ${data.ubicacion || '—'}`, 110, y);
+    y += 6;
+    if (data.horometro) { pdf.text(`Horómetro: ${data.horometro}`, 14, y); y += 6; }
+    if (data.odometro) { pdf.text(`Odómetro: ${data.odometro}`, 14, y); y += 6; }
+    if (data.tipoInspeccion) { pdf.text(`Tipo: ${data.tipoInspeccion}`, 14, y); y += 6; }
+    if (data.tipovehiculo) { pdf.text(`Vehículo: ${data.tipovehiculo}`, 14, y); y += 6; }
+    y += 4;
+
+    // Checklist table
+    const opts = window._inspOpts || [{ v: 'B' }, { v: 'D' }, { v: 'NA' }];
+    const optLabels = opts.map(o => o.v);
+    const head = [['#', 'DESCRIPCIÓN', ...optLabels]];
+    const body = [];
+    let lastCat = '';
+    const ES = { B: [39, 174, 96], D: [192, 57, 43], M: [192, 57, 43], SI: [39, 174, 96], NO: [192, 57, 43], NA: [189, 195, 199], OK: [39, 174, 96], 'N/A': [189, 195, 199] };
+
+    window._inspItems.forEach((item, i) => {
+      const cat = item.cat || item.area || '';
+      if (cat && cat !== lastCat) {
+        body.push([{ content: cat, colSpan: 2 + optLabels.length, styles: { fillColor: [40, 40, 40], textColor: 255, fontStyle: 'bold', fontSize: 8, halign: 'center' } }]);
+        lastCat = cat;
+      }
+      const val = data.checklist ? (data.checklist['item_' + i] || '') : '';
+      const row = [i + 1, item.text];
+      optLabels.forEach(o => {
+        if (val === o) {
+          row.push({ content: 'X', styles: { fillColor: ES[o] || [200, 200, 200], textColor: 255, fontStyle: 'bold', halign: 'center' } });
+        } else {
+          row.push('');
+        }
+      });
+      body.push(row);
+    });
+
+    pdf.autoTable({
+      startY: y,
+      head, body,
+      theme: 'grid',
+      styles: { fontSize: 7, cellPadding: 2, overflow: 'linebreak' },
+      headStyles: { fillColor: [41, 128, 185], textColor: 255, fontStyle: 'bold', fontSize: 8 },
+      columnStyles: { 0: { cellWidth: 10, halign: 'center' }, 1: { cellWidth: 80 } }
+    });
+
+    // Observaciones
+    y = pdf.lastAutoTable.finalY + 8;
+    if (y > 270) { pdf.addPage(); y = 14; }
+    pdf.setFontSize(9);
+    pdf.setFont("helvetica", "bold");
+    pdf.text("OBSERVACIONES:", 14, y);
+    pdf.setFont("helvetica", "normal");
+    pdf.text(data.observaciones || '—', 14, y + 5, { maxWidth: 180 });
+
+    pdf.save(`Inspeccion_${(data.identificacion || 'sin-id').replace(/[^\w]/g, '_')}_${fecha.replace(/\//g, '-')}.pdf`);
+    showToast('success', 'PDF generado');
+  } catch (err) {
+    console.error("PDF Error:", err);
+    showToast('error', 'Error PDF: ' + err.message);
+  }
+};
+
+window.inspVerHistorial = async function() {
+  const cema = window._lastInspCema || document.getElementById('insp-cema')?.value.trim();
+  if (!cema) { showToast('error', 'No hay identificación'); return; }
+  const containerId = window._inspContainerId || 'bimensualContent';
+  const c = document.getElementById(containerId);
+  c.innerHTML = `<button class="back-btn" onclick="${window._inspBackFn}"><i class="bi bi-arrow-left"></i> Volver</button><h2 style="font-family:'Space Grotesk',sans-serif;font-weight:700;color:var(--navy);font-size:20px;margin-bottom:20px">📚 Historial — ${cema}</h2><div id="insp-hist-lista">Cargando...</div>`;
+  try {
+    const q2 = query(collection(db, window._inspCol), where("identificacion", "==", cema));
+    const snap = await getDocs(q2);
+    const lista = document.getElementById('insp-hist-lista');
+    if (snap.empty) { lista.innerHTML = '<p style="color:var(--gray-400);text-align:center;padding:40px">No hay inspecciones registradas para este equipo</p>'; return; }
+    const insp = Array.from(snap.docs).map(d => ({ id: d.id, ...d.data() })).sort((a, b) => (b.fecha?.toDate() || 0) - (a.fecha?.toDate() || 0));
+    lista.innerHTML = `<div class="historial-grid">${insp.map(i => {
+      const f = i.fecha?.toDate ? i.fecha.toDate().toLocaleDateString("es-CO") : "Sin fecha";
+      const pct = i.totalItems ? Math.round((i.completados / i.totalItems) * 100) : 0;
+      return `<div class="historial-card">
+        <div class="h-date">${f}</div>
+        <div class="h-type">${i.completados || 0}/${i.totalItems || 0} ítems (${pct}%) · ${i.ubicacion || '—'}</div>
+        <button class="h-btn" onclick="window.inspExportarPDF('${i.id}')"><i class="bi bi-download"></i> Exportar PDF</button>
+      </div>`;
+    }).join('')}</div>`;
+  } catch(err) { document.getElementById('insp-hist-lista').innerHTML = `<p style="color:var(--red)">Error: ${err.message}</p>`; }
+};
+
+// ===== BIMENSUALES — MENU =====
+window.mostrarMenuBimensual = function() {
+  inspGenericMenu('bimensualContent', '🔍 Inspección Bimensual', 'Seleccione el tipo de línea', [
+    { icon: '🏗️', label: 'Línea Amarilla', sub: 'Maquinaria pesada · A4-F-009', cls: 'amarilla', onclick: "window.iniciarBimensual('amarilla')" },
+    { icon: '🚛', label: 'Línea Blanca', sub: 'Vehículos · A4-F-010', cls: 'blanca', onclick: "window.iniciarBimensual('blanca')" }
+  ]);
+};
+
+window.iniciarBimensual = function(tipo) {
+  const items = tipo === 'amarilla' ? bimAmarillaItems : bimBlancaItems;
+  const titulo = tipo === 'amarilla' ? 'Inspección Bimensual — Línea Amarilla' : 'Inspección Operacional — Línea Blanca';
+  const codigo = tipo === 'amarilla' ? 'Código: A4-F-009 · Revisión: 010' : 'Código: A4-F-010 · Versión: 12';
+  const col = tipo === 'amarilla' ? 'insp_bimensual_amarilla' : 'insp_bimensual_blanca';
+  const opts = [
+    { v: 'B', l: 'B', icon: '<i class="bi bi-check-lg"></i>' },
+    { v: 'D', l: 'D', icon: '<i class="bi bi-x-lg"></i>' },
+    { v: 'NA', l: 'N/A', icon: '' }
+  ];
+  let extraFields;
+  if (tipo === 'amarilla') {
+    extraFields = `
+      <div class="form-row" style="margin-bottom:12px">
+        <div class="form-group"><label class="form-label">CEMA ó COMEQ *</label><input class="form-input" id="insp-cema" placeholder="Código del equipo" required></div>
+        <div class="form-group"><label class="form-label">Horómetro</label><input class="form-input" id="insp-horometro" type="number" placeholder="Ej: 3245"></div>
+      </div>
+      <div class="form-row" style="margin-bottom:12px">
+        <div class="form-group"><label class="form-label">Localización Actual o Destino</label><input class="form-input" id="insp-ubicacion" placeholder="Frente de obra, taller..."></div>
+        <div class="form-group"><label class="form-label">Nombre del Operador</label><input class="form-input" id="insp-operador" value="${window.nombreOperador||''}" placeholder="Nombre completo"></div>
+      </div>
+      <div class="form-group" style="margin-bottom:12px"><label class="form-label">Tipo de Inspección</label>
+        <div style="display:flex;gap:12px;margin-top:4px">
+          <label style="display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer"><input type="radio" name="insp-tipo-bim" value="Llegada" checked> Llegada</label>
+          <label style="display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer"><input type="radio" name="insp-tipo-bim" value="Salida"> Salida</label>
+          <label style="display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer"><input type="radio" name="insp-tipo-bim" value="Mensual"> Mensual</label>
+        </div>
+      </div>`;
+  } else {
+    extraFields = `
+      <div class="form-row" style="margin-bottom:12px">
+        <div class="form-group"><label class="form-label">Placa *</label><input class="form-input" id="insp-cema" placeholder="Ej: ABC123" required></div>
+        <div class="form-group"><label class="form-label">CEMA</label><input class="form-input" id="insp-cema2" placeholder="Código CEMA"></div>
+      </div>
+      <div class="form-row" style="margin-bottom:12px">
+        <div class="form-group"><label class="form-label">COMEQ</label><input class="form-input" id="insp-comeq" placeholder="Código COMEQ"></div>
+        <div class="form-group"><label class="form-label">OBN (Obra)</label><input class="form-input" id="insp-ubicacion" placeholder="Número de obra"></div>
+      </div>
+      <div class="form-row" style="margin-bottom:12px">
+        <div class="form-group"><label class="form-label">Odómetro</label><input class="form-input" id="insp-odometro" type="number" placeholder="Km"></div>
+        <div class="form-group"><label class="form-label">Tipo de Vehículo</label>
+          <select class="form-select" id="insp-tipo-vehiculo"><option value="">Seleccionar...</option><option>Camión</option><option>Volqueta</option><option>Camioneta</option><option>Tracto Camión</option><option>Cama Baja</option><option>Carrotanque</option><option>Bus / Buseta</option><option>Automóvil</option><option>Motocicleta</option><option>Otro</option></select>
+        </div>
+      </div>
+      <div class="form-row" style="margin-bottom:12px">
+        <div class="form-group"><label class="form-label">¿Vehículo Alquilado?</label>
+          <div style="display:flex;gap:12px;margin-top:4px">
+            <label style="display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer"><input type="radio" name="insp-alquilado" value="NO" checked> No</label>
+            <label style="display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer"><input type="radio" name="insp-alquilado" value="SI"> Sí</label>
+          </div>
+        </div>
+        <div class="form-group"><label class="form-label">Propietario o Empresa</label><input class="form-input" id="insp-propietario" placeholder="Nombre del propietario"></div>
+      </div>
+      <div class="form-row" style="margin-bottom:12px">
+        <div class="form-group"><label class="form-label">Nombre del Conductor</label><input class="form-input" id="insp-conductor" value="${window.nombreOperador||''}" placeholder="Nombre completo"></div>
+        <div class="form-group"><label class="form-label">Nombre del Inspector</label><input class="form-input" id="insp-inspector" value="${window.nombreOperador||''}" placeholder="Nombre del inspector"></div>
+      </div>`;
+  }
+  inspGenericForm('bimensualContent', titulo, codigo, items, opts, col, "window.mostrarMenuBimensual()", extraFields);
+};
+
+window.initBimensualPage = function() { window.mostrarMenuBimensual(); };
+
+// ===== LOCATIVAS — MENU =====
+window.mostrarMenuLocativa = function() {
+  inspGenericMenu('locativaContent', '🏢 Inspecciones Locativas', 'Seleccione el tipo de inspección', [
+    { icon: '🏗️', label: 'Instalaciones', sub: 'A4-F-022 · Locativas', cls: '', onclick: "window.iniciarLocativa('instalaciones')" },
+    { icon: '⚡', label: 'Redes Eléctricas', sub: 'A4-F-021 · Por área', cls: '', onclick: "window.iniciarLocativa('redes')" },
+    { icon: '🔧', label: 'Talleres: Equipos', sub: 'A4-F-020 · Herramientas', cls: '', onclick: "window.iniciarLocativa('talleres_equipos')" },
+    { icon: '🧹', label: 'Talleres: Áreas', sub: 'A4-F-023 · Verificación', cls: '', onclick: "window.iniciarLocativa('talleres_areas')" },
+    { icon: '🏢', label: 'Oficinas', sub: 'A4-F-024 · Chequeo', cls: '', onclick: "window.iniciarLocativa('oficinas')" },
+    { icon: '🛏️', label: 'Habitaciones y Baños', sub: 'A4-F-026 · Chequeo', cls: '', onclick: "window.iniciarLocativa('habitaciones')" }
+  ]);
+};
+
+window.iniciarLocativa = function(tipo) {
+  const backFn = "window.mostrarMenuLocativa()";
+  const optsBI = [{v:'B',l:'B',icon:'<i class="bi bi-check-lg"></i>'},{v:'M',l:'M',icon:'<i class="bi bi-x-lg"></i>'}];
+  const optsSINO = [{v:'SI',l:'SI',icon:'<i class="bi bi-check-lg"></i>'},{v:'NO',l:'NO',icon:'<i class="bi bi-x-lg"></i>'},{v:'NA',l:'N/A',icon:''}];
+  const optsCheck = [{v:'OK',l:'✓',icon:''},{v:'NA',l:'N/A',icon:''}];
+  const lugarFields = `<div class="form-row" style="margin-bottom:12px"><div class="form-group"><label class="form-label">Lugar / Área / Inmueble *</label><input class="form-input" id="insp-cema" placeholder="Ej: PB 764, Suba, Taller..." required></div><div class="form-group"><label class="form-label">Obra / OBN</label><input class="form-input" id="insp-ubicacion" placeholder="Código de obra"></div></div>`;
+
+  if (tipo === 'instalaciones') {
+    const items = locInstalaciones.map(t => ({ text: t, required: false }));
+    inspGenericForm('locativaContent', 'Inspección de Instalaciones Locativas', 'Código: A4-F-022', items, optsSINO, 'insp_loc_instalaciones', backFn, lugarFields);
+  } else if (tipo === 'redes') {
+    const items = [];
+    locRedesAreas.forEach(area => { locRedesItems.forEach(it => { items.push({ text: it, cat: area, required: false }); }); });
+    inspGenericForm('locativaContent', 'Inspección de Redes Eléctricas', 'Código: A4-F-021', items, optsBI, 'insp_loc_redes', backFn, lugarFields);
+  } else if (tipo === 'talleres_equipos') {
+    const items = locTalleresEquipos.map((t, i) => ({ text: t, cat: locTalleresEquiposCats[i], required: false }));
+    inspGenericForm('locativaContent', 'Inspección de Equipos y Herramientas en Talleres', 'Código: A4-F-020', items, optsSINO, 'insp_loc_talleres_eq', backFn, lugarFields);
+  } else if (tipo === 'talleres_areas') {
+    const items = locTalleresAreas.map(t => ({ text: t, required: false }));
+    inspGenericForm('locativaContent', 'Verificación de Áreas en Talleres de Mantenimiento', 'Código: A4-F-023', items, optsBI, 'insp_loc_talleres_areas', backFn, lugarFields);
+  } else if (tipo === 'oficinas') {
+    const items = locOficinas.map(o => ({ text: o.text, cat: o.area, freq: o.freq, required: false }));
+    inspGenericForm('locativaContent', 'Lista de Chequeo de Oficinas', 'Código: A4-F-024', items, optsCheck, 'insp_loc_oficinas', backFn, lugarFields);
+  } else if (tipo === 'habitaciones') {
+    const items = locHabitaciones.map(o => ({ text: o.text, cat: o.area, freq: o.freq, required: false }));
+    inspGenericForm('locativaContent', 'Chequeo de Habitaciones y Baños', 'Código: A4-F-026', items, optsCheck, 'insp_loc_habitaciones', backFn, lugarFields);
+  }
+};
+
+window.initLocativaPage = function() { window.mostrarMenuLocativa(); };
+
+window.initHojaVidaPage=function(){
+  hvSubscribir();hvSetupSearch();hvSetupImport();
+  document.getElementById('hv-btn-edit')?.addEventListener('click',hvToggleEdit);
+  document.getElementById('hv-btn-save')?.addEventListener('click',hvGuardarEdicion);
+  document.getElementById('hv-btn-cancel')?.addEventListener('click',hvCancelarEdicion);
+  document.getElementById('hv-btn-pdf')?.addEventListener('click',hvExportarPDF);
+};
+</script>
+
+<script>
+window.switchAuthTab=function(tab){document.querySelectorAll('.auth-tab').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.auth-form').forEach(f=>f.classList.remove('active'));if(tab==='login'){document.querySelector('.auth-tab:first-child').classList.add('active');document.getElementById('loginForm').classList.add('active')}else{document.querySelector('.auth-tab:last-child').classList.add('active');document.getElementById('registerForm').classList.add('active')}};
+
+window.navTo=function(page){document.querySelectorAll('.page-section').forEach(s=>s.classList.remove('active'));const t=document.getElementById('page-'+page);if(t){t.classList.add('active');t.querySelectorAll('.fade-in').forEach(el=>{el.style.animation='none';el.offsetHeight;el.style.animation=''})}document.querySelectorAll('#topNav a').forEach(a=>a.classList.remove('active'));const tl=document.querySelector(`#topNav a[data-page="${page}"]`);if(tl)tl.classList.add('active');document.querySelectorAll('.sidebar-item').forEach(s=>s.classList.remove('active'));const sl=document.querySelector(`.sidebar-item[data-page="${page}"]`);if(sl)sl.classList.add('active');if(page==='preoperacionales'&&window.initPreopPage)window.initPreopPage();if(page==='bimensuales'&&window.initBimensualPage)window.initBimensualPage();if(page==='locativas'&&window.initLocativaPage)window.initLocativaPage();if(page==='hojavida'&&window.initHojaVidaPage)window.initHojaVidaPage();if(page==='equipos'&&window.cargarEquipos)window.cargarEquipos(document.querySelector('.project-btn.active')?.dataset.project||'todos');if(page==='inicio'){setTimeout(()=>{document.querySelectorAll('.progress-fill').forEach(b=>{b.style.width='0';setTimeout(()=>{b.style.width=b.dataset.target+'%'},100)})},300)}window.scrollTo({top:0,behavior:'smooth'});document.getElementById('sidebar')?.classList.remove('mobile-open')};
+
+document.addEventListener('DOMContentLoaded',()=>{
+  const p=document.getElementById('progressBars');if(p){[{l:'Mtto. Preventivo',v:87,c:'green'},{l:'Mtto. Instalaciones',v:72,c:'yellow'},{l:'Inspecciones',v:95,c:'green'},{l:'OT Cerradas',v:63,c:'red'}].forEach(x=>{p.innerHTML+=`<div class="progress-item"><div class="progress-header"><span class="progress-label">${x.l}</span><span class="progress-value">${x.v}%</span></div><div class="progress-bar"><div class="progress-fill ${x.c}" data-target="${x.v}" style="width:0"></div></div></div>`});setTimeout(()=>{document.querySelectorAll('.progress-fill').forEach(b=>{b.style.width=b.dataset.target+'%'})},600)}
+  // Project submenu
+  document.querySelectorAll('.project-btn').forEach(btn=>{btn.addEventListener('click',()=>{document.querySelectorAll('.project-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');if(window.cargarEquipos)window.cargarEquipos(btn.dataset.project)})});
+});
+
+window.toggleDrop=function(id){event.stopPropagation();document.getElementById(id).classList.toggle('show')};
+document.addEventListener('click',()=>{document.querySelectorAll('.dropdown,.user-menu').forEach(d=>d.classList.remove('show'))});
+function showToast(type,msg){const c=document.getElementById('toastContainer');const t=document.createElement('div');t.className='toast '+type;t.innerHTML=`<div class="toast-icon">${{success:'✅',error:'❌',info:'ℹ️'}[type]||'ℹ️'}</div><span>${msg}</span>`;c.appendChild(t);setTimeout(()=>t.remove(),3200)}
+window.showToast=showToast;
+document.getElementById('menuToggle')?.addEventListener('click',()=>{document.getElementById('sidebar').classList.toggle('mobile-open')});
+document.getElementById('globalSearch')?.addEventListener('input',e=>{const term=e.target.value.toLowerCase();const ap=document.querySelector('.page-section.active');if(!term){ap.querySelectorAll('.doc-card,tr').forEach(el=>el.style.display='');return}if(ap.id==='page-documentos')ap.querySelectorAll('.doc-card').forEach(c=>{c.style.display=c.textContent.toLowerCase().includes(term)?'':'none'});else if(ap.id==='page-equipos')ap.querySelectorAll('.eq-table tbody tr').forEach(r=>{r.style.display=r.textContent.toLowerCase().includes(term)?'':'none'})});
+</script>
+</body>
+</html>
