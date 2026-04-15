@@ -2131,13 +2131,15 @@ window.enviarFalla = async function() {
     // 1. Guardar en Firestore
     await addDoc(collection(db, "reportes_fallas"), data);
 
-    2. // Enviar email via EmailJS (si está configurado)
+ // 2. Enviar email via EmailJS (si está configurado)
 try {
   if (typeof emailjs !== 'undefined' && window.EMAILJS_SERVICE_ID) {
+    
+    // Creamos la fecha limpia antes de enviarla
+    const fechaLimpia = new Date().toLocaleDateString("es-CO").replace(/\//g, "-");
+
     await emailjs.send(window.EMAILJS_SERVICE_ID, window.EMAILJS_TEMPLATE_ID, {
-      // CAMBIO AQUÍ: Usamos la lista de supervisores en lugar de la variable 'email'
       to_email: window.CORREOS_SUPERVISORES, 
-      
       from_name: window.nombreOperador || 'Operador MOVA',
       equipo: `${cema} — ${nombre || 'Sin nombre'}`,
       proyecto: proyecto,
@@ -2146,17 +2148,17 @@ try {
       descripcion: descripcion,
       operable: operable === 'SI' ? 'Sí, con restricciones' : 'No, equipo detenido',
       horometro: horometro || 'N/A',
-      fecha: new Date().toLocaleDateString("es-CO")
+      fecha: fechaLimpia // <--- Usamos la variable con guiones
     });
+
     showToast('success', '✅ Reporte guardado y correo enviado a supervisores');
-  
-      } else {
-        showToast('success', '✅ Reporte guardado (configura EmailJS para enviar correo)');
-      }
-    } catch(emailErr) {
-      console.warn('Email no enviado:', emailErr);
-      showToast('info', 'Reporte guardado. El correo no se pudo enviar.');
-    }
+  } else {
+    showToast('success', '✅ Reporte guardado (configura EmailJS para enviar correo)');
+  }
+} catch(emailErr) {
+  console.warn('Email no enviado:', emailErr);
+  showToast('info', 'Reporte guardado. El correo no se pudo enviar.');
+}
 
     // 3. Mostrar éxito
     document.getElementById('fallaForm').style.display = 'none';
