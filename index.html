@@ -2191,9 +2191,18 @@ window.initFallaPage = function() {
 };
 
 // ===== EMAILJS CONFIG =====
-window.EMAILJS_SERVICE_ID = 'tu_service_id'; 
-window.EMAILJS_TEMPLATE_ID = 'tu_template_id';
-// Agrega esta nueva variable con todos los correos que necesites (sin límites)
+window.EMAILJS_SERVICE_ID = 'service_xlgjfgn'; // Reemplaza con tu Service ID
+window.EMAILJS_TEMPLATE_ID = 'template_2f0v25h'; // Reemplaza con tu Template ID
+
+// Agrega tu Public Key aquí (la que sacaste de Account -> API Keys)
+const PUBLIC_KEY = 'kTZPLsFblwc5i8r4x'; 
+
+// Inicializar EmailJS obligatoriamente
+if (typeof emailjs !== 'undefined') {
+    emailjs.init(PUBLIC_KEY);
+}
+
+// Lista de correos
 window.CORREOS_SUPERVISORES = 'asistente.mtto.morenovargas@gmail.com, supervisor.mantenimiento@morenovargas.com, asistente.mantrb.morenovargas@gmail.com, supervisor3.morenovargas@gmail.com, supervisor.mantenimiento.maracana@morenovargas.com, asistente.mantenimiento2@morenovargas.com';
 
 
