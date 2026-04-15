@@ -2131,22 +2131,25 @@ window.enviarFalla = async function() {
     // 1. Guardar en Firestore
     await addDoc(collection(db, "reportes_fallas"), data);
 
-    // 2. Enviar email via EmailJS (si está configurado)
-    try {
-      if (typeof emailjs !== 'undefined' && window.EMAILJS_SERVICE_ID) {
-        await emailjs.send(window.EMAILJS_SERVICE_ID, window.EMAILJS_TEMPLATE_ID, {
-          to_email: email,
-          from_name: window.nombreOperador || 'Operador MOVA',
-          equipo: `${cema} — ${nombre || 'Sin nombre'}`,
-          proyecto: proyecto,
-          tipo_falla: window._fallaTipo,
-          prioridad: window._fallaPrio,
-          descripcion: descripcion,
-          operable: operable === 'SI' ? 'Sí, con restricciones' : 'No, equipo detenido',
-          horometro: horometro || 'N/A',
-          fecha: new Date().toLocaleDateString("es-CO")
-        });
-        showToast('success', '✅ Reporte guardado y correo enviado');
+    2. // Enviar email via EmailJS (si está configurado)
+try {
+  if (typeof emailjs !== 'undefined' && window.EMAILJS_SERVICE_ID) {
+    await emailjs.send(window.EMAILJS_SERVICE_ID, window.EMAILJS_TEMPLATE_ID, {
+      // CAMBIO AQUÍ: Usamos la lista de supervisores en lugar de la variable 'email'
+      to_email: window.CORREOS_SUPERVISORES, 
+      
+      from_name: window.nombreOperador || 'Operador MOVA',
+      equipo: `${cema} — ${nombre || 'Sin nombre'}`,
+      proyecto: proyecto,
+      tipo_falla: window._fallaTipo,
+      prioridad: window._fallaPrio,
+      descripcion: descripcion,
+      operable: operable === 'SI' ? 'Sí, con restricciones' : 'No, equipo detenido',
+      horometro: horometro || 'N/A',
+      fecha: new Date().toLocaleDateString("es-CO")
+    });
+    showToast('success', '✅ Reporte guardado y correo enviado a supervisores');
+  
       } else {
         showToast('success', '✅ Reporte guardado (configura EmailJS para enviar correo)');
       }
@@ -2188,12 +2191,10 @@ window.initFallaPage = function() {
 };
 
 // ===== EMAILJS CONFIG =====
-// Para activar el envío de correo, crea una cuenta en https://www.emailjs.com (gratis)
-// y reemplaza estos valores:
-window.EMAILJS_SERVICE_ID = ''; // ej: 'service_abc123'
-window.EMAILJS_TEMPLATE_ID = ''; // ej: 'template_xyz789'
-// Inicializar EmailJS (descomenta y pon tu Public Key):
-// emailjs.init('TU_PUBLIC_KEY_AQUI');
+window.EMAILJS_SERVICE_ID = 'tu_service_id'; 
+window.EMAILJS_TEMPLATE_ID = 'tu_template_id';
+// Agrega esta nueva variable con todos los correos que necesites (sin límites)
+window.CORREOS_SUPERVISORES = 'asistente.mtto.morenovargas@gmail.com, supervisor.mantenimiento@morenovargas.com, asistente.mantrb.morenovargas@gmail.com, supervisor3.morenovargas@gmail.com, supervisor.mantenimiento.maracana@morenovargas.com, asistente.mantenimiento2@morenovargas.com';
 
 
 // ===== BIMENSUALES — MENU =====
