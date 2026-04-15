@@ -607,6 +607,17 @@
   .op-action-btn{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;border:none;font-family:'DM Sans',sans-serif;transition:all .2s;text-decoration:none}
   .op-action-btn.primary{background:var(--yellow);color:var(--navy)}.op-action-btn.primary:hover{background:var(--yellow-light)}
   .op-action-btn.secondary{background:rgba(255,255,255,.1);color:var(--white);border:1px solid rgba(255,255,255,.2)}.op-action-btn.secondary:hover{background:rgba(255,255,255,.18)}
+  /* HISTORIAL MANTENIMIENTO */
+  .hmtto-tabs-wrap{overflow-x:auto;margin-bottom:16px;padding-bottom:4px}
+  .hmtto-tabs{display:flex;gap:6px;border-bottom:2px solid var(--gray-200);min-width:max-content}
+  .hmtto-tab{padding:10px 20px;border:none;background:transparent;font-size:13px;font-weight:600;color:var(--gray-500);cursor:pointer;font-family:'DM Sans',sans-serif;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .2s;white-space:nowrap;border-radius:6px 6px 0 0}
+  .hmtto-tab:hover{background:var(--gray-100);color:var(--navy)}
+  .hmtto-tab.active{color:var(--blue);border-bottom-color:var(--blue);background:rgba(46,117,182,.05)}
+  .hmtto-tab-skeleton{height:38px;width:120px;background:var(--gray-200);border-radius:6px 6px 0 0;animation:hmttopulse 1.2s ease-in-out infinite;margin-right:6px}
+  @keyframes hmttopulse{0%,100%{opacity:1}50%{opacity:.4}}
+  .hmtto-toolbar{display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+  .hmtto-sync-dot{width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block;margin-right:5px;animation:syncpulse 2.5s ease-in-out infinite}
+  @keyframes syncpulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.75)}}
   .hero-right{position:absolute;right:40px;top:50%;transform:translateY(-50%);width:420px;height:200px}
   .hero-right-slide{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity 1.2s ease;pointer-events:none}
   .hero-right-slide.active{opacity:1;pointer-events:auto}
@@ -719,6 +730,7 @@
     <a class="sidebar-item admin-only" data-page="bimensuales" onclick="window.navTo('bimensuales')"><span class="sidebar-icon">🔍</span>Insp. Bimensuales</a>
     <a class="sidebar-item admin-only" data-page="locativas" onclick="window.navTo('locativas')"><span class="sidebar-icon">🏢</span>Insp. Locativas</a>
     <a class="sidebar-item admin-only" data-page="historial" onclick="window.navTo('historial')"><span class="sidebar-icon">📚</span>Historial</a>
+    <a class="sidebar-item admin-only" data-page="hist-mtto" onclick="window.navTo('hist-mtto')"><span class="sidebar-icon">🗂️</span>Historial Mantenimiento</a>
     <a class="sidebar-item admin-only" data-page="hojavida" onclick="window.navTo('hojavida')"><span class="sidebar-icon">📑</span>Hoja de vida</a></div>
 </div>
 
@@ -1108,6 +1120,31 @@
   </div>
 </div>
 
+<!-- HISTORIAL MANTENIMIENTO (Google Sheets) -->
+<div class="page-section" id="page-hist-mtto">
+  <div class="page-header">
+    <div>
+      <h1>🗂️ Historial de Mantenimiento</h1>
+      <div class="page-header-subtitle">Sincronizado desde Google Sheets · <span id="hmtto-last-update" style="color:var(--gray-400)">—</span></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <button class="hv-btn hv-btn-edit" onclick="window.hmttoRefresh()">
+        <i class="bi bi-arrow-clockwise" id="hmtto-refresh-icon"></i> Actualizar
+      </button>
+    </div>
+  </div>
+  <div style="padding:0 48px 28px">
+    <div class="hmtto-tabs-wrap"><div class="hmtto-tabs" id="hmtto-tabs"></div></div>
+    <div class="hmtto-toolbar" id="hmtto-toolbar" style="display:none">
+      <div class="hv-search-wrap" style="max-width:340px">
+        <input type="text" id="hmtto-search" placeholder="Buscar en historial…" oninput="window.hmttoFiltrar()" autocomplete="off">
+      </div>
+      <span id="hmtto-count" style="font-size:12px;color:var(--gray-400);margin-left:auto"></span>
+    </div>
+    <div id="hmtto-container"><div class="eq-loading"><i class="bi bi-arrow-repeat" style="animation:spin 1s linear infinite;display:inline-block"></i> Cargando…</div></div>
+  </div>
+</div>
+
 <div class="toast-container" id="toastContainer"></div>
 <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
@@ -1219,7 +1256,7 @@ document.getElementById('registerForm').addEventListener('submit',async e=>{e.pr
 window.cerrarSesion=()=>signOut(auth);
 
 // ===== PERMISOS =====
-const PAGES_ADMIN=['dashboard','documentos','equipos','bimensuales','locativas','historial','hojavida'];
+const PAGES_ADMIN=['dashboard','documentos','equipos','bimensuales','locativas','historial','hist-mtto','hojavida'];
 function aplicarPermisos(){
   const esAdmin=window.rolActivo==='admin';
   document.body.classList.toggle('rol-operador',!esAdmin);
@@ -2131,7 +2168,7 @@ window.enviarFalla = async function() {
     // 1. Guardar en Firestore
     await addDoc(collection(db, "reportes_fallas"), data);
 
- // 2. Enviar email via EmailJS (si está configurado)
+     // 2. Enviar email via EmailJS (si está configurado)
 try {
   if (typeof emailjs !== 'undefined' && window.EMAILJS_SERVICE_ID) {
     
@@ -2344,6 +2381,131 @@ window.histBuscar=async function(){const term=document.getElementById('hist-sear
 window.histPDF=function(col,id,tipo){window._inspCol=col;if(tipo==='preop'){window.coleccion=col;window.exportarPDF(id,col)}else if(tipo==='insp'){window.inspExportarPDF(id)}else{showToast('info','PDF de fallas no disponible')}};
 window.initHistorialPage=function(){const t=document.getElementById('hist-tipo-filter');if(t&&t.options.length<2)HIST_COLS.forEach(c=>{const o=document.createElement('option');o.value=c.col;o.textContent=c.label;t.appendChild(o)});const m=document.getElementById('hist-mes');if(m&&!m.value){const d=new Date();m.value=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')}};
 
+// ===== HISTORIAL MANTENIMIENTO (Google Sheets) =====
+const HMTTO_URL='https://script.google.com/macros/s/AKfycbxVL9dvF5inJZa3bUtwXJZBccNmrmfUZjbqfXvNMZBQK9bOWraDvD5bMcT-BXGp6SEmVA/exec';
+let hmttoSheets=[],hmttoActiva='',hmttoData={},hmttoInterval=null;
+
+async function hmttoFetch(url){
+  const r=await fetch(url);
+  if(!r.ok)throw new Error('HTTP '+r.status);
+  return r.json();
+}
+
+function hmttoTimestamp(){
+  const now=new Date();
+  const t=now.toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit'});
+  document.getElementById('hmtto-last-update').innerHTML=
+    `<span class="hmtto-sync-dot"></span>Actualizado a las ${t}`;
+}
+
+async function hmttoCargarSheets(){
+  const tabsEl=document.getElementById('hmtto-tabs');
+  tabsEl.innerHTML='<div class="hmtto-tab-skeleton"></div><div class="hmtto-tab-skeleton" style="width:90px"></div><div class="hmtto-tab-skeleton" style="width:110px"></div>';
+  try{
+    const json=await hmttoFetch(HMTTO_URL);
+    hmttoSheets=json.sheets||[];
+    if(!hmttoSheets.length){tabsEl.innerHTML='<p style="color:var(--gray-400);font-size:13px;padding:10px">Sin pestañas disponibles</p>';return}
+    tabsEl.innerHTML=hmttoSheets.map(s=>
+      `<button class="hmtto-tab${s===hmttoActiva?' active':''}" onclick="window.hmttoSelTab('${s}')">${s}</button>`
+    ).join('');
+    if(!hmttoActiva||!hmttoSheets.includes(hmttoActiva))hmttoActiva=hmttoSheets[0];
+    await hmttoCargarTab(hmttoActiva);
+  }catch(e){
+    tabsEl.innerHTML='';
+    document.getElementById('hmtto-container').innerHTML=`<div class="eq-empty"><i class="bi bi-exclamation-triangle"></i><p>Error al conectar con Google Sheets.<br><small>${e.message}</small></p></div>`;
+  }
+}
+
+async function hmttoCargarTab(sheet){
+  hmttoActiva=sheet;
+  // Marcar tab activa
+  document.querySelectorAll('.hmtto-tab').forEach(t=>t.classList.toggle('active',t.textContent===sheet));
+  const cont=document.getElementById('hmtto-container');
+  const toolbar=document.getElementById('hmtto-toolbar');
+  cont.innerHTML='<div class="eq-loading"><i class="bi bi-arrow-repeat" style="animation:spin 1s linear infinite;display:inline-block"></i> Cargando '+sheet+'…</div>';
+  toolbar.style.display='none';
+  try{
+    const json=await hmttoFetch(HMTTO_URL+'?sheet='+encodeURIComponent(sheet));
+    hmttoData[sheet]={headers:json.headers||[],rows:json.rows||[]};
+    hmttoTimestamp();
+    hmttoRenderTabla(sheet);
+  }catch(e){
+    cont.innerHTML=`<div class="eq-empty"><i class="bi bi-exclamation-triangle"></i><p>Error al cargar pestaña <strong>${sheet}</strong>.<br><small>${e.message}</small></p></div>`;
+  }
+}
+
+function hmttoRenderTabla(sheet,filtro=''){
+  const {headers,rows}=hmttoData[sheet]||{headers:[],rows:[]};
+  const cont=document.getElementById('hmtto-container');
+  const toolbar=document.getElementById('hmtto-toolbar');
+  const countEl=document.getElementById('hmtto-count');
+  if(!rows.length){
+    cont.innerHTML='<div class="eq-empty" style="text-align:center;padding:60px 20px;color:var(--gray-400)"><i class="bi bi-inbox" style="font-size:40px;display:block;margin-bottom:12px;opacity:.4"></i><p>Sin registros en esta pestaña</p></div>';
+    toolbar.style.display='none';return;
+  }
+  const term=filtro.toLowerCase();
+  const filtered=term?rows.filter(r=>Object.values(r).some(v=>String(v).toLowerCase().includes(term))):rows;
+  toolbar.style.display='flex';
+  countEl.textContent=`${filtered.length} de ${rows.length} registros`;
+  if(!filtered.length){cont.innerHTML='<div class="eq-empty" style="text-align:center;padding:40px 20px;color:var(--gray-400)"><i class="bi bi-search" style="font-size:32px;display:block;margin-bottom:10px;opacity:.4"></i><p>Sin coincidencias para "<strong>'+filtro+'</strong>"</p></div>';return}
+  const ths=headers.map(h=>`<th>${h}</th>`).join('');
+  const trs=filtered.map(row=>{
+    const tds=headers.map(h=>{
+      let v=row[h]??'';
+      // Detectar fechas tipo Date object serializado
+      if(v&&typeof v==='string'&&v.match(/^\d{4}-\d{2}-\d{2}T/))v=new Date(v).toLocaleDateString('es-CO');
+      return`<td>${v===''||v===null?'<span style="color:var(--gray-300)">—</span>':v}</td>`;
+    }).join('');
+    return`<tr>${tds}</tr>`;
+  }).join('');
+  cont.innerHTML=`<div class="card"><div class="card-body" style="padding:0;overflow-x:auto"><table class="eq-table"><thead><tr>${ths}</tr></thead><tbody>${trs}</tbody></table></div></div>`;
+}
+
+window.hmttoSelTab=async function(sheet){
+  if(!hmttoData[sheet])await hmttoCargarTab(sheet);
+  else{
+    hmttoActiva=sheet;
+    document.querySelectorAll('.hmtto-tab').forEach(t=>t.classList.toggle('active',t.textContent===sheet));
+    const busq=document.getElementById('hmtto-search');
+    if(busq)busq.value='';
+    hmttoRenderTabla(sheet);
+  }
+};
+
+window.hmttoFiltrar=function(){
+  const term=document.getElementById('hmtto-search').value;
+  hmttoRenderTabla(hmttoActiva,term);
+};
+
+window.hmttoRefresh=async function(){
+  const icon=document.getElementById('hmtto-refresh-icon');
+  if(icon){icon.style.animation='spin .6s linear infinite';icon.style.display='inline-block'}
+  hmttoData={};// limpiar caché
+  await hmttoCargarSheets();
+  if(icon)icon.style.animation='';
+};
+
+// Auto-polling cada 60 segundos mientras la página esté activa
+window.initHistMttoPage=function(){
+  hmttoCargarSheets();
+  if(hmttoInterval)clearInterval(hmttoInterval);
+  hmttoInterval=setInterval(async()=>{
+    if(document.getElementById('page-hist-mtto').classList.contains('active')){
+      // Solo recarga la pestaña activa silenciosamente
+      try{
+        const json=await hmttoFetch(HMTTO_URL+'?sheet='+encodeURIComponent(hmttoActiva));
+        const prev=JSON.stringify(hmttoData[hmttoActiva]?.rows);
+        hmttoData[hmttoActiva]={headers:json.headers||[],rows:json.rows||[]};
+        if(JSON.stringify(json.rows)!==prev){
+          hmttoRenderTabla(hmttoActiva,document.getElementById('hmtto-search')?.value||'');
+          showToast('info','Historial actualizado — nuevos registros detectados');
+        }
+        hmttoTimestamp();
+      }catch(e){/* silencioso */}
+    }
+  },60000);
+};
+
 window.initHojaVidaPage=function(){
   hvSubscribir();hvSetupSearch();hvSetupImport();
   document.getElementById('hv-btn-edit')?.addEventListener('click',hvToggleEdit);
@@ -2363,7 +2525,8 @@ window.navTo=function(page){
   }document.querySelectorAll('.page-section').forEach(s=>s.classList.remove('active'));const t=document.getElementById('page-'+page);if(t){t.classList.add('active');t.querySelectorAll('.fade-in').forEach(el=>{el.style.animation='none';el.offsetHeight;el.style.animation=''});
   // Agregar botón "Volver al inicio" en todas las páginas excepto inicio
   if(page!=='inicio'){let bb=t.querySelector('.auto-back-btn');if(!bb){bb=document.createElement('a');bb.className='auto-back-btn';bb.innerHTML='<i class="bi bi-arrow-left"></i> Volver al Inicio';bb.style.cssText='display:inline-flex;align-items:center;gap:6px;padding:8px 16px;margin:16px 0 0 48px;border-radius:8px;border:1px solid var(--gray-200);background:var(--white);color:var(--gray-600);font-size:12px;font-weight:500;cursor:pointer;transition:all .2s;font-family:DM Sans,sans-serif;text-decoration:none';bb.onmouseover=function(){this.style.background='var(--gray-50)'};bb.onmouseout=function(){this.style.background='var(--white)'};bb.onclick=function(){window.navTo("inicio")};const ph=t.querySelector('.page-header,.preop-container,.falla-container,.hv-container');if(ph)t.insertBefore(bb,ph);else t.prepend(bb)}}
-}document.querySelectorAll('#topNav a').forEach(a=>a.classList.remove('active'));const tl=document.querySelector(`#topNav a[data-page="${page}"]`);if(tl)tl.classList.add('active');document.querySelectorAll('.sidebar-item').forEach(s=>s.classList.remove('active'));const sl=document.querySelector(`.sidebar-item[data-page="${page}"]`);if(sl)sl.classList.add('active');if(page==='fallas'&&window.initFallaPage)window.initFallaPage();if(page==='preoperacionales'&&window.initPreopPage)window.initPreopPage();if(page==='bimensuales'&&window.initBimensualPage)window.initBimensualPage();if(page==='locativas'&&window.initLocativaPage)window.initLocativaPage();if(page==='historial'&&window.initHistorialPage)window.initHistorialPage();if(page==='hojavida'&&window.initHojaVidaPage)window.initHojaVidaPage();if(page==='equipos'&&window.cargarEquipos)window.cargarEquipos(document.querySelector('.project-btn.active')?.dataset.project||'todos');if(page==='inicio'){if(window._initHeroCarousel)window._initHeroCarousel();setTimeout(()=>{document.querySelectorAll('.progress-fill').forEach(b=>{b.style.width='0';setTimeout(()=>{b.style.width=b.dataset.target+'%'},100)})},300)}window.scrollTo({top:0,behavior:'smooth'});document.getElementById('sidebar')?.classList.remove('mobile-open');document.getElementById('sidebarOverlay')?.classList.remove('show')};
+}document.querySelectorAll('#topNav a').forEach(a=>a.classList.remove('active'));const tl=document.querySelector(`#topNav a[data-page="${page}"]`);if(tl)tl.classList.add('active');document.querySelectorAll('.sidebar-item').forEach(s=>s.classList.remove('active'));const sl=document.querySelector(`.sidebar-item[data-page="${page}"]`);if(sl)sl.classList.add('active');if(page==='fallas'&&window.initFallaPage)window.initFallaPage();if(page==='preoperacionales'&&window.initPreopPage)window.initPreopPage();if(page==='bimensuales'&&window.initBimensualPage)window.initBimensualPage();if(page==='locativas'&&window.initLocativaPage)window.initLocativaPage();if(page==='historial'&&window.initHistorialPage)window.initHistorialPage();if(page==='hojavida'&&window.initHojaVidaPage)window.initHojaVidaPage();
+if(page==='hist-mtto'&&window.initHistMttoPage)window.initHistMttoPage();if(page==='equipos'&&window.cargarEquipos)window.cargarEquipos(document.querySelector('.project-btn.active')?.dataset.project||'todos');if(page==='inicio'){if(window._initHeroCarousel)window._initHeroCarousel();setTimeout(()=>{document.querySelectorAll('.progress-fill').forEach(b=>{b.style.width='0';setTimeout(()=>{b.style.width=b.dataset.target+'%'},100)})},300)}window.scrollTo({top:0,behavior:'smooth'});document.getElementById('sidebar')?.classList.remove('mobile-open');document.getElementById('sidebarOverlay')?.classList.remove('show')};
 
 document.addEventListener('DOMContentLoaded',()=>{
   const p=document.getElementById('progressBars');if(p){[{l:'Mtto. Preventivo',v:87,c:'green'},{l:'Mtto. Instalaciones',v:72,c:'yellow'},{l:'Inspecciones',v:95,c:'green'},{l:'OT Cerradas',v:63,c:'red'}].forEach(x=>{p.innerHTML+=`<div class="progress-item"><div class="progress-header"><span class="progress-label">${x.l}</span><span class="progress-value">${x.v}%</span></div><div class="progress-bar"><div class="progress-fill ${x.c}" data-target="${x.v}" style="width:0"></div></div></div>`});setTimeout(()=>{document.querySelectorAll('.progress-fill').forEach(b=>{b.style.width=b.dataset.target+'%'})},600)}
