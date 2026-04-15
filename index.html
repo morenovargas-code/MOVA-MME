@@ -593,7 +593,20 @@
   .hv-estado.inactivo{background:rgba(229,57,53,.12);color:var(--red)}
   .hv-estado.mantenimiento{background:rgba(255,152,0,.12);color:#E65100}
 
-  /* HERO CAROUSEL — solo rota el lado derecho */
+  /* ===== PERMISOS POR ROL ===== */
+  body.rol-operador .admin-only{display:none!important}
+  .role-badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;padding:3px 8px;border-radius:10px;text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
+  .role-badge.admin{background:rgba(46,117,182,.12);color:var(--blue)}
+  .role-badge.operador{background:rgba(76,175,80,.12);color:var(--green-dark)}
+  /* Panel bienvenida operador */
+  .op-welcome{background:linear-gradient(135deg,var(--navy),var(--navy-mid));border-radius:14px;padding:28px 32px;margin:28px 48px 0;color:var(--white);display:flex;align-items:center;gap:24px}
+  .op-welcome-icon{font-size:48px;flex-shrink:0}
+  .op-welcome h2{font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:700;margin-bottom:6px}
+  .op-welcome p{font-size:13px;color:var(--gray-300);line-height:1.5}
+  .op-welcome-actions{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+  .op-action-btn{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;border:none;font-family:'DM Sans',sans-serif;transition:all .2s;text-decoration:none}
+  .op-action-btn.primary{background:var(--yellow);color:var(--navy)}.op-action-btn.primary:hover{background:var(--yellow-light)}
+  .op-action-btn.secondary{background:rgba(255,255,255,.1);color:var(--white);border:1px solid rgba(255,255,255,.2)}.op-action-btn.secondary:hover{background:rgba(255,255,255,.18)}
   .hero-right{position:absolute;right:40px;top:50%;transform:translateY(-50%);width:420px;height:200px}
   .hero-right-slide{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity 1.2s ease;pointer-events:none}
   .hero-right-slide.active{opacity:1;pointer-events:auto}
@@ -642,15 +655,19 @@
     </div>
     <form class="auth-form active" id="loginForm">
       <div class="auth-field"><label>Correo Electrónico</label><input type="email" id="login-email" placeholder="correo@ejemplo.com" required></div>
-      <div class="auth-field"><label>Contraseña</label><input type="password" id="login-password" placeholder="••••••••" required></div>
+      <div class="auth-field"><label>Contraseña <span style="font-size:10px;color:var(--gray-400);font-weight:400;text-transform:none;letter-spacing:0">(tu código IPE)</span></label><input type="password" id="login-password" placeholder="Ej: IPE-001" required></div>
       <div class="auth-error" id="loginError"></div>
       <button type="submit" class="auth-submit login-btn"><i class="bi bi-box-arrow-in-right"></i> Ingresar</button>
     </form>
     <form class="auth-form" id="registerForm">
-      <div class="auth-field"><label>Correo Electrónico</label><input type="email" id="reg-email" placeholder="correo@ejemplo.com" required></div>
-      <div class="auth-field"><label>Contraseña</label><input type="password" id="reg-password" placeholder="Mínimo 6 caracteres" required></div>
-      <div class="auth-field"><label>IPE (Equipo de Protección) *</label>
-        <select id="reg-ipe" required><option value="">Seleccionar IPE...</option><option value="IPE-001">IPE-001 — Casco + Gafas + Guantes</option><option value="IPE-002">IPE-002 — Casco + Botas + Chaleco</option><option value="IPE-003">IPE-003 — Completo</option><option value="IPE-004">IPE-004 — Básico</option></select>
+      <div class="auth-field"><label>Nombre y Apellido *</label><input type="text" id="reg-nombre" placeholder="Ej: Carlos Ramírez" required autocomplete="off"></div>
+      <div class="auth-field"><label>Correo Electrónico *</label><input type="email" id="reg-email" placeholder="correo@ejemplo.com" required></div>
+      <div class="auth-field"><label>Código IPE * <span style="font-size:10px;color:var(--yellow-light);font-weight:400;text-transform:none;letter-spacing:0">(será tu contraseña)</span></label>
+        <input type="text" id="reg-ipe" placeholder="Ej: IPE-001, IPE-023..." required autocomplete="off" style="text-transform:uppercase">
+        <div style="margin-top:6px;font-size:11px;color:var(--gray-400)"><i class="bi bi-info-circle"></i> Para ingresar usarás tu correo y este código IPE como contraseña.</div>
+      </div>
+      <div class="auth-field"><label>Código de Administrador <span style="font-size:10px;color:var(--gray-400);font-weight:400;text-transform:none;letter-spacing:0">(opcional — solo si eres supervisor o director)</span></label>
+        <input type="password" id="reg-codigo" placeholder="Dejar vacío si eres operador/conductor" autocomplete="off">
       </div>
       <div class="auth-error" id="regError"></div>
       <button type="submit" class="auth-submit register-btn"><i class="bi bi-person-plus"></i> Crear Cuenta</button>
@@ -662,8 +679,8 @@
 <div class="ipe-overlay" id="ipeOverlay">
   <div class="ipe-modal">
     <h2>⚙️ Asignar IPE</h2>
-    <p>Tu cuenta no tiene un IPE asignado. Selecciona uno para continuar.</p>
-    <select id="ipe-modal-select"><option value="">Seleccionar IPE...</option><option value="IPE-001">IPE-001 — Casco + Gafas + Guantes</option><option value="IPE-002">IPE-002 — Casco + Botas + Chaleco</option><option value="IPE-003">IPE-003 — Completo</option><option value="IPE-004">IPE-004 — Básico</option></select>
+    <p>Tu cuenta no tiene un IPE asignado. Ingresa tu código IPE para continuar.</p>
+    <input id="ipe-modal-select" type="text" placeholder="Ej: IPE-001, IPE-023..." style="width:100%;padding:12px 16px;border:1px solid var(--gray-200);border-radius:10px;font-size:14px;font-family:DM Sans,sans-serif;color:var(--gray-700);outline:none;margin-bottom:16px;text-transform:uppercase" autocomplete="off">
     <button class="ipe-save" id="ipeModalSave">Guardar IPE</button>
   </div>
 </div>
@@ -673,15 +690,15 @@
   <div class="topbar-logo" onclick="window.navTo('inicio')"><div class="logo-icon">MM&E</div>MOVA</div>
   <div class="topbar-nav" id="topNav">
     <a data-page="inicio" class="active" onclick="window.navTo('inicio')">Inicio</a>
-    <a data-page="documentos" onclick="window.navTo('documentos')">Documentos</a>
-    <a data-page="equipos" onclick="window.navTo('equipos')">Equipos</a>
+    <a data-page="documentos" class="admin-only" onclick="window.navTo('documentos')">Documentos</a>
+    <a data-page="equipos" class="admin-only" onclick="window.navTo('equipos')">Equipos</a>
     <a data-page="preoperacionales" onclick="window.navTo('preoperacionales')">Preoperacional</a>
   </div>
   <div class="topbar-search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><input type="text" placeholder="Buscar..." id="globalSearch" autocomplete="off"></div>
   <div class="topbar-right">
     <span class="topbar-user-name" id="topbarUserName"></span>
     <button class="topbar-btn" onclick="toggleDrop('notifDrop')">🔔<span class="notif-dot"></span><div class="dropdown" id="notifDrop"><div class="dropdown-header">Notificaciones</div><div class="dropdown-item"><div class="notif-icon" style="background:rgba(229,57,53,.1)">🔴</div><div><div class="notif-text"><strong>Motoniveladora 120K</strong> fuera de servicio</div><div class="notif-time">Hace 30 min</div></div></div></div></button>
-    <div class="topbar-avatar" onclick="toggleDrop('userDrop')"><span id="avatarInitials">JR</span><div class="user-menu" id="userDrop"><div class="user-menu-header"><div class="name" id="menuUserName">Usuario</div><div class="role">Coord. Mantenimiento</div></div><div class="user-menu-item" onclick="window.cerrarSesion()">🚪 Cerrar Sesión</div></div></div>
+    <div class="topbar-avatar" onclick="toggleDrop('userDrop')"><span id="avatarInitials">JR</span><div class="user-menu" id="userDrop"><div class="user-menu-header"><div class="name" id="menuUserName">Usuario</div><div id="menuUserRole"><span class="role-badge operador">Operador</span></div></div><div class="user-menu-item" onclick="window.cerrarSesion()">🚪 Cerrar Sesión</div></div></div>
     <button class="topbar-btn menu-toggle" id="menuToggle">☰</button>
   </div>
 </div>
@@ -691,17 +708,18 @@
 <div class="sidebar" id="sidebar">
   <div class="sidebar-section"><div class="sidebar-label">Principal</div>
     <a class="sidebar-item active" data-page="inicio" onclick="window.navTo('inicio')"><span class="sidebar-icon">🏠</span>Inicio</a>
-    <a class="sidebar-item" data-page="dashboard" onclick="window.navTo('dashboard')"><span class="sidebar-icon">📊</span>Dashboard KPIs</a></div>
-  <div class="sidebar-section"><div class="sidebar-label">Gestión Documental</div>
-    <a class="sidebar-item" data-page="documentos" onclick="window.navTo('documentos')"><span class="sidebar-icon">📂</span>Listado Maestro</a></div>
+    <a class="sidebar-item admin-only" data-page="dashboard" onclick="window.navTo('dashboard')"><span class="sidebar-icon">📊</span>Dashboard KPIs</a></div>
+  <div class="sidebar-section admin-only"><div class="sidebar-label">Gestión Documental</div>
+    <a class="sidebar-item admin-only" data-page="documentos" onclick="window.navTo('documentos')"><span class="sidebar-icon">📂</span>Listado Maestro</a></div>
   <div class="sidebar-section"><div class="sidebar-label">Operaciones</div>
     <a class="sidebar-item" data-page="fallas" onclick="window.navTo('fallas')"><span class="sidebar-icon">⚠️</span>Reportar Falla</a>
-    <a class="sidebar-item" data-page="equipos" onclick="window.navTo('equipos')"><span class="sidebar-icon">🚜</span>Equipos</a>
+    <a class="sidebar-item admin-only" data-page="equipos" onclick="window.navTo('equipos')"><span class="sidebar-icon">🚜</span>Equipos</a>
     <a class="sidebar-item" data-page="preoperacionales" onclick="window.navTo('preoperacionales')"><span class="sidebar-icon">✅</span>Preoperacionales</a>
-    <a class="sidebar-item" data-page="ordenes" onclick="window.navTo('ordenes')"><span class="sidebar-icon">🔧</span>Órdenes de Trabajo</a>
-    <a class="sidebar-item" data-page="bimensuales" onclick="window.navTo('bimensuales')"><span class="sidebar-icon">🔍</span>Insp. Bimensuales</a>
-    <a class="sidebar-item" data-page="locativas" onclick="window.navTo('locativas')"><span class="sidebar-icon">🏢</span>Insp. Locativas</a>
-    <a class="sidebar-item" data-page="hojavida" onclick="window.navTo('hojavida')"><span class="sidebar-icon">📑</span>Hoja de vida</a></div>
+    <a class="sidebar-item" data-page="ordenes" onclick="window.navTo('ordenes')"><span class="sidebar-icon">🔧</span>Solicitar Mantenimiento</a>
+    <a class="sidebar-item admin-only" data-page="bimensuales" onclick="window.navTo('bimensuales')"><span class="sidebar-icon">🔍</span>Insp. Bimensuales</a>
+    <a class="sidebar-item admin-only" data-page="locativas" onclick="window.navTo('locativas')"><span class="sidebar-icon">🏢</span>Insp. Locativas</a>
+    <a class="sidebar-item admin-only" data-page="historial" onclick="window.navTo('historial')"><span class="sidebar-icon">📚</span>Historial</a>
+    <a class="sidebar-item admin-only" data-page="hojavida" onclick="window.navTo('hojavida')"><span class="sidebar-icon">📑</span>Hoja de vida</a></div>
 </div>
 
 <!-- MAIN -->
@@ -748,10 +766,23 @@
     <div class="quick-access fade-in delay-1">
       <a class="quick-item" onclick="window.navTo('preoperacionales')"><span class="qi-icon qi-blue">📝</span>Inspección Preoperacional</a>
       <a class="quick-item" onclick="window.navTo('ordenes')"><span class="qi-icon qi-green">🔧</span>Solicitar Mantenimiento</a>
-      <a class="quick-item" onclick="window.navTo('equipos')"><span class="qi-icon qi-yellow">⛽</span>Control de Combustible</a>
-      <a class="quick-item" onclick="window.navTo('documentos')"><span class="qi-icon qi-blue">📊</span>Informe Mensual</a>
+      <a class="quick-item admin-only" onclick="window.navTo('equipos')"><span class="qi-icon qi-yellow">⛽</span>Control de Combustible</a>
+      <a class="quick-item admin-only" onclick="window.navTo('documentos')"><span class="qi-icon qi-blue">📊</span>Informe Mensual</a>
     </div>
-    <div class="content">
+    <!-- Panel bienvenida solo para operadores -->
+    <div class="op-welcome fade-in" id="op-welcome-panel" style="display:none">
+      <div class="op-welcome-icon">👷</div>
+      <div>
+        <h2>¡Bienvenido, <span id="op-welcome-nombre"></span>!</h2>
+        <p>Desde aquí puedes registrar tu inspección preoperacional, reportar una falla o solicitar un mantenimiento. Usa los botones de abajo o el menú lateral.</p>
+        <div class="op-welcome-actions">
+          <a class="op-action-btn primary" onclick="window.navTo('preoperacionales')">📝 Preoperacional</a>
+          <a class="op-action-btn secondary" onclick="window.navTo('fallas')">⚠️ Reportar Falla</a>
+          <a class="op-action-btn secondary" onclick="window.navTo('ordenes')">🔧 Solicitar Mantenimiento</a>
+        </div>
+      </div>
+    </div>
+    <div class="content admin-only">
       <div class="content-left">
         <div class="card fade-in delay-2"><div class="card-header"><div class="card-title"><span class="card-title-icon" style="background:rgba(46,117,182,.1);color:var(--blue)">📊</span>Indicadores — Marzo 2026</div><a class="card-action" onclick="window.navTo('dashboard')">Dashboard →</a></div><div class="card-body"><div class="kpi-grid"><div class="kpi-card good"><div class="kpi-label">Disponibilidad</div><div class="kpi-value">92.4%</div><div class="kpi-trend up">▲ +2.1%</div></div><div class="kpi-card good"><div class="kpi-label">Cumplimiento</div><div class="kpi-value">87%</div><div class="kpi-trend up">▲ +5%</div></div><div class="kpi-card warn"><div class="kpi-label">MTTR</div><div class="kpi-value">4.2h</div><div class="kpi-trend down">▼ Meta: 3.5h</div></div><div class="kpi-card good"><div class="kpi-label">Backlog OT</div><div class="kpi-value">8</div><div class="kpi-trend up">▲ Dentro meta</div></div></div></div></div>
         <div class="card fade-in delay-3"><div class="card-header"><div class="card-title"><span class="card-title-icon" style="background:rgba(244,180,0,.1);color:var(--yellow)">📂</span>Documentos Recientes</div><a class="card-action" onclick="window.navTo('documentos')">Ver todos →</a></div><div class="card-body"><div class="docs-grid"><div class="doc-card"><span class="doc-card-tag tag-updated">Actualizado</span><div class="doc-card-icon prog">📘</div><div class="doc-card-title">Programa de Mtto. de Equipos</div><div class="doc-card-code">A4-PR-001 · v3.2</div></div><div class="doc-card"><span class="doc-card-tag tag-new">Nuevo</span><div class="doc-card-icon proc">🔧</div><div class="doc-card-title">Adquisición de Combustible</div><div class="doc-card-code">A4-P-003 · v1.0</div></div><div class="doc-card"><div class="doc-card-icon char">📑</div><div class="doc-card-title">Caracterización Proceso Mtto.</div><div class="doc-card-code">D1-CP-005 · v2.0</div></div></div></div></div>
@@ -923,6 +954,33 @@
     <div class="preop-container" id="locativaContent"></div>
   </div>
 
+
+  <div class="page-section" id="page-historial">
+    <div class="page-header"><div><h1>📚 Historial Unificado</h1><div class="page-header-subtitle">Resumen y búsqueda de inspecciones diligenciadas</div></div></div>
+    <div style="padding:28px 48px">
+      <div style="display:flex;gap:4px;background:var(--gray-100);border-radius:10px;padding:3px;margin-bottom:20px;width:fit-content">
+        <button class="hist-tab active" data-tab="resumen" onclick="window.histTab('resumen')" style="padding:8px 20px;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;background:var(--white);color:var(--navy)">📊 Resumen</button>
+        <button class="hist-tab" data-tab="busqueda" onclick="window.histTab('busqueda')" style="padding:8px 20px;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;background:transparent;color:var(--gray-500)">🔍 Búsqueda</button>
+      </div>
+      <div id="hist-resumen">
+        <div style="display:flex;gap:12px;margin-bottom:20px;align-items:center;flex-wrap:wrap">
+          <label style="font-size:13px;font-weight:600;color:var(--gray-600)">Mes:</label>
+          <input type="month" id="hist-mes" class="form-input" style="max-width:200px">
+          <button class="btn btn-primary btn-sm" onclick="window.histCargarResumen()"><i class="bi bi-arrow-clockwise"></i> Actualizar</button>
+        </div>
+        <div id="hist-cards" class="dashboard-nav" style="grid-template-columns:repeat(auto-fill,minmax(220px,1fr))"><div class="eq-loading">Selecciona un mes y haz click en Actualizar</div></div>
+      </div>
+      <div id="hist-busqueda" style="display:none">
+        <div style="display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap">
+          <input type="text" id="hist-search" class="form-input" placeholder="Buscar por CEMA, COMEQ o Placa..." style="flex:1;min-width:240px">
+          <select id="hist-tipo-filter" class="form-select" style="max-width:240px"><option value="">Todos los tipos</option></select>
+          <button class="btn btn-primary btn-sm" onclick="window.histBuscar()"><i class="bi bi-search"></i> Buscar</button>
+        </div>
+        <div id="hist-resultados"><div class="eq-empty"><i class="bi bi-search"></i><p>Ingresa un código y presiona Buscar</p></div></div>
+      </div>
+    </div>
+  </div>
+
   <!-- HOJA DE VIDA -->
   <div class="page-section" id="page-hojavida">
     <div class="page-header"><div><h1>📑 Hoja de Vida</h1><div class="page-header-subtitle">Certificado de integridad mecánica por equipo</div></div></div>
@@ -1081,30 +1139,39 @@ onAuthStateChanged(auth, async user => {
   if (user) {
     as.classList.add('hidden');
     window.operadorActivo = user.email;
-    window.nombreOperador = user.displayName || user.email.split("@")[0].replace(/\./g, " ").replace(/\b\w/g, l => l.toUpperCase());
-    
-    // ... (todo tu código de nombres y avatar igual) ...
-    document.getElementById('topbarUserName').textContent = window.nombreOperador;
-    document.getElementById('menuUserName').textContent = window.nombreOperador;
-    document.getElementById('avatarInitials').textContent = window.nombreOperador.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
 
     try {
       const ud = await getDoc(doc(db, "usuarios", user.uid));
-      if (ud.exists() && ud.data().ipe) {
-        window.ipeActivo = ud.data().ipe;
-        showToast('success', `Bienvenido, ${window.nombreOperador}`);
+      const udata = ud.exists() ? ud.data() : {};
+
+      // Nombre: Firestore > displayName > derivar del correo (fallback)
+      window.nombreOperador = udata.nombre || user.displayName
+        || user.email.split("@")[0].replace(/\./g," ").replace(/\b\w/g,l=>l.toUpperCase());
+      window.rolActivo = udata.rol || 'operador';
+
+      document.getElementById('topbarUserName').textContent = window.nombreOperador;
+      document.getElementById('menuUserName').textContent = window.nombreOperador;
+      document.getElementById('avatarInitials').textContent = window.nombreOperador.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+      aplicarPermisos();
+
+      if (udata.ipe) {
+        window.ipeActivo = udata.ipe;
+        showToast('success', `Bienvenido, ${window.nombreOperador.split(' ')[0]}`);
       } else {
         window.ipeActivo = null;
-        mostrarModalIPE(user.uid);
+        mostrarModalIPE(user.uid, !udata.nombre);
       }
     } catch (e) {
+      window.nombreOperador = user.email.split("@")[0].replace(/\./g," ").replace(/\b\w/g,l=>l.toUpperCase());
+      document.getElementById('topbarUserName').textContent = window.nombreOperador;
+      document.getElementById('menuUserName').textContent = window.nombreOperador;
+      document.getElementById('avatarInitials').textContent = window.nombreOperador.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
       window.ipeActivo = null;
-      mostrarModalIPE(user.uid);
+      mostrarModalIPE(user.uid, true);
     }
 
-    // --- CARGA INICIAL ---
-    cargarEquipos('todos'); // Carga la tabla
-    window.activarContadoresGlobales(); // <--- AGREGADO: Activa los números de las tarjetas
+    cargarEquipos('todos');
+    window.activarContadoresGlobales();
 
   } else {
     as.classList.remove('hidden');
@@ -1113,19 +1180,63 @@ onAuthStateChanged(auth, async user => {
   }
 });
 
-function mostrarModalIPE(uid){
-  document.getElementById('ipeOverlay').classList.add('show');
+function mostrarModalIPE(uid, pedirNombre=false){
+  const overlay=document.getElementById('ipeOverlay');
+  const modal=overlay.querySelector('.ipe-modal');
+  // Inyectar campo de nombre si hace falta
+  const existing=document.getElementById('ipe-modal-nombre-wrap');
+  if(pedirNombre&&!existing){
+    const wrap=document.createElement('div');wrap.id='ipe-modal-nombre-wrap';wrap.style.cssText='margin-bottom:14px;text-align:left';
+    wrap.innerHTML='<label style="display:block;font-size:12px;font-weight:600;color:var(--gray-500);margin-bottom:6px;text-transform:uppercase;letter-spacing:.3px">Nombre y Apellido *</label><input id="ipe-modal-nombre" type="text" placeholder="Ej: Carlos Ramírez" style="width:100%;padding:12px 14px;border:1px solid var(--gray-200);border-radius:10px;font-size:14px;font-family:DM Sans,sans-serif;color:var(--gray-700);outline:none" autocomplete="off">';
+    modal.insertBefore(wrap,document.getElementById('ipe-modal-select'));
+  }else if(!pedirNombre&&existing){existing.remove()}
+  overlay.classList.add('show');
   document.getElementById('ipeModalSave').onclick=async()=>{
     const ipe=document.getElementById('ipe-modal-select').value;
     if(!ipe){showToast('error','Selecciona un IPE');return}
-    try{await setDoc(doc(db,"usuarios",uid),{email:window.operadorActivo,ipe,updatedAt:serverTimestamp()},{merge:true});window.ipeActivo=ipe;document.getElementById('ipeOverlay').classList.remove('show');showToast('success','IPE asignado: '+ipe)}
-    catch(e){showToast('error','Error: '+e.message)}
+    const nombreInput=document.getElementById('ipe-modal-nombre');
+    const nombre=nombreInput?nombreInput.value.trim():'';
+    if(pedirNombre&&!nombre){showToast('error','Ingresa tu nombre y apellido');return}
+    try{
+      const updates={ipe,updatedAt:serverTimestamp()};
+      if(nombre)updates.nombre=nombre;
+      await setDoc(doc(db,"usuarios",uid),updates,{merge:true});
+      window.ipeActivo=ipe;
+      if(nombre){
+        window.nombreOperador=nombre;
+        document.getElementById('topbarUserName').textContent=nombre;
+        document.getElementById('menuUserName').textContent=nombre;
+        document.getElementById('avatarInitials').textContent=nombre.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+      }
+      overlay.classList.remove('show');
+      showToast('success','IPE asignado: '+ipe);
+    }catch(e){showToast('error','Error: '+e.message)}
   };
 }
 
 document.getElementById('loginForm').addEventListener('submit',async e=>{e.preventDefault();document.getElementById('loginError').textContent='';try{await signInWithEmailAndPassword(auth,document.getElementById('login-email').value,document.getElementById('login-password').value)}catch(err){document.getElementById('loginError').textContent=err.code==='auth/wrong-password'?'Contraseña incorrecta':err.code==='auth/user-not-found'?'Usuario no encontrado':'Error: '+err.message}});
-document.getElementById('registerForm').addEventListener('submit',async e=>{e.preventDefault();const em=document.getElementById('reg-email').value,pw=document.getElementById('reg-password').value,ipe=document.getElementById('reg-ipe').value,re=document.getElementById('regError');re.textContent='';if(!ipe){re.textContent='El IPE es obligatorio';return}try{const c=await createUserWithEmailAndPassword(auth,em,pw);await setDoc(doc(db,"usuarios",c.user.uid),{email:em,ipe,createdAt:serverTimestamp()});showToast('success','Cuenta creada')}catch(err){re.textContent=err.code==='auth/email-already-in-use'?'Ya registrado':err.code==='auth/weak-password'?'Contraseña 6+ caracteres':'Error: '+err.message}});
+document.getElementById('registerForm').addEventListener('submit',async e=>{e.preventDefault();const nombre=document.getElementById('reg-nombre').value.trim(),em=document.getElementById('reg-email').value,ipe=document.getElementById('reg-ipe').value.trim().toUpperCase(),codigo=document.getElementById('reg-codigo').value.trim(),re=document.getElementById('regError');re.textContent='';if(!nombre){re.textContent='El nombre y apellido son obligatorios';return}if(!ipe){re.textContent='El IPE es obligatorio';return}if(codigo&&codigo!=='MOVA2026ADMIN'){re.textContent='Código de administrador incorrecto';return}const rol=codigo==='MOVA2026ADMIN'?'admin':'operador';try{const c=await createUserWithEmailAndPassword(auth,em,ipe);await setDoc(doc(db,"usuarios",c.user.uid),{email:em,nombre,ipe,rol,createdAt:serverTimestamp()});showToast('success','Cuenta creada. Bienvenido, '+nombre.split(' ')[0])}catch(err){re.textContent=err.code==='auth/email-already-in-use'?'Correo ya registrado':err.code==='auth/weak-password'?'IPE debe tener al menos 6 caracteres':'Error: '+err.message}});
 window.cerrarSesion=()=>signOut(auth);
+
+// ===== PERMISOS =====
+const PAGES_ADMIN=['dashboard','documentos','equipos','bimensuales','locativas','historial','hojavida'];
+function aplicarPermisos(){
+  const esAdmin=window.rolActivo==='admin';
+  document.body.classList.toggle('rol-operador',!esAdmin);
+  // Badge de rol
+  const badge=document.getElementById('menuUserRole');
+  if(badge)badge.innerHTML=esAdmin
+    ?'<span class="role-badge admin">⚙️ Administrador</span>'
+    :'<span class="role-badge operador">🚜 Operador</span>';
+  // Panel bienvenida operador en inicio
+  const wp=document.getElementById('op-welcome-panel');
+  if(wp){
+    wp.style.display=esAdmin?'none':'flex';
+    const wn=document.getElementById('op-welcome-nombre');
+    if(wn)wn.textContent=(window.nombreOperador||'').split(' ')[0];
+  }
+}
+window.aplicarPermisos=aplicarPermisos;
 
 // ===== EQUIPOS: UN SOLO FLUJO LIMPIO =====
 // onSnapshot escucha en tiempo real. Al subir Excel → writeBatch → Firestore → onSnapshot actualiza la tabla automáticamente.
@@ -1248,7 +1359,7 @@ window.iniciarPreop=function(tipo){window.tipoLinea=tipo;window.coleccion=tipo==
 function renderFormPreop(tipo,items){
   window.itemsChecklist=items;const titulo=tipo==="amarilla"?"Línea Amarilla":"Línea Blanca";const c=document.getElementById('preopContent');
   let html=items.map(item=>{const n=nameFromText(item.text);return`<div class="checklist-row"><div class="checklist-text">${item.text}</div><div class="checklist-actions"><input type="radio" name="${n}" id="${n}_b" value="B"><label for="${n}_b"><i class="bi bi-check-lg"></i> B</label><input type="radio" name="${n}" id="${n}_m" value="M"><label for="${n}_m"><i class="bi bi-x-lg"></i> M</label><input type="radio" name="${n}" id="${n}_na" value="NA"><label for="${n}_na">N/A</label></div></div>`}).join('');
-  c.innerHTML=`<button class="back-btn" onclick="window.mostrarMenuPreop()"><i class="bi bi-arrow-left"></i> Volver</button><h2 style="font-family:'Space Grotesk',sans-serif;font-weight:700;color:var(--navy);font-size:20px;margin-bottom:20px">✅ Preoperacional — ${titulo}</h2><div class="preop-status-bar"><div class="preop-status-item"><i class="bi bi-person-circle"></i><div><div class="ps-label">Operador</div><div class="ps-value">${window.nombreOperador||'—'}</div></div></div><div class="preop-status-item"><i class="bi bi-tools"></i><div><div class="ps-label">IPE</div><div class="ps-value">${window.ipeActivo||'—'}</div></div></div></div><div class="preop-form-section"><h4><i class="bi bi-info-circle"></i> Datos del Equipo</h4><div class="form-row" style="margin-bottom:12px"><div class="form-group"><label class="form-label">CEMA *</label><input class="form-input" id="preop-cema" placeholder="Código CEMA" required></div><div class="form-group"><label class="form-label">COMEQ</label><input class="form-input" id="preop-comeq" placeholder="Código COMEQ"></div></div><div class="form-row" style="margin-bottom:12px"><div class="form-group"><label class="form-label">Tipo Equipo *</label><select class="form-select" id="preop-tipo"><option value="">Seleccionar...</option><option>Excavadora</option><option>Auto Hormigonera</option><option>Motoniveladora</option><option>Volqueta Doble Troque</option><option>Camioneta Doble Cabina</option><option>Turbo/Carro taller</option><option>Carro tanque de combustible</option><option>Camión Grúa</option></select></div><div class="form-group"><label class="form-label">Horómetro / Odómetro</label><input class="form-input" id="preop-horometro" type="number" placeholder="Ej: 3245"></div></div><div class="form-group"><label class="form-label">Ubicación</label><input class="form-input" id="preop-ubicacion" placeholder="Frente de obra, taller..."></div></div><div class="preop-form-section"><h4><i class="bi bi-list-check" style="color:var(--yellow)"></i> Checklist — * Seg. Activa · ** Seg. Pasiva</h4><div style="max-height:500px;overflow-y:auto" id="preop-checklist">${html}</div></div><div class="preop-form-section"><h4><i class="bi bi-chat-text"></i> Observaciones</h4><textarea class="form-textarea" id="preop-obs" placeholder="Observaciones..."></textarea></div><div id="preop-post-actions" style="display:none"><div class="preop-post-actions"><div class="preop-post-btn" onclick="window.exportarPDF()"><i class="bi bi-file-earmark-pdf"></i>Exportar PDF</div><div class="preop-post-btn" onclick="window.verHistorial()"><i class="bi bi-clock-history"></i>Historial</div></div></div><button class="preop-save-btn disabled" id="preop-guardar" disabled onclick="window.guardarInspeccion()"><i class="bi bi-save"></i> Guardar Inspección</button>`;
+  c.innerHTML=`<button class="back-btn" onclick="window.mostrarMenuPreop()"><i class="bi bi-arrow-left"></i> Volver</button><h2 style="font-family:'Space Grotesk',sans-serif;font-weight:700;color:var(--navy);font-size:20px;margin-bottom:20px">✅ Preoperacional — ${titulo}</h2><div class="preop-status-bar"><div class="preop-status-item"><i class="bi bi-person-circle"></i><div><div class="ps-label">Operador</div><div class="ps-value">${window.nombreOperador||'—'}</div></div></div><div class="preop-status-item"><i class="bi bi-tools"></i><div><div class="ps-label">IPE</div><div class="ps-value">${window.ipeActivo||'—'}</div></div></div></div><div class="preop-form-section"><h4><i class="bi bi-info-circle"></i> Datos del Equipo</h4><div class="form-row" style="margin-bottom:12px"><div class="form-group"><label class="form-label">CEMA *</label><input class="form-input" id="preop-cema" placeholder="Código CEMA" required></div><div class="form-group"><label class="form-label">COMEQ</label><input class="form-input" id="preop-comeq" placeholder="Código COMEQ"></div></div><div class="form-row" style="margin-bottom:12px"><div class="form-group"><label class="form-label">Tipo Equipo *</label><select class="form-select" id="preop-tipo"><option value="">Seleccionar...</option><option>Excavadora</option><option>Camión</option><option>Motoniveladora</option><option>Volqueta</option><option>Retroexcavadora</option><option>Compactador</option><option>Cargador</option><option>Grúa</option></select></div><div class="form-group"><label class="form-label">Horómetro</label><input class="form-input" id="preop-horometro" type="number" placeholder="Ej: 3245"></div></div><div class="form-group"><label class="form-label">Ubicación</label><input class="form-input" id="preop-ubicacion" placeholder="Frente de obra, taller..."></div></div><div class="preop-form-section"><h4><i class="bi bi-list-check" style="color:var(--yellow)"></i> Checklist — * Seg. Activa · ** Seg. Pasiva</h4><div style="max-height:500px;overflow-y:auto" id="preop-checklist">${html}</div></div><div class="preop-form-section"><h4><i class="bi bi-chat-text"></i> Observaciones</h4><textarea class="form-textarea" id="preop-obs" placeholder="Observaciones..."></textarea></div><div id="preop-post-actions" style="display:none"><div class="preop-post-actions"><div class="preop-post-btn" onclick="window.exportarPDF()"><i class="bi bi-file-earmark-pdf"></i>Exportar PDF</div><div class="preop-post-btn" onclick="window.verHistorial()"><i class="bi bi-clock-history"></i>Historial</div></div></div><button class="preop-save-btn disabled" id="preop-guardar" disabled onclick="window.guardarInspeccion()"><i class="bi bi-save"></i> Guardar Inspección</button>`;
   document.querySelectorAll('#preop-checklist input[type="radio"]').forEach(r=>r.addEventListener('change',validarChecklist));
 }
 // Pégalo así al final de tu script
@@ -1321,10 +1432,10 @@ window.activarContadoresGlobales = function() {
 // activarContadoresGlobales();
 function validarChecklist(){const ch={};document.querySelectorAll('#preop-checklist input[type="radio"]:checked').forEach(r=>ch[r.name]=r.value);const f=window.itemsChecklist.filter(i=>i.required).map(i=>nameFromText(i.text)).filter(n=>!["B","M","NA"].includes(ch[n]));const btn=document.getElementById('preop-guardar');if(f.length===0){btn.disabled=false;btn.className='preop-save-btn ready'}else{btn.disabled=true;btn.className='preop-save-btn disabled';btn.title=`Faltan ${f.length} ítems`}}
 
-window.guardarInspeccion=async function(){const btn=document.getElementById('preop-guardar');btn.innerHTML='<span style="display:inline-block;width:16px;height:16px;border:2px solid white;border-top-color:transparent;border-radius:50%;animation:spin .6s linear infinite"></span> Guardando...';btn.disabled=true;try{const cema=document.getElementById('preop-cema').value.trim(),tipo=document.getElementById('preop-tipo').value;if(!cema){showToast('error','CEMA obligatorio');throw new Error('CEMA')}if(!tipo){showToast('error','Seleccione tipo');throw new Error('Tipo')}if(!window.ipeActivo){showToast('error','IPE no definido');throw new Error('IPE')}const cl={};document.querySelectorAll('#preop-checklist input[type="radio"]:checked').forEach(r=>cl[r.name]=r.value);const data={equipo:{cema,comeq:document.getElementById('preop-comeq').value.trim()||"—",tipo,horometro:document.getElementById('preop-horometro').value.trim()||"—",ubicacion:document.getElementById('preop-ubicacion').value.trim()||"—"},operador:window.operadorActivo,ipe:window.ipeActivo,checklist:cl,observaciones:document.getElementById('preop-obs').value.trim()||"Sin observaciones",fecha:serverTimestamp(),tipoLinea:window.tipoLinea};const ref=await addDoc(collection(db,window.coleccion),data);window.inspeccionActualId=ref.id;window.inspeccionActualData=data;window._lastCema=cema;document.querySelectorAll('.preop-form-section').forEach(s=>s.style.display='none');btn.style.display='none';document.getElementById('preop-post-actions').style.display='block';showToast('success','✅ Inspección guardada')}catch(err){console.error(err);showToast('error','Error: '+err.message);btn.innerHTML='<i class="bi bi-save"></i> Guardar Inspección';validarChecklist()}};
+window.guardarInspeccion=async function(){const btn=document.getElementById('preop-guardar');btn.innerHTML='<span style="display:inline-block;width:16px;height:16px;border:2px solid white;border-top-color:transparent;border-radius:50%;animation:spin .6s linear infinite"></span> Guardando...';btn.disabled=true;try{const cema=document.getElementById('preop-cema').value.trim(),tipo=document.getElementById('preop-tipo').value;if(!cema){showToast('error','CEMA obligatorio');throw new Error('CEMA')}if(!tipo){showToast('error','Seleccione tipo');throw new Error('Tipo')}if(!window.ipeActivo){showToast('error','IPE no definido');throw new Error('IPE')}const cl={};document.querySelectorAll('#preop-checklist input[type="radio"]:checked').forEach(r=>cl[r.name]=r.value);const data={equipo:{cema,comeq:document.getElementById('preop-comeq').value.trim()||"—",tipo,horometro:document.getElementById('preop-horometro').value.trim()||"—",ubicacion:document.getElementById('preop-ubicacion').value.trim()||"—"},operador:window.nombreOperador||window.operadorActivo,ipe:window.ipeActivo,checklist:cl,observaciones:document.getElementById('preop-obs').value.trim()||"Sin observaciones",fecha:serverTimestamp(),tipoLinea:window.tipoLinea};const ref=await addDoc(collection(db,window.coleccion),data);window.inspeccionActualId=ref.id;window.inspeccionActualData=data;window._lastCema=cema;document.querySelectorAll('.preop-form-section').forEach(s=>s.style.display='none');btn.style.display='none';document.getElementById('preop-post-actions').style.display='block';showToast('success','✅ Inspección guardada')}catch(err){console.error(err);showToast('error','Error: '+err.message);btn.innerHTML='<i class="bi bi-save"></i> Guardar Inspección';validarChecklist()}};
 
 // PDF
-window.exportarPDF=async function(id=null,colEx=null){let col=colEx||window.coleccion;if(!col){showToast('error','Colección no determinada');return}try{const{jsPDF}=window.jspdf;const pdf=new jsPDF("landscape","mm","a4");function nf(d){const dt=new Date(d);return new Date(Date.UTC(dt.getFullYear(),dt.getMonth(),dt.getDate()))}let db2;if(id){const s=await getDoc(doc(db,col,id));db2=s.data()}else{db2=window.inspeccionActualData}if(!db2?.equipo?.cema){showToast('error','Datos no válidos');return}const cema=db2.equipo.cema,fi=nf(db2.fecha?.toDate?db2.fecha.toDate():new Date());function gS(f){const b=nf(f),l=new Date(b);l.setUTCDate(b.getUTCDate()-b.getUTCDay()+1);l.setUTCHours(0,0,0,0);return Array.from({length:7},(_,i)=>{const d=new Date(l);d.setUTCDate(l.getUTCDate()+i);d.setUTCHours(0,0,0,0);return d})}function ff(d){return d.toLocaleDateString("es-CO")}const sem=gS(fi);const q2=query(collection(db,col),where("equipo.cema","==",cema));const sn=await getDocs(q2);const is=sn.docs.map(dc=>({id:dc.id,data:dc.data(),fecha:nf(dc.data().fecha?.toDate()||new Date())})).filter(i=>Math.abs((fi-i.fecha)/864e5)<=7).sort((a,b)=>b.fecha-a.fecha);if(!id&&window.inspeccionActualData)is.unshift({id:'actual',data:db2,fecha:fi});sem.forEach(dia=>{if(!is.some(i=>i.fecha.getTime()===dia.getTime()))is.push({id:'vacio',data:{checklist:{},operador:''},fecha:dia})});is.sort((a,b)=>b.fecha-a.fecha);const tl=(db2.tipoLinea||window.tipoLinea||"DESCONOCIDA").toUpperCase();pdf.setFont("helvetica","bold");pdf.setFontSize(22);pdf.text("INSPECCION PREOPERACIONAL",148,18,{align:"center"});pdf.setFontSize(18);pdf.text(tl,148,25,{align:"center"});pdf.setFontSize(14);pdf.text(`EQUIPO: ${cema}`,148,35,{align:"center"});pdf.setFontSize(12);pdf.text(`SEMANA | ${ff(sem[0])} - ${ff(sem[6])}`,148,43,{align:"center"});const eq=db2.equipo||{};pdf.autoTable({startY:55,theme:"grid",styles:{font:"helvetica",fontSize:10,cellPadding:4},head:[[{content:"DATOS DEL EQUIPO",colSpan:5,styles:{halign:"center",fontSize:13,fontStyle:"bold",fillColor:[40,40,40],textColor:255}}]],body:[[`CEMA: ${eq.cema}`,`COMEQ: ${eq.comeq}`,`TIPO: ${eq.tipo}`,`HORÓMETRO: ${eq.horometro}`,`UBICACIÓN: ${eq.ubicacion}`],[`OPERADOR: ${db2.operador?db2.operador.split("@")[0]:"---"}`,`IPE: ${db2.ipe}`,"","",""]]});let yP=pdf.lastAutoTable.finalY+10;if(!db2.checklist){showToast('error','Checklist no encontrado');return}const ES={B:{text:"X",bg:[39,174,96],color:255},M:{text:"X",bg:[192,57,43],color:255},NA:{text:"X",bg:[189,195,199],color:0}};const h1=[{content:"ITEM",rowSpan:2}];sem.forEach(d=>h1.push({content:ff(d),colSpan:3,styles:{halign:"center"}}));const h2=sem.flatMap(()=>["B","M","NA"]);const items=Object.keys(db2.checklist);const rows=items.map(item=>{const row=[item.replace(/_/g," ").toUpperCase()];sem.forEach(dia=>{const insp=is.find(i=>i.fecha.getTime()===dia.getTime());const est=insp?insp.data.checklist[item]:null;["B","M","NA"].forEach(k=>{row.push(est===k?{content:ES[k].text,styles:{fillColor:ES[k].bg,textColor:ES[k].color,fontStyle:"bold"}}:"")})});return row});pdf.autoTable({startY:yP+15,theme:"grid",head:[h1,h2],body:rows,styles:{fontSize:7,halign:"center",valign:"middle",lineWidth:.5,cellPadding:2,overflow:"linebreak"},headStyles:{fillColor:[41,128,185],textColor:255,fontStyle:"bold",fontSize:8},columnStyles:{0:{cellWidth:42,halign:"left"}}});pdf.save(`MOVA_${cema}_${ff(sem[0])}.pdf`);showToast('success','PDF generado')}catch(err){console.error("PDF Error:",err);showToast('error','Error PDF: '+err.message)}};
+window.exportarPDF=async function(id=null,colEx=null){let col=colEx||window.coleccion;if(!col){showToast('error','Colección no determinada');return}try{const{jsPDF}=window.jspdf;const pdf=new jsPDF("landscape","mm","a4");function nf(d){const dt=new Date(d);return new Date(Date.UTC(dt.getFullYear(),dt.getMonth(),dt.getDate()))}let db2;if(id){const s=await getDoc(doc(db,col,id));db2=s.data()}else{db2=window.inspeccionActualData}if(!db2?.equipo?.cema){showToast('error','Datos no válidos');return}const cema=db2.equipo.cema,fi=nf(db2.fecha?.toDate?db2.fecha.toDate():new Date());function gS(f){const b=nf(f),l=new Date(b);l.setUTCDate(b.getUTCDate()-b.getUTCDay()+1);l.setUTCHours(0,0,0,0);return Array.from({length:7},(_,i)=>{const d=new Date(l);d.setUTCDate(l.getUTCDate()+i);d.setUTCHours(0,0,0,0);return d})}function ff(d){return d.toLocaleDateString("es-CO")}const sem=gS(fi);const q2=query(collection(db,col),where("equipo.cema","==",cema));const sn=await getDocs(q2);const is=sn.docs.map(dc=>({id:dc.id,data:dc.data(),fecha:nf(dc.data().fecha?.toDate()||new Date())})).filter(i=>Math.abs((fi-i.fecha)/864e5)<=7).sort((a,b)=>b.fecha-a.fecha);if(!id&&window.inspeccionActualData)is.unshift({id:'actual',data:db2,fecha:fi});sem.forEach(dia=>{if(!is.some(i=>i.fecha.getTime()===dia.getTime()))is.push({id:'vacio',data:{checklist:{},operador:''},fecha:dia})});is.sort((a,b)=>b.fecha-a.fecha);const tl=(db2.tipoLinea||window.tipoLinea||"DESCONOCIDA").toUpperCase();pdf.setFont("helvetica","bold");pdf.setFontSize(22);pdf.text("INSPECCION PREOPERACIONAL",148,18,{align:"center"});pdf.setFontSize(18);pdf.text(tl,148,25,{align:"center"});pdf.setFontSize(14);pdf.text(`EQUIPO: ${cema}`,148,35,{align:"center"});pdf.setFontSize(12);pdf.text(`SEMANA | ${ff(sem[0])} - ${ff(sem[6])}`,148,43,{align:"center"});const eq=db2.equipo||{};pdf.autoTable({startY:55,theme:"grid",styles:{font:"helvetica",fontSize:10,cellPadding:4},head:[[{content:"DATOS DEL EQUIPO",colSpan:5,styles:{halign:"center",fontSize:13,fontStyle:"bold",fillColor:[40,40,40],textColor:255}}]],body:[[`CEMA: ${eq.cema}`,`COMEQ: ${eq.comeq}`,`TIPO: ${eq.tipo}`,`HORÓMETRO: ${eq.horometro}`,`UBICACIÓN: ${eq.ubicacion}`],[`OPERADOR: ${db2.operador||"---"}`,`IPE: ${db2.ipe||"---"}`,"","",""]]});let yP=pdf.lastAutoTable.finalY+10;if(!db2.checklist){showToast('error','Checklist no encontrado');return}const ES={B:{text:"X",bg:[39,174,96],color:255},M:{text:"X",bg:[192,57,43],color:255},NA:{text:"X",bg:[189,195,199],color:0}};const h1=[{content:"ITEM",rowSpan:2}];sem.forEach(d=>h1.push({content:ff(d),colSpan:3,styles:{halign:"center"}}));const h2=sem.flatMap(()=>["B","M","NA"]);const items=Object.keys(db2.checklist);const rows=items.map(item=>{const row=[item.replace(/_/g," ").toUpperCase()];sem.forEach(dia=>{const insp=is.find(i=>i.fecha.getTime()===dia.getTime());const est=insp?insp.data.checklist[item]:null;["B","M","NA"].forEach(k=>{row.push(est===k?{content:ES[k].text,styles:{fillColor:ES[k].bg,textColor:ES[k].color,fontStyle:"bold"}}:"")})});return row});pdf.autoTable({startY:yP+15,theme:"grid",head:[h1,h2],body:rows,styles:{fontSize:7,halign:"center",valign:"middle",lineWidth:.5,cellPadding:2,overflow:"linebreak"},headStyles:{fillColor:[41,128,185],textColor:255,fontStyle:"bold",fontSize:8},columnStyles:{0:{cellWidth:42,halign:"left"}}});pdf.save(`MOVA_${cema}_${ff(sem[0])}.pdf`);showToast('success','PDF generado')}catch(err){console.error("PDF Error:",err);showToast('error','Error PDF: '+err.message)}};
 
 // Historial
 window.verHistorial=async function(){let cema=window._lastCema;const ci=document.getElementById('preop-cema');if(ci&&ci.value.trim())cema=ci.value.trim();if(!cema){showToast('error','No hay equipo');return}const c=document.getElementById('preopContent');c.innerHTML=`<button class="back-btn" onclick="window.mostrarMenuPreop()"><i class="bi bi-arrow-left"></i> Volver</button><h2 style="font-family:'Space Grotesk',sans-serif;font-weight:700;color:var(--navy);font-size:20px;margin-bottom:20px">📚 Historial — ${cema}</h2><div id="historial-lista">Cargando...</div>`;try{const q2=query(collection(db,window.coleccion),where("equipo.cema","==",cema));const snap=await getDocs(q2);const lista=document.getElementById('historial-lista');if(snap.empty){lista.innerHTML='<p style="color:var(--gray-400);text-align:center;padding:40px">No hay historial</p>';return}const insp=Array.from(snap.docs).map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.fecha?.toDate()||0)-(a.fecha?.toDate()||0));lista.innerHTML=`<div class="historial-grid">${insp.map(i=>{const f=i.fecha?.toDate?i.fecha.toDate().toLocaleDateString("es-CO"):"Sin fecha";return`<div class="historial-card"><div class="h-date">${f}</div><div class="h-type">${i.equipo?.tipo||'—'} · ${i.tipoLinea||'—'}</div><button class="h-btn" onclick="window.exportarPDF('${i.id}','${window.coleccion}')"><i class="bi bi-download"></i> PDF</button></div>`}).join('')}</div>`}catch(err){document.getElementById('historial-lista').innerHTML=`<p style="color:var(--red)">Error: ${err.message}</p>`}};
@@ -1781,7 +1892,7 @@ window.inspGuardar = async function() {
     const data = {
       identificacion: cema,
       ubicacion: document.getElementById('insp-ubicacion')?.value.trim() || '—',
-      inspector: window.operadorActivo,
+      inspector: window.nombreOperador||window.operadorActivo,
       ipe: window.ipeActivo,
       checklist,
       ...extras,
@@ -2011,7 +2122,7 @@ window.enviarFalla = async function() {
     tipoFalla: window._fallaTipo,
     prioridad: window._fallaPrio,
     descripcion, operable, email,
-    reportadoPor: window.operadorActivo || '—',
+    reportadoPor: window.nombreOperador||window.operadorActivo||'—',
     estado: 'abierta',
     fecha: serverTimestamp()
   };
@@ -2199,6 +2310,28 @@ window.iniciarLocativa = function(tipo) {
 
 window.initLocativaPage = function() { window.mostrarMenuLocativa(); };
 
+
+// HISTORIAL UNIFICADO
+const HIST_COLS=[
+  {col:'inspecciones_linea_amarilla',label:'Preop Amarilla',pdf:'preop'},
+  {col:'inspecciones_linea_blanca',label:'Preop Blanca',pdf:'preop'},
+  {col:'insp_bimensual_amarilla',label:'Bimensual Amarilla',pdf:'insp'},
+  {col:'insp_bimensual_blanca',label:'Bimensual Blanca',pdf:'insp'},
+  {col:'insp_loc_instalaciones',label:'Loc. Instalaciones',pdf:'insp'},
+  {col:'insp_loc_redes',label:'Loc. Redes Eléctricas',pdf:'insp'},
+  {col:'insp_loc_talleres_eq',label:'Loc. Talleres Equipos',pdf:'insp'},
+  {col:'insp_loc_talleres_areas',label:'Loc. Talleres Áreas',pdf:'insp'},
+  {col:'insp_loc_oficinas',label:'Loc. Oficinas',pdf:'insp'},
+  {col:'insp_loc_habitaciones',label:'Loc. Habitaciones',pdf:'insp'},
+  {col:'reportes_fallas',label:'Reportes de Falla',pdf:'falla'}
+];
+window.histTab=function(tab){document.querySelectorAll('.hist-tab').forEach(t=>{const a=t.dataset.tab===tab;t.style.background=a?'var(--white)':'transparent';t.style.color=a?'var(--navy)':'var(--gray-500)';t.classList.toggle('active',a)});document.getElementById('hist-resumen').style.display=tab==='resumen'?'block':'none';document.getElementById('hist-busqueda').style.display=tab==='busqueda'?'block':'none'};
+window.histCargarResumen=async function(){const mes=document.getElementById('hist-mes').value;if(!mes){showToast('error','Selecciona un mes');return}const[y,m]=mes.split('-').map(Number);const ini=new Date(y,m-1,1),fin=new Date(y,m,1);const cont=document.getElementById('hist-cards');cont.innerHTML='<div class="eq-loading">Cargando...</div>';const counts=[];for(const c of HIST_COLS){try{const snap=await getDocs(collection(db,c.col));const n=snap.docs.filter(d=>{const f=d.data().fecha?.toDate?.();return f&&f>=ini&&f<fin}).length;counts.push({...c,n})}catch(e){counts.push({...c,n:0})}}cont.innerHTML=counts.map(c=>`<div class="nav-card" onclick="window.histVerTipo('${c.col}','${c.label}')"><div class="nav-icon all"><i class="bi bi-clipboard-check"></i></div><div class="nav-info"><span class="nav-label">${c.label}</span><h2 class="nav-value">${c.n}</h2></div></div>`).join('')};
+window.histVerTipo=function(col,label){window.histTab('busqueda');document.getElementById('hist-tipo-filter').value=col;document.getElementById('hist-search').value='';window.histBuscar()};
+window.histBuscar=async function(){const term=document.getElementById('hist-search').value.trim().toLowerCase();const tipoF=document.getElementById('hist-tipo-filter').value;const cont=document.getElementById('hist-resultados');cont.innerHTML='<div class="eq-loading">Buscando...</div>';const cols=tipoF?HIST_COLS.filter(c=>c.col===tipoF):HIST_COLS;const results=[];for(const c of cols){try{const snap=await getDocs(collection(db,c.col));snap.docs.forEach(d=>{const data=d.data();const id=(data.identificacion||data.equipo?.cema||data.cema||'').toString().toLowerCase();if(!term||id.includes(term))results.push({id:d.id,col:c.col,label:c.label,pdf:c.pdf,data})})}catch(e){}}results.sort((a,b)=>(b.data.fecha?.toDate?.()||0)-(a.data.fecha?.toDate?.()||0));if(results.length===0){cont.innerHTML='<div class="eq-empty"><i class="bi bi-inbox"></i><p>Sin resultados</p></div>';return}cont.innerHTML=`<div class="card"><div class="card-body" style="padding:0;overflow-x:auto"><table class="eq-table"><thead><tr><th>Fecha</th><th>Tipo</th><th>Identificación</th><th>Inspector</th><th>PDF</th></tr></thead><tbody>${results.map(r=>{const f=r.data.fecha?.toDate?.()?.toLocaleDateString('es-CO')||'—';const id=r.data.identificacion||r.data.equipo?.cema||r.data.cema||'—';const ins=r.data.inspector||r.data.operador||'—';return`<tr><td>${f}</td><td>${r.label}</td><td class="eq-name">${id}</td><td>${ins}</td><td><button class="btn btn-sm btn-primary" onclick="window.histPDF('${r.col}','${r.id}','${r.pdf}')"><i class="bi bi-download"></i></button></td></tr>`}).join('')}</tbody></table></div></div><p style="margin-top:12px;color:var(--gray-400);font-size:12px">${results.length} resultado(s)</p>`};
+window.histPDF=function(col,id,tipo){window._inspCol=col;if(tipo==='preop'){window.coleccion=col;window.exportarPDF(id,col)}else if(tipo==='insp'){window.inspExportarPDF(id)}else{showToast('info','PDF de fallas no disponible')}};
+window.initHistorialPage=function(){const t=document.getElementById('hist-tipo-filter');if(t&&t.options.length<2)HIST_COLS.forEach(c=>{const o=document.createElement('option');o.value=c.col;o.textContent=c.label;t.appendChild(o)});const m=document.getElementById('hist-mes');if(m&&!m.value){const d=new Date();m.value=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')}};
+
 window.initHojaVidaPage=function(){
   hvSubscribir();hvSetupSearch();hvSetupImport();
   document.getElementById('hv-btn-edit')?.addEventListener('click',hvToggleEdit);
@@ -2211,10 +2344,14 @@ window.initHojaVidaPage=function(){
 <script>
 window.switchAuthTab=function(tab){document.querySelectorAll('.auth-tab').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.auth-form').forEach(f=>f.classList.remove('active'));if(tab==='login'){document.querySelector('.auth-tab:first-child').classList.add('active');document.getElementById('loginForm').classList.add('active')}else{document.querySelector('.auth-tab:last-child').classList.add('active');document.getElementById('registerForm').classList.add('active')}};
 
-window.navTo=function(page){document.querySelectorAll('.page-section').forEach(s=>s.classList.remove('active'));const t=document.getElementById('page-'+page);if(t){t.classList.add('active');t.querySelectorAll('.fade-in').forEach(el=>{el.style.animation='none';el.offsetHeight;el.style.animation=''});
+window.navTo=function(page){
+  // Bloqueo de acceso por rol
+  if(window.rolActivo!=='admin'&&(typeof PAGES_ADMIN!=='undefined')&&PAGES_ADMIN.includes(page)){
+    showToast('error','No tienes permiso para acceder a este módulo');return;
+  }document.querySelectorAll('.page-section').forEach(s=>s.classList.remove('active'));const t=document.getElementById('page-'+page);if(t){t.classList.add('active');t.querySelectorAll('.fade-in').forEach(el=>{el.style.animation='none';el.offsetHeight;el.style.animation=''});
   // Agregar botón "Volver al inicio" en todas las páginas excepto inicio
   if(page!=='inicio'){let bb=t.querySelector('.auto-back-btn');if(!bb){bb=document.createElement('a');bb.className='auto-back-btn';bb.innerHTML='<i class="bi bi-arrow-left"></i> Volver al Inicio';bb.style.cssText='display:inline-flex;align-items:center;gap:6px;padding:8px 16px;margin:16px 0 0 48px;border-radius:8px;border:1px solid var(--gray-200);background:var(--white);color:var(--gray-600);font-size:12px;font-weight:500;cursor:pointer;transition:all .2s;font-family:DM Sans,sans-serif;text-decoration:none';bb.onmouseover=function(){this.style.background='var(--gray-50)'};bb.onmouseout=function(){this.style.background='var(--white)'};bb.onclick=function(){window.navTo("inicio")};const ph=t.querySelector('.page-header,.preop-container,.falla-container,.hv-container');if(ph)t.insertBefore(bb,ph);else t.prepend(bb)}}
-}document.querySelectorAll('#topNav a').forEach(a=>a.classList.remove('active'));const tl=document.querySelector(`#topNav a[data-page="${page}"]`);if(tl)tl.classList.add('active');document.querySelectorAll('.sidebar-item').forEach(s=>s.classList.remove('active'));const sl=document.querySelector(`.sidebar-item[data-page="${page}"]`);if(sl)sl.classList.add('active');if(page==='fallas'&&window.initFallaPage)window.initFallaPage();if(page==='preoperacionales'&&window.initPreopPage)window.initPreopPage();if(page==='bimensuales'&&window.initBimensualPage)window.initBimensualPage();if(page==='locativas'&&window.initLocativaPage)window.initLocativaPage();if(page==='hojavida'&&window.initHojaVidaPage)window.initHojaVidaPage();if(page==='equipos'&&window.cargarEquipos)window.cargarEquipos(document.querySelector('.project-btn.active')?.dataset.project||'todos');if(page==='inicio'){if(window._initHeroCarousel)window._initHeroCarousel();setTimeout(()=>{document.querySelectorAll('.progress-fill').forEach(b=>{b.style.width='0';setTimeout(()=>{b.style.width=b.dataset.target+'%'},100)})},300)}window.scrollTo({top:0,behavior:'smooth'});document.getElementById('sidebar')?.classList.remove('mobile-open');document.getElementById('sidebarOverlay')?.classList.remove('show')};
+}document.querySelectorAll('#topNav a').forEach(a=>a.classList.remove('active'));const tl=document.querySelector(`#topNav a[data-page="${page}"]`);if(tl)tl.classList.add('active');document.querySelectorAll('.sidebar-item').forEach(s=>s.classList.remove('active'));const sl=document.querySelector(`.sidebar-item[data-page="${page}"]`);if(sl)sl.classList.add('active');if(page==='fallas'&&window.initFallaPage)window.initFallaPage();if(page==='preoperacionales'&&window.initPreopPage)window.initPreopPage();if(page==='bimensuales'&&window.initBimensualPage)window.initBimensualPage();if(page==='locativas'&&window.initLocativaPage)window.initLocativaPage();if(page==='historial'&&window.initHistorialPage)window.initHistorialPage();if(page==='hojavida'&&window.initHojaVidaPage)window.initHojaVidaPage();if(page==='equipos'&&window.cargarEquipos)window.cargarEquipos(document.querySelector('.project-btn.active')?.dataset.project||'todos');if(page==='inicio'){if(window._initHeroCarousel)window._initHeroCarousel();setTimeout(()=>{document.querySelectorAll('.progress-fill').forEach(b=>{b.style.width='0';setTimeout(()=>{b.style.width=b.dataset.target+'%'},100)})},300)}window.scrollTo({top:0,behavior:'smooth'});document.getElementById('sidebar')?.classList.remove('mobile-open');document.getElementById('sidebarOverlay')?.classList.remove('show')};
 
 document.addEventListener('DOMContentLoaded',()=>{
   const p=document.getElementById('progressBars');if(p){[{l:'Mtto. Preventivo',v:87,c:'green'},{l:'Mtto. Instalaciones',v:72,c:'yellow'},{l:'Inspecciones',v:95,c:'green'},{l:'OT Cerradas',v:63,c:'red'}].forEach(x=>{p.innerHTML+=`<div class="progress-item"><div class="progress-header"><span class="progress-label">${x.l}</span><span class="progress-value">${x.v}%</span></div><div class="progress-bar"><div class="progress-fill ${x.c}" data-target="${x.v}" style="width:0"></div></div></div>`});setTimeout(()=>{document.querySelectorAll('.progress-fill').forEach(b=>{b.style.width=b.dataset.target+'%'})},600)}
