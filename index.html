@@ -2217,7 +2217,7 @@ window.enviarFalla = async function() {
     // 1. Guardar en Firestore
     await addDoc(collection(db, "reportes_fallas"), data);
 
-        // 2. Enviar email via EmailJS (si está configurado)
+          // 2. Enviar email via EmailJS (si está configurado)
 try {
   if (typeof emailjs !== 'undefined' && window.EMAILJS_SERVICE_ID) {
     
@@ -2471,36 +2471,49 @@ async function csegRenderCI(sheet,filtro){
   if(!csegOverrides[sheetKey])csegOverrides[sheetKey]=await(window.ciGetOverrides?window.ciGetOverrides(sheetKey):{});
   const overrides=csegOverrides[sheetKey];
   const keyCol=headers.find(h=>h.toUpperCase().includes('CEMA'))||headers[0];
+  const esFechaCol=h=>{const u=h.toUpperCase();return u.includes('FECHA')||/\b(ENE|FEB|MAR|ABR|MAY|JUN|JUL|AGO|SEP|OCT|NOV|DIC|ENERO|FEBRERO|MARZO|ABRIL|MAYO|JUNIO|JULIO|AGOSTO|SEPTIEMBRE|OCTUBRE|NOVIEMBRE|DICIEMBRE)\b/.test(u);};
   const term=filtro.toLowerCase();
   const filtered=term?rows.filter(r=>Object.values(r).some(v=>String(v).toLowerCase().includes(term))):rows;
-  const fechaCol=headers.find(h=>h.toUpperCase().includes('FECHA')&&(h.toUpperCase().includes('ENTREGA')||h.toUpperCase().includes('TERMINAC')||h.toUpperCase().includes('REAL')));
-  const ths=headers.map(h=>`<th style="white-space:nowrap;font-size:10px;padding:9px 10px;background:var(--navy);color:var(--white);text-align:left;font-weight:700;text-transform:uppercase;letter-spacing:.4px;border-right:1px solid rgba(255,255,255,.08)">${h}</th>`).join('');
+  const ths=headers.map(h=>{
+    const esF=esFechaCol(h);
+    return`<th style="white-space:nowrap;font-size:10px;padding:9px 10px;background:${esF?'#1a3a5c':'var(--navy)'};color:var(--white);text-align:left;font-weight:700;text-transform:uppercase;letter-spacing:.4px;border-right:1px solid rgba(255,255,255,.08)">${h}</th>`;
+  }).join('');
   const trs=filtered.map((row,i)=>{
     const rowKey=String(row[keyCol]||i).trim()||String(i);
-    const autoEstado=fechaCol&&String(row[fechaCol]??'').trim()?'entregada':'falta';
-    const estado=overrides[rowKey]||autoEstado;
-    const bg=estado==='entregada'?'rgba(76,175,80,.1)':'rgba(229,57,53,.07)';
-    const safeKey=rowKey.replace(/'/g,"\\'");
-    const safeSheet=sheet.replace(/'/g,"\\'");
-    const badge=estado==='entregada'
-      ?`<span style="background:rgba(76,175,80,.15);color:#2E7D32;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;cursor:pointer" onclick="window.csegToggleCI('${sheetKey}','${safeKey}','falta','${safeSheet}')">&#10003; Entregada</span>`
-      :`<span style="background:rgba(229,57,53,.12);color:#C62828;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;cursor:pointer" onclick="window.csegToggleCI('${sheetKey}','${safeKey}','entregada','${safeSheet}')">&#9679; Falta</span>`;
-    const tds=headers.map(h=>{const v=String(row[h]??'').trim();return`<td style="font-size:11px;padding:7px 10px;border-right:1px solid rgba(0,0,0,.04);white-space:nowrap">${v||'<span style=color:var(--gray-300)>&#8212;</span>'}</td>`;}).join('');
-    return`<tr style="background:${bg};border-bottom:1px solid rgba(0,0,0,.04)"><td style="padding:6px 10px;border-right:1px solid rgba(0,0,0,.04)">${badge}</td>${tds}</tr>`;
+    const tds=headers.map(h=>{
+      const v=String(row[h]??'').trim();
+      if(esFechaCol(h)){
+        const cellKey=rowKey+'::'+h;
+        const autoEstado=v?'verde':'rojo';
+        const estado=overrides[cellKey]||autoEstado;
+        const bg=estado==='verde'?'rgba(76,175,80,.2)':'rgba(229,57,53,.15)';
+        const border=estado==='verde'?'rgba(76,175,80,.4)':'rgba(229,57,53,.35)';
+        const tc=estado==='verde'?'#1B5E20':'#B71C1C';
+        const icon=estado==='verde'?'&#10003;':'&#9679;';
+        const ck=cellKey.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+        const ss2=sheet.replace(/'/g,"\\'");
+        return`<td style="padding:4px 6px;border-right:1px solid rgba(0,0,0,.06);border-bottom:1px solid rgba(0,0,0,.06);text-align:center"><div onclick="window.csegToggleCICell('${sheetKey}','${ck}','${ss2}')" style="background:${bg};border:1px solid ${border};color:${tc};font-size:11px;font-weight:600;padding:4px 8px;border-radius:6px;cursor:pointer;min-width:64px;display:inline-block" title="Clic para cambiar">${icon} ${v||'—'}</div></td>`;
+      }
+      return`<td style="font-size:11px;padding:7px 10px;border-right:1px solid rgba(0,0,0,.05);border-bottom:1px solid rgba(0,0,0,.05);white-space:nowrap">${v||'<span style="color:var(--gray-300)">—</span>'}</td>`;
+    }).join('');
+    return`<tr>${tds}</tr>`;
   }).join('');
-  const thEstado=`<th style="font-size:10px;padding:9px 10px;background:var(--navy);color:var(--yellow);text-align:left;font-weight:700;text-transform:uppercase;letter-spacing:.4px;white-space:nowrap;border-right:1px solid rgba(255,255,255,.12)">Estado</th>`;
   return`<div style="background:var(--white);border-radius:12px;border:1px solid var(--gray-200);overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.04)">
-    <div style="padding:10px 14px;background:var(--gray-50);border-bottom:1px solid var(--gray-200);font-size:11px;color:var(--gray-500)">
-      Haz clic en el badge para cambiar el estado. Se guarda automaticamente y es visible para todos los usuarios.
-      <span style="margin-left:12px;color:var(--gray-400)">${filtered.length} de ${rows.length} registros</span>
+    <div style="padding:10px 16px;background:var(--gray-50);border-bottom:1px solid var(--gray-200);display:flex;gap:20px;align-items:center;flex-wrap:wrap;font-size:11px;color:var(--gray-500)">
+      <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:rgba(76,175,80,.3);margin-right:4px"></span>Entregada</span>
+      <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:rgba(229,57,53,.25);margin-right:4px"></span>Falta</span>
+      <span style="color:var(--blue)">&#8505; Clic en celda de fecha para cambiar &mdash; se guarda para todos</span>
+      <span style="margin-left:auto;color:var(--gray-400)">${filtered.length} de ${rows.length} registros</span>
     </div>
-    <div style="overflow-x:auto;max-height:calc(100vh - 300px)"><table style="width:100%;border-collapse:collapse;font-family:'DM Sans',sans-serif"><thead><tr>${thEstado}${ths}</tr></thead><tbody>${trs}</tbody></table></div>
+    <div style="overflow-x:auto;max-height:calc(100vh - 300px)"><table style="width:100%;border-collapse:collapse;font-family:'DM Sans',sans-serif"><thead><tr>${ths}</tr></thead><tbody>${trs}</tbody></table></div>
   </div>`;
 }
-window.csegToggleCI=async function(sheetKey,rowKey,nuevoEstado,sheet){
+window.csegToggleCICell=async function(sheetKey,cellKey,sheet){
   if(!csegOverrides[sheetKey])csegOverrides[sheetKey]={};
-  csegOverrides[sheetKey][rowKey]=nuevoEstado;
-  if(window.ciSetOverride)await window.ciSetOverride(sheetKey,rowKey,nuevoEstado);
+  const actual=csegOverrides[sheetKey][cellKey];
+  const nuevo=(!actual||actual==='rojo')?'verde':'rojo';
+  csegOverrides[sheetKey][cellKey]=nuevo;
+  if(window.ciSetOverride)await window.ciSetOverride(sheetKey,cellKey,nuevo);
   await csegRenderTabla(sheet,document.getElementById('cseg-search')?.value||'');
 };
 
