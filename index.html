@@ -618,6 +618,18 @@
   .hmtto-toolbar{display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap}
   .hmtto-sync-dot{width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block;margin-right:5px;animation:syncpulse 2.5s ease-in-out infinite}
   @keyframes syncpulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.75)}}
+  /* Filas coloreadas por tipo */
+  .hmtto-row{border-bottom:1px solid var(--gray-100)}
+  .hmtto-row:hover td{background:rgba(46,117,182,.04)!important}
+  .hmtto-row-prev td{background:rgba(76,175,80,.07)}
+  .hmtto-row-prev:hover td{background:rgba(76,175,80,.14)!important}
+  .hmtto-row-corr td{background:rgba(229,57,53,.07)}
+  .hmtto-row-corr:hover td{background:rgba(229,57,53,.13)!important}
+  /* Header oscuro tipo sheets */
+  #hmtto-container table thead th{background:var(--navy);color:var(--white);padding:10px 12px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;border-right:1px solid rgba(255,255,255,.08)}
+  #hmtto-container table tbody td{padding:8px 12px;border-right:1px solid var(--gray-100);vertical-align:middle}
+  /* Historial Mantenimiento — dentro de .main, hereda layout normalmente */
+  #page-hist-mtto .page-header{padding:28px 48px 0}
   .hero-right{position:absolute;right:40px;top:50%;transform:translateY(-50%);width:420px;height:200px}
   .hero-right-slide{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity 1.2s ease;pointer-events:none}
   .hero-right-slide.active{opacity:1;pointer-events:auto}
@@ -731,6 +743,7 @@
     <a class="sidebar-item admin-only" data-page="locativas" onclick="window.navTo('locativas')"><span class="sidebar-icon">🏢</span>Insp. Locativas</a>
     <a class="sidebar-item admin-only" data-page="historial" onclick="window.navTo('historial')"><span class="sidebar-icon">📚</span>Historial</a>
     <a class="sidebar-item admin-only" data-page="hist-mtto" onclick="window.navTo('hist-mtto')"><span class="sidebar-icon">🗂️</span>Historial Mantenimiento</a>
+    <a class="sidebar-item admin-only" data-page="ctrl-seg" onclick="window.navTo('ctrl-seg')"><span class="sidebar-icon">📋</span>Control & Seguimiento</a>
     <a class="sidebar-item admin-only" data-page="hojavida" onclick="window.navTo('hojavida')"><span class="sidebar-icon">📑</span>Hoja de vida</a></div>
 </div>
 
@@ -1118,32 +1131,55 @@
       </div>
     </div>
   </div>
-</div>
 
-<!-- HISTORIAL MANTENIMIENTO (Google Sheets) -->
-<div class="page-section" id="page-hist-mtto">
-  <div class="page-header">
-    <div>
-      <h1>🗂️ Historial de Mantenimiento</h1>
-      <div class="page-header-subtitle">Sincronizado desde Google Sheets · <span id="hmtto-last-update" style="color:var(--gray-400)">—</span></div>
+  <!-- HISTORIAL MANTENIMIENTO (Google Sheets) -->
+  <div class="page-section" id="page-hist-mtto">
+    <div class="page-header">
+      <div>
+        <h1>🗂️ Historial de Mantenimiento</h1>
+        <div class="page-header-subtitle">Sincronizado desde Google Sheets · <span id="hmtto-last-update" style="color:var(--gray-400)">—</span></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <button class="hv-btn hv-btn-edit" onclick="window.hmttoRefresh()">
+          <i class="bi bi-arrow-clockwise" id="hmtto-refresh-icon"></i> Actualizar
+        </button>
+      </div>
     </div>
-    <div style="display:flex;align-items:center;gap:10px">
-      <button class="hv-btn hv-btn-edit" onclick="window.hmttoRefresh()">
-        <i class="bi bi-arrow-clockwise" id="hmtto-refresh-icon"></i> Actualizar
+    <div style="padding:0 48px 28px">
+      <div class="hmtto-tabs-wrap"><div class="hmtto-tabs" id="hmtto-tabs"></div></div>
+      <div class="hmtto-toolbar" id="hmtto-toolbar" style="display:none">
+        <div class="hv-search-wrap" style="max-width:340px">
+          <input type="text" id="hmtto-search" placeholder="Buscar en historial…" oninput="window.hmttoFiltrar()" autocomplete="off">
+        </div>
+        <span id="hmtto-count" style="font-size:12px;color:var(--gray-400);margin-left:auto"></span>
+      </div>
+      <div id="hmtto-container"><div class="eq-loading"><i class="bi bi-arrow-repeat" style="animation:spin 1s linear infinite;display:inline-block"></i> Cargando…</div></div>
+    </div>
+  </div>
+  <!-- CONTROL & SEGUIMIENTO (Google Sheets) -->
+  <div class="page-section" id="page-ctrl-seg">
+    <div class="page-header">
+      <div>
+        <h1>📋 Control & Seguimiento</h1>
+        <div class="page-header-subtitle">Sincronizado desde Google Sheets · <span id="cseg-last-update" style="color:var(--gray-400)">—</span></div>
+      </div>
+      <button class="hv-btn hv-btn-edit" onclick="window.csegRefresh()">
+        <i class="bi bi-arrow-clockwise" id="cseg-refresh-icon"></i> Actualizar
       </button>
     </div>
-  </div>
-  <div style="padding:0 48px 28px">
-    <div class="hmtto-tabs-wrap"><div class="hmtto-tabs" id="hmtto-tabs"></div></div>
-    <div class="hmtto-toolbar" id="hmtto-toolbar" style="display:none">
-      <div class="hv-search-wrap" style="max-width:340px">
-        <input type="text" id="hmtto-search" placeholder="Buscar en historial…" oninput="window.hmttoFiltrar()" autocomplete="off">
+    <div style="padding:0 48px 28px">
+      <div class="hmtto-tabs-wrap"><div class="hmtto-tabs" id="cseg-tabs"></div></div>
+      <div class="hmtto-toolbar" id="cseg-toolbar" style="display:none">
+        <div class="hv-search-wrap" style="max-width:340px">
+          <input type="text" id="cseg-search" placeholder="Buscar…" oninput="window.csegFiltrar()" autocomplete="off">
+        </div>
+        <span id="cseg-count" style="font-size:12px;color:var(--gray-400);margin-left:auto"></span>
       </div>
-      <span id="hmtto-count" style="font-size:12px;color:var(--gray-400);margin-left:auto"></span>
+      <div id="cseg-container"><div class="eq-loading"><i class="bi bi-arrow-repeat" style="animation:spin 1s linear infinite;display:inline-block"></i> Cargando…</div></div>
     </div>
-    <div id="hmtto-container"><div class="eq-loading"><i class="bi bi-arrow-repeat" style="animation:spin 1s linear infinite;display:inline-block"></i> Cargando…</div></div>
   </div>
-</div>
+
+</div><!-- /main -->
 
 <div class="toast-container" id="toastContainer"></div>
 <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
@@ -1255,8 +1291,21 @@ document.getElementById('loginForm').addEventListener('submit',async e=>{e.preve
 document.getElementById('registerForm').addEventListener('submit',async e=>{e.preventDefault();const nombre=document.getElementById('reg-nombre').value.trim(),em=document.getElementById('reg-email').value,ipe=document.getElementById('reg-ipe').value.trim().toUpperCase(),codigo=document.getElementById('reg-codigo').value.trim(),re=document.getElementById('regError');re.textContent='';if(!nombre){re.textContent='El nombre y apellido son obligatorios';return}if(!ipe){re.textContent='El IPE es obligatorio';return}if(codigo&&codigo!=='MOVA2026ADMIN'){re.textContent='Código de administrador incorrecto';return}const rol=codigo==='MOVA2026ADMIN'?'admin':'operador';try{const c=await createUserWithEmailAndPassword(auth,em,ipe);await setDoc(doc(db,"usuarios",c.user.uid),{email:em,nombre,ipe,rol,createdAt:serverTimestamp()});showToast('success','Cuenta creada. Bienvenido, '+nombre.split(' ')[0])}catch(err){re.textContent=err.code==='auth/email-already-in-use'?'Correo ya registrado':err.code==='auth/weak-password'?'IPE debe tener al menos 6 caracteres':'Error: '+err.message}});
 window.cerrarSesion=()=>signOut(auth);
 
+// ===== CI SEGUIMIENTO — persistencia en Firestore =====
+window.ciGetOverrides=async function(sheetKey){
+  try{const s=await getDoc(doc(db,'ci_seguimiento',sheetKey));return s.exists()?(s.data().overrides||{}):{}}catch(e){return{}}
+};
+window.ciSetOverride=async function(sheetKey,rowKey,estado){
+  try{
+    await setDoc(doc(db,'ci_seguimiento',sheetKey),
+      {overrides:{[rowKey]:estado},updatedBy:window.nombreOperador||'',updatedAt:serverTimestamp()},
+      {merge:true});
+    return true;
+  }catch(e){showToast('error','Error al guardar: '+e.message);return false}
+};
+
 // ===== PERMISOS =====
-const PAGES_ADMIN=['dashboard','documentos','equipos','bimensuales','locativas','historial','hist-mtto','hojavida'];
+const PAGES_ADMIN=['dashboard','documentos','equipos','bimensuales','locativas','historial','hist-mtto','ctrl-seg','hojavida'];
 function aplicarPermisos(){
   const esAdmin=window.rolActivo==='admin';
   document.body.classList.toggle('rol-operador',!esAdmin);
@@ -2168,7 +2217,7 @@ window.enviarFalla = async function() {
     // 1. Guardar en Firestore
     await addDoc(collection(db, "reportes_fallas"), data);
 
-     // 2. Enviar email via EmailJS (si está configurado)
+        // 2. Enviar email via EmailJS (si está configurado)
 try {
   if (typeof emailjs !== 'undefined' && window.EMAILJS_SERVICE_ID) {
     
@@ -2381,8 +2430,220 @@ window.histBuscar=async function(){const term=document.getElementById('hist-sear
 window.histPDF=function(col,id,tipo){window._inspCol=col;if(tipo==='preop'){window.coleccion=col;window.exportarPDF(id,col)}else if(tipo==='insp'){window.inspExportarPDF(id)}else{showToast('info','PDF de fallas no disponible')}};
 window.initHistorialPage=function(){const t=document.getElementById('hist-tipo-filter');if(t&&t.options.length<2)HIST_COLS.forEach(c=>{const o=document.createElement('option');o.value=c.col;o.textContent=c.label;t.appendChild(o)});const m=document.getElementById('hist-mes');if(m&&!m.value){const d=new Date();m.value=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')}};
 
-// ===== HISTORIAL MANTENIMIENTO (Google Sheets) =====
+// ===== CONTROL & SEGUIMIENTO (Google Sheets) =====
+const CSEG_URL='https://script.google.com/macros/s/AKfycbxVL9dvF5inJZa3bUtwXJZBccNmrmfUZjbqfXvNMZBQK9bOWraDvD5bMcT-BXGp6SEmVA/exec';
+const CSEG_FILTER=s=>!s.toUpperCase().includes('H. MTTO')&&!s.toUpperCase().includes('H.MTTO');
+function csegHeaderRow(s){const n=s.toUpperCase();if(n.includes('CAT')&&n.includes('LOGO'))return 5;if(n.includes('CRONOGRAMA')||n.includes('DASHBOARD'))return 14;return 4;}
+function csegTipoHoja(s){const n=s.toUpperCase();if(n.includes('CAT')&&n.includes('LOGO'))return'catalogo';if(n.includes('DASHBOARD'))return'dashboard';if(n.includes('CRONOGRAMA'))return'cronograma';if(n.includes('C.I.')||n.includes('BIMENSUAL')||n.includes('LOCATIVA'))return'ci';if(n.includes('CONTROL PREOP')||n.includes('CTRL PREOP'))return'preop';return'tabla';}
+function csegSheetKey(s){return s.toLowerCase().replace(/[^a-z0-9]/g,'_');}
+function csegTimestamp(){const t=new Date().toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit'});const el=document.getElementById('cseg-last-update');if(el)el.innerHTML=`<span class="hmtto-sync-dot"></span>Actualizado a las ${t}`;}
+let csegSheets=[],csegActiva='',csegData={},csegInterval=null,csegOverrides={};
+
+function csegRenderCatalogo(sheet,filtro){
+  const{headers,rows}=csegData[sheet];
+  const term=filtro.toLowerCase();
+  const filtered=term?rows.filter(r=>Object.values(r).some(v=>String(v).toLowerCase().includes(term))):rows;
+  const totalRows=rows.length||1;
+  const idCols=new Set(headers.filter(h=>{const filled=rows.filter(r=>String(r[h]??'').trim()).length;return filled/totalRows>0.7;}));
+  const ths=headers.map(h=>`<th style="white-space:nowrap;font-size:10px;padding:9px 10px;background:var(--navy);color:var(--white);text-align:left;font-weight:700;text-transform:uppercase;letter-spacing:.4px;border-right:1px solid rgba(255,255,255,.08)">${h}</th>`).join('');
+  const trs=filtered.map(row=>{
+    const tds=headers.map(h=>{
+      const v=String(row[h]??'').trim();
+      let bg='',color='';
+      if(!idCols.has(h)){if(v){bg='rgba(76,175,80,.12)';color='#2E7D32';}else{bg='rgba(229,57,53,.1)';color='#C62828';}}
+      return`<td style="font-size:11px;padding:7px 10px;border-right:1px solid var(--gray-100);border-bottom:1px solid var(--gray-100);background:${bg};color:${color};white-space:nowrap">${v||''}</td>`;
+    }).join('');
+    return`<tr>${tds}</tr>`;
+  }).join('');
+  return`<div style="background:var(--white);border-radius:12px;border:1px solid var(--gray-200);overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.04)">
+    <div style="padding:10px 14px;background:var(--gray-50);border-bottom:1px solid var(--gray-200);display:flex;gap:16px;align-items:center;font-size:11px;color:var(--gray-500)">
+      <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:rgba(76,175,80,.25);margin-right:4px"></span>Entregado</span>
+      <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:rgba(229,57,53,.18);margin-right:4px"></span>Pendiente</span>
+      <span style="margin-left:auto;color:var(--gray-400)">${filtered.length} de ${rows.length} equipos</span>
+    </div>
+    <div style="overflow-x:auto;max-height:calc(100vh - 300px)"><table style="width:100%;border-collapse:collapse;font-family:'DM Sans',sans-serif"><thead><tr>${ths}</tr></thead><tbody>${trs}</tbody></table></div>
+  </div>`;
+}
+
+async function csegRenderCI(sheet,filtro){
+  const{headers,rows}=csegData[sheet];
+  const sheetKey=csegSheetKey(sheet);
+  if(!csegOverrides[sheetKey])csegOverrides[sheetKey]=await(window.ciGetOverrides?window.ciGetOverrides(sheetKey):{});
+  const overrides=csegOverrides[sheetKey];
+  const keyCol=headers.find(h=>h.toUpperCase().includes('CEMA'))||headers[0];
+  const term=filtro.toLowerCase();
+  const filtered=term?rows.filter(r=>Object.values(r).some(v=>String(v).toLowerCase().includes(term))):rows;
+  const fechaCol=headers.find(h=>h.toUpperCase().includes('FECHA')&&(h.toUpperCase().includes('ENTREGA')||h.toUpperCase().includes('TERMINAC')||h.toUpperCase().includes('REAL')));
+  const ths=headers.map(h=>`<th style="white-space:nowrap;font-size:10px;padding:9px 10px;background:var(--navy);color:var(--white);text-align:left;font-weight:700;text-transform:uppercase;letter-spacing:.4px;border-right:1px solid rgba(255,255,255,.08)">${h}</th>`).join('');
+  const trs=filtered.map((row,i)=>{
+    const rowKey=String(row[keyCol]||i).trim()||String(i);
+    const autoEstado=fechaCol&&String(row[fechaCol]??'').trim()?'entregada':'falta';
+    const estado=overrides[rowKey]||autoEstado;
+    const bg=estado==='entregada'?'rgba(76,175,80,.1)':'rgba(229,57,53,.07)';
+    const safeKey=rowKey.replace(/'/g,"\\'");
+    const safeSheet=sheet.replace(/'/g,"\\'");
+    const badge=estado==='entregada'
+      ?`<span style="background:rgba(76,175,80,.15);color:#2E7D32;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;cursor:pointer" onclick="window.csegToggleCI('${sheetKey}','${safeKey}','falta','${safeSheet}')">&#10003; Entregada</span>`
+      :`<span style="background:rgba(229,57,53,.12);color:#C62828;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;cursor:pointer" onclick="window.csegToggleCI('${sheetKey}','${safeKey}','entregada','${safeSheet}')">&#9679; Falta</span>`;
+    const tds=headers.map(h=>{const v=String(row[h]??'').trim();return`<td style="font-size:11px;padding:7px 10px;border-right:1px solid rgba(0,0,0,.04);white-space:nowrap">${v||'<span style=color:var(--gray-300)>&#8212;</span>'}</td>`;}).join('');
+    return`<tr style="background:${bg};border-bottom:1px solid rgba(0,0,0,.04)"><td style="padding:6px 10px;border-right:1px solid rgba(0,0,0,.04)">${badge}</td>${tds}</tr>`;
+  }).join('');
+  const thEstado=`<th style="font-size:10px;padding:9px 10px;background:var(--navy);color:var(--yellow);text-align:left;font-weight:700;text-transform:uppercase;letter-spacing:.4px;white-space:nowrap;border-right:1px solid rgba(255,255,255,.12)">Estado</th>`;
+  return`<div style="background:var(--white);border-radius:12px;border:1px solid var(--gray-200);overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.04)">
+    <div style="padding:10px 14px;background:var(--gray-50);border-bottom:1px solid var(--gray-200);font-size:11px;color:var(--gray-500)">
+      Haz clic en el badge para cambiar el estado. Se guarda automaticamente y es visible para todos los usuarios.
+      <span style="margin-left:12px;color:var(--gray-400)">${filtered.length} de ${rows.length} registros</span>
+    </div>
+    <div style="overflow-x:auto;max-height:calc(100vh - 300px)"><table style="width:100%;border-collapse:collapse;font-family:'DM Sans',sans-serif"><thead><tr>${thEstado}${ths}</tr></thead><tbody>${trs}</tbody></table></div>
+  </div>`;
+}
+window.csegToggleCI=async function(sheetKey,rowKey,nuevoEstado,sheet){
+  if(!csegOverrides[sheetKey])csegOverrides[sheetKey]={};
+  csegOverrides[sheetKey][rowKey]=nuevoEstado;
+  if(window.ciSetOverride)await window.ciSetOverride(sheetKey,rowKey,nuevoEstado);
+  await csegRenderTabla(sheet,document.getElementById('cseg-search')?.value||'');
+};
+
+function csegRenderPreop(sheet,filtro){
+  const{headers,rows}=csegData[sheet];
+  const term=filtro.toLowerCase();
+  const fechaCol=headers.find(h=>h.toUpperCase().includes('FECHA'));
+  const detalleCols=headers.filter(h=>{const u=h.toUpperCase();return u.includes('DIAGNOS')||u.includes('ESPECIALIDAD')||u.includes('TECNICO')||(u.includes('TIPO')&&u.includes('MANT'))||u.includes('TERMINAC')||u.includes('ORDEN')||u.includes('OT')||u.includes('DESCRIPCI');});
+  const grupoCols=headers.filter(h=>!detalleCols.includes(h));
+  let lastGrupo={};
+  const filled=rows.map(row=>{
+    const r={...row};
+    grupoCols.forEach(h=>{if(String(r[h]??'').trim())lastGrupo[h]=r[h];else r[h]=lastGrupo[h]??'';});
+    return r;
+  });
+  const filtered=term?filled.filter(r=>Object.values(r).some(v=>String(v).toLowerCase().includes(term))):filled;
+  if(!filtered.length)return'<div style="text-align:center;padding:40px;color:var(--gray-400)">Sin resultados</div>';
+  const cemaCol=grupoCols.find(h=>h.toUpperCase().includes('CEMA'))||grupoCols[1]||grupoCols[0];
+  let prevKey='',rowsHtml='';
+  filtered.forEach(row=>{
+    const gKey=(String(row[fechaCol]||'')+String(row[cemaCol]||'')).trim();
+    const isNew=gKey!==prevKey;prevKey=gKey;
+    if(isNew){
+      rowsHtml+=`<tr style="background:rgba(46,117,182,.06);border-top:2px solid rgba(46,117,182,.15)">`;
+      rowsHtml+=grupoCols.map(h=>`<td style="font-size:11px;font-weight:600;padding:8px 10px;color:var(--navy);border-right:1px solid var(--gray-100);white-space:nowrap">${String(row[h]??'').trim()||'&#8212;'}</td>`).join('');
+      rowsHtml+=detalleCols.map(h=>`<td style="font-size:11px;padding:8px 10px;border-right:1px solid var(--gray-100);white-space:nowrap">${String(row[h]??'').trim()||'&#8212;'}</td>`).join('');
+      rowsHtml+=`</tr>`;
+    }else{
+      rowsHtml+=`<tr style="background:var(--white);border-top:1px solid var(--gray-100)">`;
+      rowsHtml+=grupoCols.map(()=>`<td style="padding:6px 10px;border-right:1px solid var(--gray-100)"></td>`).join('');
+      rowsHtml+=detalleCols.map(h=>`<td style="font-size:11px;padding:6px 10px;color:var(--gray-600);border-right:1px solid var(--gray-100);white-space:nowrap">${String(row[h]??'').trim()||'&#8212;'}</td>`).join('');
+      rowsHtml+=`</tr>`;
+    }
+  });
+  const allCols=[...grupoCols,...detalleCols];
+  const ths=allCols.map((h,i)=>`<th style="white-space:nowrap;font-size:10px;padding:9px 10px;background:${i<grupoCols.length?'#1a3a5c':'var(--navy)'};color:var(--white);text-align:left;font-weight:700;text-transform:uppercase;letter-spacing:.4px;border-right:1px solid rgba(255,255,255,.08)">${h}</th>`).join('');
+  return`<div style="background:var(--white);border-radius:12px;border:1px solid var(--gray-200);overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.04)">
+    <div style="overflow-x:auto;max-height:calc(100vh - 300px)"><table style="width:100%;border-collapse:collapse;font-family:'DM Sans',sans-serif"><thead><tr>${ths}</tr></thead><tbody>${rowsHtml}</tbody></table></div>
+    <div style="padding:10px 16px;background:var(--gray-50);border-top:1px solid var(--gray-200);font-size:11px;color:var(--gray-400)">${filtered.length} registros &mdash; fila azul = nuevo equipo/periodo</div>
+  </div>`;
+}
+
+function csegRenderTablaEstandar(sheet,filtro){
+  const{headers,rows}=csegData[sheet];
+  const term=filtro.toLowerCase();
+  const filtered=term?rows.filter(r=>Object.values(r).some(v=>String(v).toLowerCase().includes(term))):rows;
+  function celda(v,h){
+    const s=String(v??'').trim();if(!s)return'<span style="color:var(--gray-300)">&#8212;</span>';
+    if(s.match(/^\d{4}-\d{2}-\d{2}T/))return new Date(s).toLocaleDateString('es-CO');
+    if(['B','M','NA','N/A'].includes(s.toUpperCase())){const cfg={B:{bg:'rgba(76,175,80,.15)',c:'#2E7D32'},M:{bg:'rgba(229,57,53,.13)',c:'#C62828'},NA:{bg:'rgba(148,163,184,.15)',c:'#64748B'},'N/A':{bg:'rgba(148,163,184,.15)',c:'#64748B'}};const x=cfg[s.toUpperCase()]||cfg.NA;return`<span style="background:${x.bg};color:${x.c};padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">${s}</span>`;}
+    const hU=h.toUpperCase();
+    if(s.match(/^\d+(\.\d+)?%$/)||((hU.includes('AVANCE')||hU.includes('CUMPL'))&&!isNaN(parseFloat(s)))){const pct=Math.min(100,parseFloat(s));const color=pct>=80?'var(--green)':pct>=50?'var(--orange)':'var(--red)';return`<div style="min-width:80px"><div style="font-size:11px;font-weight:700;color:${color}">${s.includes('%')?s:pct+'%'}</div><div style="height:4px;background:var(--gray-200);border-radius:2px;margin-top:2px"><div style="width:${pct}%;height:4px;background:${color};border-radius:2px"></div></div></div>`;}
+    if(s.toUpperCase()==='SI'||s.toUpperCase()==='SI\u0301')return`<span style="background:rgba(76,175,80,.12);color:#2E7D32;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">&#10004; SI</span>`;
+    if(s.toUpperCase()==='NO')return`<span style="background:rgba(229,57,53,.1);color:#C62828;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">&#10006; NO</span>`;
+    return s;
+  }
+  function rowBg(row){for(const h of headers){const v=String(row[h]??'').toUpperCase();if(v==='M')return'rgba(229,57,53,.05)';if(v==='B')return'rgba(76,175,80,.05)';}return'';}
+  const ths=headers.map(h=>`<th style="white-space:nowrap;font-size:10px;padding:9px 10px;background:var(--navy);color:var(--white);text-align:left;font-weight:700;text-transform:uppercase;letter-spacing:.4px;border-right:1px solid rgba(255,255,255,.08)">${h}</th>`).join('');
+  const trs=filtered.map(row=>`<tr style="background:${rowBg(row)};border-bottom:1px solid var(--gray-100)">${headers.map(h=>`<td style="font-size:11px;padding:7px 10px;border-right:1px solid var(--gray-100);white-space:nowrap">${celda(row[h],h)}</td>`).join('')}</tr>`).join('');
+  return`<div style="background:var(--white);border-radius:12px;border:1px solid var(--gray-200);overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.04)">
+    <div style="overflow-x:auto;max-height:calc(100vh - 300px)"><table style="width:100%;border-collapse:collapse;font-family:'DM Sans',sans-serif"><thead><tr>${ths}</tr></thead><tbody>${trs}</tbody></table></div>
+    <div style="padding:10px 16px;background:var(--gray-50);border-top:1px solid var(--gray-200);font-size:11px;color:var(--gray-400);text-align:right">${filtered.length} de ${rows.length} registros</div>
+  </div>`;
+}
+
+async function csegRenderTabla(sheet,filtro=''){
+  const d=csegData[sheet]||{};
+  const cont=document.getElementById('cseg-container');
+  const toolbar=document.getElementById('cseg-toolbar');
+  const countEl=document.getElementById('cseg-count');
+  if(!d.rows?.length){cont.innerHTML='<div style="text-align:center;padding:60px;color:var(--gray-400)"><i class="bi bi-inbox" style="font-size:40px;display:block;margin-bottom:12px;opacity:.4"></i><p>Sin registros</p></div>';toolbar.style.display='none';return;}
+  toolbar.style.display='flex';
+  const term=filtro.toLowerCase();
+  const n=term?d.rows.filter(r=>Object.values(r).some(v=>String(v).toLowerCase().includes(term))).length:d.rows.length;
+  if(countEl)countEl.textContent=`${n} de ${d.rows.length} registros`;
+  let html='';
+  if(d.tipo==='catalogo')html=csegRenderCatalogo(sheet,filtro);
+  else if(d.tipo==='ci')html=await csegRenderCI(sheet,filtro);
+  else if(d.tipo==='preop')html=csegRenderPreop(sheet,filtro);
+  else html=csegRenderTablaEstandar(sheet,filtro);
+  cont.innerHTML=html;
+}
+
+async function csegCargarTab(sheet){
+  csegActiva=sheet;
+  document.querySelectorAll('#cseg-tabs .hmtto-tab').forEach(t=>t.classList.toggle('active',t.dataset.sheet===sheet));
+  const cont=document.getElementById('cseg-container');
+  cont.innerHTML=`<div class="eq-loading"><i class="bi bi-arrow-repeat" style="animation:spin 1s linear infinite;display:inline-block"></i> Cargando...</div>`;
+  document.getElementById('cseg-toolbar').style.display='none';
+  try{
+    const hr=csegHeaderRow(sheet);
+    const json=await hmttoFetch(`${CSEG_URL}?sheet=${encodeURIComponent(sheet)}&hr=${hr}`);
+    csegData[sheet]={headers:json.headers||[],rows:json.rows||[],tipo:csegTipoHoja(sheet)};
+    csegTimestamp();
+    await csegRenderTabla(sheet);
+  }catch(e){
+    cont.innerHTML=`<div style="text-align:center;padding:60px;color:var(--gray-400)"><i class="bi bi-exclamation-triangle" style="font-size:36px;display:block;margin-bottom:12px"></i><p>Error: ${e.message}</p></div>`;
+  }
+}
+
+async function csegCargarSheets(){
+  const tabsEl=document.getElementById('cseg-tabs');
+  tabsEl.innerHTML='<div class="hmtto-tab-skeleton"></div><div class="hmtto-tab-skeleton" style="width:90px"></div><div class="hmtto-tab-skeleton" style="width:110px"></div>';
+  try{
+    const json=await hmttoFetch(CSEG_URL);
+    csegSheets=(json.sheets||[]).filter(CSEG_FILTER);
+    if(!csegSheets.length){tabsEl.innerHTML='<p style="color:var(--gray-400);font-size:13px;padding:10px 0">Sin hojas disponibles</p>';return;}
+    tabsEl.innerHTML=csegSheets.map(s=>{
+      const label=s.replace(/^C\.I\.\s*/i,'').trim()||s;
+      return`<button class="hmtto-tab${s===csegActiva?' active':''}" data-sheet="${s}" onclick="window.csegSelTab(this.dataset.sheet)">${label}</button>`;
+    }).join('');
+    if(!csegActiva||!csegSheets.includes(csegActiva))csegActiva=csegSheets[0];
+    await csegCargarTab(csegActiva);
+  }catch(e){
+    tabsEl.innerHTML='';
+    document.getElementById('cseg-container').innerHTML=`<div style="text-align:center;padding:60px;color:var(--gray-400)"><i class="bi bi-exclamation-triangle" style="font-size:36px;display:block;margin-bottom:12px"></i><p>Error: ${e.message}</p></div>`;
+  }
+}
+window.csegSelTab=async function(sheet){
+  if(!csegData[sheet])await csegCargarTab(sheet);
+  else{csegActiva=sheet;document.querySelectorAll('#cseg-tabs .hmtto-tab').forEach(t=>t.classList.toggle('active',t.dataset.sheet===sheet));const s=document.getElementById('cseg-search');if(s)s.value='';await csegRenderTabla(sheet);}
+};
+window.csegFiltrar=function(){csegRenderTabla(csegActiva,document.getElementById('cseg-search').value);};
+window.csegRefresh=async function(){const icon=document.getElementById('cseg-refresh-icon');if(icon){icon.style.animation='spin .6s linear infinite';icon.style.display='inline-block';}csegData={};csegOverrides={};await csegCargarSheets();if(icon)icon.style.animation='';};
+window.initCtrlSegPage=function(){
+  window.scrollTo({top:0,behavior:'instant'});
+  csegCargarSheets();
+  if(csegInterval)clearInterval(csegInterval);
+  csegInterval=setInterval(async()=>{
+    if(!document.getElementById('page-ctrl-seg').classList.contains('active'))return;
+    try{
+      const hr=csegHeaderRow(csegActiva);
+      const json=await hmttoFetch(`${CSEG_URL}?sheet=${encodeURIComponent(csegActiva)}&hr=${hr}`);
+      const prev=csegData[csegActiva]?.rows?.length;
+      csegData[csegActiva]={headers:json.headers||[],rows:json.rows||[],tipo:csegTipoHoja(csegActiva)};
+      if((json.rows||[]).length!==prev){await csegRenderTabla(csegActiva,document.getElementById('cseg-search')?.value||'');showToast('info','Control actualizado');}
+      csegTimestamp();
+    }catch(e){}
+  },60000);
+};
 const HMTTO_URL='https://script.google.com/macros/s/AKfycbxVL9dvF5inJZa3bUtwXJZBccNmrmfUZjbqfXvNMZBQK9bOWraDvD5bMcT-BXGp6SEmVA/exec';
+// Solo mostrar hojas cuyo nombre contenga "H. MTTO" o "MTTO"
+const HMTTO_FILTER = s => s.toUpperCase().includes('H. MTTO') || s.toUpperCase().includes('H.MTTO');
 let hmttoSheets=[],hmttoActiva='',hmttoData={},hmttoInterval=null;
 
 async function hmttoFetch(url){
@@ -2398,31 +2659,40 @@ function hmttoTimestamp(){
     `<span class="hmtto-sync-dot"></span>Actualizado a las ${t}`;
 }
 
+// Extrae el nombre del proyecto de la pestaña: "H. MTTO. RB164" → "RB164"
+function hmttoTabLabel(s){
+  return s.replace(/H\.?\s*MTTO\.?\s*/i,'').trim()||s;
+}
+
 async function hmttoCargarSheets(){
   const tabsEl=document.getElementById('hmtto-tabs');
-  tabsEl.innerHTML='<div class="hmtto-tab-skeleton"></div><div class="hmtto-tab-skeleton" style="width:90px"></div><div class="hmtto-tab-skeleton" style="width:110px"></div>';
+  tabsEl.innerHTML='<div class="hmtto-tab-skeleton"></div><div class="hmtto-tab-skeleton" style="width:80px"></div><div class="hmtto-tab-skeleton" style="width:100px"></div>';
   try{
     const json=await hmttoFetch(HMTTO_URL);
-    hmttoSheets=json.sheets||[];
-    if(!hmttoSheets.length){tabsEl.innerHTML='<p style="color:var(--gray-400);font-size:13px;padding:10px">Sin pestañas disponibles</p>';return}
+    // Filtrar solo hojas de historial de mantenimiento
+    hmttoSheets=(json.sheets||[]).filter(HMTTO_FILTER);
+    if(!hmttoSheets.length){
+      tabsEl.innerHTML='<p style="color:var(--gray-400);font-size:13px;padding:10px 0">Sin hojas de historial de mantenimiento encontradas</p>';
+      document.getElementById('hmtto-container').innerHTML='';
+      return;
+    }
     tabsEl.innerHTML=hmttoSheets.map(s=>
-      `<button class="hmtto-tab${s===hmttoActiva?' active':''}" onclick="window.hmttoSelTab('${s}')">${s}</button>`
+      `<button class="hmtto-tab${s===hmttoActiva?' active':''}" onclick="window.hmttoSelTab('${s}')">${hmttoTabLabel(s)}</button>`
     ).join('');
     if(!hmttoActiva||!hmttoSheets.includes(hmttoActiva))hmttoActiva=hmttoSheets[0];
     await hmttoCargarTab(hmttoActiva);
   }catch(e){
     tabsEl.innerHTML='';
-    document.getElementById('hmtto-container').innerHTML=`<div class="eq-empty"><i class="bi bi-exclamation-triangle"></i><p>Error al conectar con Google Sheets.<br><small>${e.message}</small></p></div>`;
+    document.getElementById('hmtto-container').innerHTML=`<div class="eq-empty" style="text-align:center;padding:60px 20px;color:var(--gray-400)"><i class="bi bi-exclamation-triangle" style="font-size:36px;display:block;margin-bottom:12px"></i><p>Error al conectar con Google Sheets.<br><small style="color:var(--gray-300)">${e.message}</small></p></div>`;
   }
 }
 
 async function hmttoCargarTab(sheet){
   hmttoActiva=sheet;
-  // Marcar tab activa
-  document.querySelectorAll('.hmtto-tab').forEach(t=>t.classList.toggle('active',t.textContent===sheet));
+  document.querySelectorAll('.hmtto-tab').forEach(t=>t.classList.toggle('active',t.textContent===hmttoTabLabel(sheet)));
   const cont=document.getElementById('hmtto-container');
   const toolbar=document.getElementById('hmtto-toolbar');
-  cont.innerHTML='<div class="eq-loading"><i class="bi bi-arrow-repeat" style="animation:spin 1s linear infinite;display:inline-block"></i> Cargando '+sheet+'…</div>';
+  cont.innerHTML=`<div class="eq-loading"><i class="bi bi-arrow-repeat" style="animation:spin 1s linear infinite;display:inline-block"></i> Cargando ${hmttoTabLabel(sheet)}…</div>`;
   toolbar.style.display='none';
   try{
     const json=await hmttoFetch(HMTTO_URL+'?sheet='+encodeURIComponent(sheet));
@@ -2430,8 +2700,34 @@ async function hmttoCargarTab(sheet){
     hmttoTimestamp();
     hmttoRenderTabla(sheet);
   }catch(e){
-    cont.innerHTML=`<div class="eq-empty"><i class="bi bi-exclamation-triangle"></i><p>Error al cargar pestaña <strong>${sheet}</strong>.<br><small>${e.message}</small></p></div>`;
+    cont.innerHTML=`<div style="text-align:center;padding:60px 20px;color:var(--gray-400)"><i class="bi bi-exclamation-triangle" style="font-size:36px;display:block;margin-bottom:12px"></i><p>Error al cargar <strong>${hmttoTabLabel(sheet)}</strong>.<br><small>${e.message}</small></p></div>`;
   }
+}
+
+function hmttoFormatVal(v,h){
+  if(v===''||v===null||v===undefined)return'<span style="color:var(--gray-300)">—</span>';
+  const str=String(v).trim();
+  if(!str||str==='0')return'<span style="color:var(--gray-300)">—</span>';
+  // Fechas serializadas ISO
+  if(str.match(/^\d{4}-\d{2}-\d{2}T/))return new Date(str).toLocaleDateString('es-CO');
+  // Columna TIPO DE MANTENIMIENTO → badge
+  const hU=h.toUpperCase();
+  if(hU.includes('TIPO')&&hU.includes('MANT')){
+    const up=str.toUpperCase();
+    if(up.includes('PREV'))return`<span style="background:rgba(76,175,80,.15);color:#2E7D32;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700;white-space:nowrap">✅ ${str}</span>`;
+    if(up.includes('CORR'))return`<span style="background:rgba(229,57,53,.13);color:#C62828;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700;white-space:nowrap">🔴 ${str}</span>`;
+  }
+  return str;
+}
+
+function hmttoRowClass(row,headers){
+  // Detectar tipo de mantenimiento para colorear la fila
+  const tipoKey=headers.find(h=>h.toUpperCase().includes('TIPO')&&h.toUpperCase().includes('MANT'));
+  if(!tipoKey)return'';
+  const tipo=String(row[tipoKey]||'').toUpperCase();
+  if(tipo.includes('PREV'))return' hmtto-row-prev';
+  if(tipo.includes('CORR'))return' hmtto-row-corr';
+  return'';
 }
 
 function hmttoRenderTabla(sheet,filtro=''){
@@ -2440,32 +2736,48 @@ function hmttoRenderTabla(sheet,filtro=''){
   const toolbar=document.getElementById('hmtto-toolbar');
   const countEl=document.getElementById('hmtto-count');
   if(!rows.length){
-    cont.innerHTML='<div class="eq-empty" style="text-align:center;padding:60px 20px;color:var(--gray-400)"><i class="bi bi-inbox" style="font-size:40px;display:block;margin-bottom:12px;opacity:.4"></i><p>Sin registros en esta pestaña</p></div>';
+    cont.innerHTML='<div style="text-align:center;padding:60px 20px;color:var(--gray-400)"><i class="bi bi-inbox" style="font-size:40px;display:block;margin-bottom:12px;opacity:.4"></i><p>Sin registros en esta pestaña</p></div>';
     toolbar.style.display='none';return;
   }
   const term=filtro.toLowerCase();
   const filtered=term?rows.filter(r=>Object.values(r).some(v=>String(v).toLowerCase().includes(term))):rows;
   toolbar.style.display='flex';
   countEl.textContent=`${filtered.length} de ${rows.length} registros`;
-  if(!filtered.length){cont.innerHTML='<div class="eq-empty" style="text-align:center;padding:40px 20px;color:var(--gray-400)"><i class="bi bi-search" style="font-size:32px;display:block;margin-bottom:10px;opacity:.4"></i><p>Sin coincidencias para "<strong>'+filtro+'</strong>"</p></div>';return}
-  const ths=headers.map(h=>`<th>${h}</th>`).join('');
+  if(!filtered.length){
+    cont.innerHTML=`<div style="text-align:center;padding:40px 20px;color:var(--gray-400)"><i class="bi bi-search" style="font-size:32px;display:block;margin-bottom:10px;opacity:.4"></i><p>Sin coincidencias para "<strong>${filtro}</strong>"</p></div>`;
+    return;
+  }
+  const ths=headers.map(h=>`<th style="white-space:nowrap;font-size:10px;letter-spacing:.4px">${h}</th>`).join('');
   const trs=filtered.map(row=>{
-    const tds=headers.map(h=>{
-      let v=row[h]??'';
-      // Detectar fechas tipo Date object serializado
-      if(v&&typeof v==='string'&&v.match(/^\d{4}-\d{2}-\d{2}T/))v=new Date(v).toLocaleDateString('es-CO');
-      return`<td>${v===''||v===null?'<span style="color:var(--gray-300)">—</span>':v}</td>`;
-    }).join('');
-    return`<tr>${tds}</tr>`;
+    const cls=hmttoRowClass(row,headers);
+    const tds=headers.map(h=>`<td style="font-size:12px;white-space:nowrap">${hmttoFormatVal(row[h],h)}</td>`).join('');
+    return`<tr class="hmtto-row${cls}">${tds}</tr>`;
   }).join('');
-  cont.innerHTML=`<div class="card"><div class="card-body" style="padding:0;overflow-x:auto"><table class="eq-table"><thead><tr>${ths}</tr></thead><tbody>${trs}</tbody></table></div></div>`;
+  cont.innerHTML=`
+    <div style="background:var(--white);border-radius:12px;border:1px solid var(--gray-200);overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.04)">
+      <div style="overflow-x:auto;max-height:calc(100vh - 280px)">
+        <table style="width:100%;border-collapse:collapse;font-family:'DM Sans',sans-serif">
+          <thead>
+            <tr style="background:var(--navy);position:sticky;top:0;z-index:2">
+              ${ths}
+            </tr>
+          </thead>
+          <tbody>${trs}</tbody>
+        </table>
+      </div>
+      <div style="padding:10px 16px;background:var(--gray-50);border-top:1px solid var(--gray-200);display:flex;gap:20px;align-items:center">
+        <span style="font-size:11px;color:var(--gray-500)"><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:rgba(76,175,80,.25);margin-right:4px"></span>Preventivo</span>
+        <span style="font-size:11px;color:var(--gray-500)"><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:rgba(229,57,53,.18);margin-right:4px"></span>Correctivo</span>
+        <span style="font-size:11px;color:var(--gray-400);margin-left:auto">${filtered.length} de ${rows.length} registros</span>
+      </div>
+    </div>`;
 }
 
 window.hmttoSelTab=async function(sheet){
   if(!hmttoData[sheet])await hmttoCargarTab(sheet);
   else{
     hmttoActiva=sheet;
-    document.querySelectorAll('.hmtto-tab').forEach(t=>t.classList.toggle('active',t.textContent===sheet));
+    document.querySelectorAll('.hmtto-tab').forEach(t=>t.classList.toggle('active',t.textContent===hmttoTabLabel(sheet)));
     const busq=document.getElementById('hmtto-search');
     if(busq)busq.value='';
     hmttoRenderTabla(sheet);
@@ -2487,6 +2799,9 @@ window.hmttoRefresh=async function(){
 
 // Auto-polling cada 60 segundos mientras la página esté activa
 window.initHistMttoPage=function(){
+  // Forzar scroll al tope — el contenido siempre arranca desde el header
+  document.querySelector('.main')?.scrollTo({top:0});
+  window.scrollTo({top:0,behavior:'instant'});
   hmttoCargarSheets();
   if(hmttoInterval)clearInterval(hmttoInterval);
   hmttoInterval=setInterval(async()=>{
@@ -2494,9 +2809,9 @@ window.initHistMttoPage=function(){
       // Solo recarga la pestaña activa silenciosamente
       try{
         const json=await hmttoFetch(HMTTO_URL+'?sheet='+encodeURIComponent(hmttoActiva));
-        const prev=JSON.stringify(hmttoData[hmttoActiva]?.rows);
+        const prev=hmttoData[hmttoActiva]?.rows?.length;
         hmttoData[hmttoActiva]={headers:json.headers||[],rows:json.rows||[]};
-        if(JSON.stringify(json.rows)!==prev){
+        if((json.rows||[]).length!==prev){
           hmttoRenderTabla(hmttoActiva,document.getElementById('hmtto-search')?.value||'');
           showToast('info','Historial actualizado — nuevos registros detectados');
         }
@@ -2526,7 +2841,8 @@ window.navTo=function(page){
   // Agregar botón "Volver al inicio" en todas las páginas excepto inicio
   if(page!=='inicio'){let bb=t.querySelector('.auto-back-btn');if(!bb){bb=document.createElement('a');bb.className='auto-back-btn';bb.innerHTML='<i class="bi bi-arrow-left"></i> Volver al Inicio';bb.style.cssText='display:inline-flex;align-items:center;gap:6px;padding:8px 16px;margin:16px 0 0 48px;border-radius:8px;border:1px solid var(--gray-200);background:var(--white);color:var(--gray-600);font-size:12px;font-weight:500;cursor:pointer;transition:all .2s;font-family:DM Sans,sans-serif;text-decoration:none';bb.onmouseover=function(){this.style.background='var(--gray-50)'};bb.onmouseout=function(){this.style.background='var(--white)'};bb.onclick=function(){window.navTo("inicio")};const ph=t.querySelector('.page-header,.preop-container,.falla-container,.hv-container');if(ph)t.insertBefore(bb,ph);else t.prepend(bb)}}
 }document.querySelectorAll('#topNav a').forEach(a=>a.classList.remove('active'));const tl=document.querySelector(`#topNav a[data-page="${page}"]`);if(tl)tl.classList.add('active');document.querySelectorAll('.sidebar-item').forEach(s=>s.classList.remove('active'));const sl=document.querySelector(`.sidebar-item[data-page="${page}"]`);if(sl)sl.classList.add('active');if(page==='fallas'&&window.initFallaPage)window.initFallaPage();if(page==='preoperacionales'&&window.initPreopPage)window.initPreopPage();if(page==='bimensuales'&&window.initBimensualPage)window.initBimensualPage();if(page==='locativas'&&window.initLocativaPage)window.initLocativaPage();if(page==='historial'&&window.initHistorialPage)window.initHistorialPage();if(page==='hojavida'&&window.initHojaVidaPage)window.initHojaVidaPage();
-if(page==='hist-mtto'&&window.initHistMttoPage)window.initHistMttoPage();if(page==='equipos'&&window.cargarEquipos)window.cargarEquipos(document.querySelector('.project-btn.active')?.dataset.project||'todos');if(page==='inicio'){if(window._initHeroCarousel)window._initHeroCarousel();setTimeout(()=>{document.querySelectorAll('.progress-fill').forEach(b=>{b.style.width='0';setTimeout(()=>{b.style.width=b.dataset.target+'%'},100)})},300)}window.scrollTo({top:0,behavior:'smooth'});document.getElementById('sidebar')?.classList.remove('mobile-open');document.getElementById('sidebarOverlay')?.classList.remove('show')};
+if(page==='hist-mtto'&&window.initHistMttoPage)window.initHistMttoPage();
+if(page==='ctrl-seg'&&window.initCtrlSegPage)window.initCtrlSegPage();if(page==='equipos'&&window.cargarEquipos)window.cargarEquipos(document.querySelector('.project-btn.active')?.dataset.project||'todos');if(page==='inicio'){if(window._initHeroCarousel)window._initHeroCarousel();setTimeout(()=>{document.querySelectorAll('.progress-fill').forEach(b=>{b.style.width='0';setTimeout(()=>{b.style.width=b.dataset.target+'%'},100)})},300)}window.scrollTo({top:0,behavior:'smooth'});document.getElementById('sidebar')?.classList.remove('mobile-open');document.getElementById('sidebarOverlay')?.classList.remove('show')};
 
 document.addEventListener('DOMContentLoaded',()=>{
   const p=document.getElementById('progressBars');if(p){[{l:'Mtto. Preventivo',v:87,c:'green'},{l:'Mtto. Instalaciones',v:72,c:'yellow'},{l:'Inspecciones',v:95,c:'green'},{l:'OT Cerradas',v:63,c:'red'}].forEach(x=>{p.innerHTML+=`<div class="progress-item"><div class="progress-header"><span class="progress-label">${x.l}</span><span class="progress-value">${x.v}%</span></div><div class="progress-bar"><div class="progress-fill ${x.c}" data-target="${x.v}" style="width:0"></div></div></div>`});setTimeout(()=>{document.querySelectorAll('.progress-fill').forEach(b=>{b.style.width=b.dataset.target+'%'})},600)}
