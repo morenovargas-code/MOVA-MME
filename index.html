@@ -630,6 +630,45 @@
   #hmtto-container table tbody td{padding:8px 12px;border-right:1px solid var(--gray-100);vertical-align:middle}
   /* Historial Mantenimiento — dentro de .main, hereda layout normalmente */
   #page-hist-mtto .page-header{padding:28px 48px 0}
+  /* DASHBOARD DINÁMICO */
+  .dash-tab{padding:10px 22px;border:none;background:transparent;font-size:13px;font-weight:600;color:var(--gray-500);cursor:pointer;font-family:'DM Sans',sans-serif;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .2s}
+  .dash-tab:hover{color:var(--navy)}
+  .dash-tab.active{color:var(--blue);border-bottom-color:var(--blue)}
+  .dash-section{margin-bottom:32px}
+  .dash-section-title{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:1px;margin-bottom:14px;display:flex;align-items:center;gap:8px;padding-bottom:8px;border-bottom:2px solid var(--yellow)}
+  .dash-kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+  .dash-kpi{background:var(--white);border:1px solid var(--gray-200);border-radius:12px;padding:18px 20px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
+  .dash-kpi:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.08);border-color:var(--blue)}
+  .dash-kpi::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:var(--blue);opacity:.4}
+  .dash-kpi.green::after{background:var(--green)}.dash-kpi.red::after{background:var(--red)}.dash-kpi.yellow::after{background:var(--orange)}
+  .dash-kpi-label{font-size:11px;font-weight:600;color:var(--gray-400);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+  .dash-kpi-value{font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:700;color:var(--navy);line-height:1}
+  .dash-kpi-sub{font-size:11px;color:var(--gray-400);margin-top:4px}
+  .dash-kpi-hint{font-size:10px;color:var(--blue);margin-top:6px}
+  .dash-bar-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+  .dash-bar-label{width:80px;text-align:right;color:var(--gray-600);font-weight:600;flex-shrink:0;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .dash-bar-label.wide{width:150px}
+  .dash-bar-track{flex:1;height:20px;background:var(--gray-100);border-radius:10px;overflow:hidden}
+  .dash-bar-fill{height:100%;border-radius:10px;transition:width .6s ease;display:flex;align-items:center;justify-content:flex-end;padding-right:6px;font-size:10px;font-weight:700;color:var(--white)}
+  .dash-bar-fill.blue{background:linear-gradient(90deg,var(--blue),var(--blue-bright))}.dash-bar-fill.green{background:linear-gradient(90deg,#388e3c,var(--green))}.dash-bar-fill.red{background:linear-gradient(90deg,#c62828,var(--red))}.dash-bar-fill.yellow{background:linear-gradient(90deg,#e65100,var(--orange))}.dash-bar-fill.purple{background:linear-gradient(90deg,#6a1b9a,#9c27b0)}
+  .dash-bar-count{width:40px;font-size:11px;font-weight:700;color:var(--gray-600)}
+  .dash-two-col{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  .dash-card{background:var(--white);border:1px solid var(--gray-200);border-radius:12px;padding:20px;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+  .dash-card-title{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;color:var(--navy);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between}
+  .dash-month-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-top:6px}
+  .dash-month-cell{background:var(--gray-50);border-radius:6px;padding:8px 4px;text-align:center;cursor:pointer;transition:all .15s;border:1px solid var(--gray-200)}
+  .dash-month-cell:hover{background:rgba(46,117,182,.08);border-color:var(--blue)}
+  .dash-month-cell .mc-name{font-size:10px;font-weight:600;color:var(--gray-400);text-transform:uppercase}
+  .dash-month-cell .mc-val{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;color:var(--navy);margin-top:2px}
+  .dash-month-cell .mc-bar{height:4px;background:var(--blue);border-radius:2px;margin-top:4px}
+  .dash-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:10px;font-size:11px;font-weight:700}
+  .dash-badge.green{background:rgba(76,175,80,.12);color:#2e7d32}.dash-badge.red{background:rgba(229,57,53,.12);color:#c62828}.dash-badge.blue{background:rgba(46,117,182,.1);color:var(--blue)}.dash-badge.yellow{background:rgba(244,180,0,.12);color:#e65100}
+  .dash-vs{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .dash-vs-col{background:var(--gray-50);border-radius:10px;padding:14px;text-align:center}
+  .dash-vs-col h4{font-size:11px;font-weight:700;color:var(--gray-400);text-transform:uppercase;margin-bottom:8px}
+  .dash-vs-col .val{font-family:'Space Grotesk',sans-serif;font-size:32px;font-weight:700;color:var(--navy)}
+  .dash-vs-col .sub{font-size:11px;color:var(--gray-400);margin-top:2px}
+  @media(max-width:900px){.dash-kpi-grid{grid-template-columns:repeat(2,1fr)}.dash-two-col{grid-template-columns:1fr}.dash-month-grid{grid-template-columns:repeat(3,1fr)}}
   .hero-right{position:absolute;right:40px;top:50%;transform:translateY(-50%);width:420px;height:200px}
   .hero-right-slide{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity 1.2s ease;pointer-events:none}
   .hero-right-slide.active{opacity:1;pointer-events:auto}
@@ -830,7 +869,7 @@
         <p class="falla-sub">Completa los datos del equipo y la falla detectada. Se guardará en el sistema y se enviará un correo de notificación.</p>
 
         <div class="form-row" style="margin-bottom:14px">
-          <div class="form-group"><label class="form-label">CEMA / Código del Equipo *</label><input class="form-input" id="falla-cema" placeholder="Ej: 7EO3030" required></div>
+          <div class="form-group"><label class="form-label">CEMA / Código del Equipo *</label><div class="hv-search-wrap" style="position:relative"><input class="form-input" id="falla-cema" placeholder="Buscar CEMA o nombre equipo..." required autocomplete="off"><div id="falla-cema-suggest" class="hv-suggest"></div></div></div>
           <div class="form-group"><label class="form-label">Nombre del Equipo</label><input class="form-input" id="falla-nombre" placeholder="Ej: Excavadora PC200"></div>
         </div>
         <div class="form-row" style="margin-bottom:14px">
@@ -897,7 +936,80 @@
   <div class="page-section" id="page-preoperacionales"><div class="preop-container" id="preopContent"></div></div>
 
   <!-- DASHBOARD -->
-  <div class="page-section" id="page-dashboard"><div class="page-header"><div><h1>📊 Dashboard KPIs</h1><div class="page-header-subtitle">Marzo 2026</div></div></div><div style="padding:28px 48px"><div class="kpi-grid"><div class="kpi-card good"><div class="kpi-label">Disponibilidad</div><div class="kpi-value">92.4%</div><div class="kpi-trend up">▲ +2.1%</div></div><div class="kpi-card good"><div class="kpi-label">Cumplimiento</div><div class="kpi-value">87%</div><div class="kpi-trend up">▲ +5%</div></div><div class="kpi-card warn"><div class="kpi-label">MTTR</div><div class="kpi-value">4.2h</div><div class="kpi-trend down">▼ Meta: 3.5h</div></div><div class="kpi-card good"><div class="kpi-label">MTBF</div><div class="kpi-value">156h</div><div class="kpi-trend up">▲ +12h</div></div><div class="kpi-card good"><div class="kpi-label">Backlog OT</div><div class="kpi-value">8</div><div class="kpi-trend up">▲ Dentro meta</div></div><div class="kpi-card good"><div class="kpi-label">Inspecciones</div><div class="kpi-value">95%</div><div class="kpi-trend up">▲ Excelente</div></div></div></div></div>
+  <!-- DASHBOARD KPIs DINÁMICO -->
+  <div class="page-section" id="page-dashboard">
+    <div class="page-header" style="padding-bottom:0">
+      <div>
+        <h1>📊 Dashboard KPIs</h1>
+        <div class="page-header-subtitle" id="dash-subtitle">Cargando datos...</div>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+        <select id="dash-anio" onchange="window.initDashboardPage()" style="padding:8px 12px;border:1px solid var(--gray-200);border-radius:8px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none">
+          <option value="2025">2025</option>
+          <option value="2026" selected>2026</option>
+        </select>
+        <button class="hv-btn hv-btn-edit" onclick="window.initDashboardPage()" style="gap:6px">
+          <i class="bi bi-arrow-clockwise" id="dash-refresh-icon"></i> Actualizar
+        </button>
+      </div>
+    </div>
+
+    <!-- KPIs PERMANENTES -->
+    <div style="padding:16px 48px 0" id="dash-kpis-top">
+      <div class="kpi-grid" style="margin-bottom:0">
+        <div class="kpi-card good"><div class="kpi-label">Disponibilidad</div><div class="kpi-value">92.4%</div><div class="kpi-trend up">▲ +2.1%</div></div>
+        <div class="kpi-card good"><div class="kpi-label">Cumplimiento</div><div class="kpi-value">87%</div><div class="kpi-trend up">▲ +5%</div></div>
+        <div class="kpi-card warn"><div class="kpi-label">MTTR</div><div class="kpi-value">4.2h</div><div class="kpi-trend down">▼ Meta: 3.5h</div></div>
+        <div class="kpi-card good"><div class="kpi-label">MTBF</div><div class="kpi-value">156h</div><div class="kpi-trend up">▲ +12h</div></div>
+        <div class="kpi-card good"><div class="kpi-label">Backlog OT</div><div class="kpi-value">8</div><div class="kpi-trend up">▲ Dentro meta</div></div>
+        <div class="kpi-card good"><div class="kpi-label">Inspecciones</div><div class="kpi-value">95%</div><div class="kpi-trend up">▲ Excelente</div></div>
+      </div>
+    </div>
+
+    <!-- TABS -->
+    <div style="padding:0 48px;margin-top:16px;border-bottom:2px solid var(--gray-200)">
+      <div style="display:flex;gap:0">
+        <button class="dash-tab active" data-tab="mtto" onclick="window.dashTab('mtto')">🔧 Mantenimiento</button>
+        <button class="dash-tab" data-tab="preop" onclick="window.dashTab('preop')">✅ Preoperacionales</button>
+        <button class="dash-tab" data-tab="insp" onclick="window.dashTab('insp')">🔍 Inspecciones</button>
+        <button class="dash-tab" data-tab="fallas" onclick="window.dashTab('fallas')">⚠️ Fallas</button>
+      </div>
+    </div>
+
+    <div style="padding:24px 48px 40px">
+      <!-- TAB: MANTENIMIENTO -->
+      <div id="dash-tab-mtto" class="dash-tab-content">
+        <div id="dash-mtto-loading" class="eq-loading"><i class="bi bi-arrow-repeat" style="animation:spin 1s linear infinite;display:inline-block"></i> Cargando historial...</div>
+        <div id="dash-mtto-content" style="display:none"></div>
+      </div>
+      <!-- TAB: PREOPERACIONALES -->
+      <div id="dash-tab-preop" class="dash-tab-content" style="display:none">
+        <div id="dash-preop-loading" class="eq-loading"><i class="bi bi-arrow-repeat" style="animation:spin 1s linear infinite;display:inline-block"></i> Cargando...</div>
+        <div id="dash-preop-content" style="display:none"></div>
+      </div>
+      <!-- TAB: INSPECCIONES -->
+      <div id="dash-tab-insp" class="dash-tab-content" style="display:none">
+        <div id="dash-insp-loading" class="eq-loading"><i class="bi bi-arrow-repeat" style="animation:spin 1s linear infinite;display:inline-block"></i> Cargando...</div>
+        <div id="dash-insp-content" style="display:none"></div>
+      </div>
+      <!-- TAB: FALLAS -->
+      <div id="dash-tab-fallas" class="dash-tab-content" style="display:none">
+        <div id="dash-fallas-loading" class="eq-loading"><i class="bi bi-arrow-repeat" style="animation:spin 1s linear infinite;display:inline-block"></i> Cargando...</div>
+        <div id="dash-fallas-content" style="display:none"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DRILLDOWN MODAL -->
+  <div id="dash-drill-overlay" style="display:none;position:fixed;inset:0;z-index:10000;background:rgba(15,33,55,.7);backdrop-filter:blur(6px);align-items:center;justify-content:center">
+    <div style="background:var(--white);border-radius:16px;width:92%;max-width:680px;max-height:85vh;overflow-y:auto;box-shadow:0 30px 80px rgba(0,0,0,.3)">
+      <div style="padding:20px 24px;border-bottom:1px solid var(--gray-100);display:flex;justify-content:space-between;align-items:center">
+        <h3 id="dash-drill-title" style="font-family:'Space Grotesk',sans-serif;color:var(--navy);font-size:16px;font-weight:700"></h3>
+        <button onclick="document.getElementById('dash-drill-overlay').style.display='none'" style="border:none;background:var(--gray-100);border-radius:6px;width:30px;height:30px;cursor:pointer;font-size:16px">✕</button>
+      </div>
+      <div id="dash-drill-body" style="padding:20px 24px"></div>
+    </div>
+  </div>
 
   <!-- DOCUMENTOS -->
   <div class="page-section" id="page-documentos"><div class="page-header"><div><h1>📂 Gestión Documental</h1></div></div><div style="padding:28px 48px"><div class="docs-grid" style="grid-template-columns:repeat(4,1fr)"><div class="doc-card"><span class="doc-card-tag tag-updated">Actualizado</span><div class="doc-card-icon prog">📘</div><div class="doc-card-title">Programa Mtto. Equipos</div><div class="doc-card-code">A4-PR-001 · v3.2</div></div><div class="doc-card"><span class="doc-card-tag tag-new">Nuevo</span><div class="doc-card-icon proc">🔧</div><div class="doc-card-title">Adquisición Combustible</div><div class="doc-card-code">A4-P-003 · v1.0</div></div><div class="doc-card"><div class="doc-card-icon proc">🔧</div><div class="doc-card-title">Selección Equipo Crítico</div><div class="doc-card-code">A4-P-002 · v4.0</div></div><div class="doc-card"><div class="doc-card-icon char">📑</div><div class="doc-card-title">Caracterización Proceso Mtto.</div><div class="doc-card-code">D1-CP-005 · v2.0</div></div><div class="doc-card"><span class="doc-card-tag tag-review">En Revisión</span><div class="doc-card-icon form">📋</div><div class="doc-card-title">Análisis Criticidad Equipos</div><div class="doc-card-code">XX-XX-XXX · borrador</div></div><div class="doc-card"><div class="doc-card-icon form">📋</div><div class="doc-card-title">Formato Inspección Preoperacional</div><div class="doc-card-code">A4-F-001 · v2.0</div></div><div class="doc-card"><span class="doc-card-tag tag-updated">Actualizado</span><div class="doc-card-icon form">📋</div><div class="doc-card-title">Formato Orden de Trabajo</div><div class="doc-card-code">A4-F-002 · v3.1</div></div></div></div></div>
@@ -966,7 +1078,70 @@
 
 
   <!-- ORDENES -->
-  <div class="page-section" id="page-ordenes"><div class="page-header"><div><h1>🔧 Órdenes de Trabajo</h1></div></div><div style="padding:28px 48px"><div class="card"><div class="card-body" style="padding:0"><table class="eq-table"><thead><tr><th>OT #</th><th>Equipo</th><th>Tipo</th><th>Estado</th><th>Asignado</th></tr></thead><tbody><tr><td class="eq-name">OT-2026-042</td><td>Motoniveladora 120K</td><td>Correctivo</td><td><span class="eq-status down"><span class="eq-status-dot"></span>Abierta</span></td><td>Carlos M.</td></tr><tr><td class="eq-name">OT-2026-041</td><td>Retroexcavadora 420F</td><td>Preventivo</td><td><span class="eq-status maint"><span class="eq-status-dot"></span>En Proceso</span></td><td>Laura P.</td></tr><tr><td class="eq-name">OT-2026-039</td><td>Excavadora PC350</td><td>Preventivo</td><td><span class="eq-status active"><span class="eq-status-dot"></span>Cerrada</span></td><td>Carlos M.</td></tr></tbody></table></div></div></div></div>
+  <!-- SOLICITAR MANTENIMIENTO PREVENTIVO -->
+  <div class="page-section" id="page-ordenes">
+    <div class="page-header"><div><h1>🔧 Solicitar Mantenimiento Preventivo</h1><div class="page-header-subtitle">Registra una solicitud de mantenimiento preventivo para tu equipo</div></div></div>
+    <div class="falla-container">
+      <div class="falla-card" id="mttoForm">
+        <h2>🔧 Nueva Solicitud de Mantenimiento</h2>
+        <p class="falla-sub">Completa los datos del equipo y el tipo de mantenimiento requerido.</p>
+
+        <div class="form-row" style="margin-bottom:14px">
+          <div class="form-group"><label class="form-label">CEMA / Código del Equipo *</label><div class="hv-search-wrap" style="position:relative"><input class="form-input" id="mtto-cema" placeholder="Buscar CEMA o nombre equipo..." required autocomplete="off"><div id="mtto-cema-suggest" class="hv-suggest"></div></div></div>
+          <div class="form-group"><label class="form-label">Nombre del Equipo</label><input class="form-input" id="mtto-nombre" placeholder="Ej: Excavadora PC200"></div>
+        </div>
+        <div class="form-row" style="margin-bottom:14px">
+          <div class="form-group"><label class="form-label">Proyecto / Ubicación *</label>
+            <select class="form-select" id="mtto-proyecto"><option value="">Seleccionar...</option><option>Rubiales</option><option>Scatec</option><option>Guajira</option><option>Bogotá — Suba</option><option>Otro</option></select>
+          </div>
+          <div class="form-group"><label class="form-label">Horómetro / Odómetro actual</label><input class="form-input" id="mtto-horometro" placeholder="Lectura actual" type="number"></div>
+        </div>
+
+        <label class="form-label" style="margin-bottom:8px">Tipo de Mantenimiento Preventivo *</label>
+        <div class="falla-tipo-grid" id="mttoTipoGrid" style="grid-template-columns:repeat(3,1fr)">
+          <div class="falla-tipo-opt" data-tipo="Mantenimiento 250 Hrs / 5.000 Km" onclick="window.selectMttoTipo(this)"><span class="ft-icon">⏱️</span>250 Hrs / 5.000 Km</div>
+          <div class="falla-tipo-opt" data-tipo="Mantenimiento 500 Hrs / 10.000 Km" onclick="window.selectMttoTipo(this)"><span class="ft-icon">🔩</span>500 Hrs / 10.000 Km</div>
+          <div class="falla-tipo-opt" data-tipo="Mantenimiento 1.000 Hrs / 20.000 Km" onclick="window.selectMttoTipo(this)"><span class="ft-icon">🛠️</span>1.000 Hrs / 20.000 Km</div>
+          <div class="falla-tipo-opt" data-tipo="Engrase General" onclick="window.selectMttoTipo(this)"><span class="ft-icon">💧</span>Engrase General</div>
+          <div class="falla-tipo-opt" data-tipo="Revisión de Llantas" onclick="window.selectMttoTipo(this)"><span class="ft-icon">🔘</span>Revisión de Llantas</div>
+          <div class="falla-tipo-opt" data-tipo="Revisión Aire Acondicionado" onclick="window.selectMttoTipo(this)"><span class="ft-icon">❄️</span>Aire Acondicionado</div>
+          <div class="falla-tipo-opt" data-tipo="Tensionar Frenos" onclick="window.selectMttoTipo(this)"><span class="ft-icon">🛑</span>Tensionar Frenos</div>
+          <div class="falla-tipo-opt" data-tipo="Revisión Sistema Eléctrico" onclick="window.selectMttoTipo(this)"><span class="ft-icon">⚡</span>Sistema Eléctrico</div>
+          <div class="falla-tipo-opt" data-tipo="Otro" onclick="window.selectMttoTipo(this)"><span class="ft-icon">📋</span>Otro</div>
+        </div>
+
+        <div class="form-group" style="margin-bottom:14px;margin-top:16px">
+          <label class="form-label">Descripción / Observaciones</label>
+          <textarea class="form-textarea" id="mtto-descripcion" placeholder="Describe el trabajo requerido, síntomas observados, última vez que se realizó el mantenimiento…" style="min-height:90px"></textarea>
+        </div>
+
+        <div class="form-row" style="margin-bottom:14px">
+          <div class="form-group"><label class="form-label">Urgencia</label>
+            <div style="display:flex;gap:10px;margin-top:4px">
+              <label style="display:flex;align-items:center;gap:5px;font-size:13px;cursor:pointer"><input type="radio" name="mtto-urgencia" value="Programable" checked> Programable</label>
+              <label style="display:flex;align-items:center;gap:5px;font-size:13px;cursor:pointer"><input type="radio" name="mtto-urgencia" value="Esta semana"> Esta semana</label>
+              <label style="display:flex;align-items:center;gap:5px;font-size:13px;cursor:pointer"><input type="radio" name="mtto-urgencia" value="Urgente"> Urgente</label>
+            </div>
+          </div>
+          <div class="form-group"><label class="form-label">Solicitado por</label><input class="form-input" id="mtto-solicitadopor" disabled></div>
+        </div>
+
+        <button class="falla-submit" id="mttoSubmitBtn" onclick="window.enviarMtto()" style="background:var(--blue)">
+          <i class="bi bi-send"></i> Enviar Solicitud
+        </button>
+      </div>
+
+      <div class="falla-card falla-success" id="mttoSuccess" style="display:none">
+        <div class="fs-icon">✅</div>
+        <h3>Solicitud enviada correctamente</h3>
+        <p>La solicitud de mantenimiento ha sido registrada en el sistema.</p>
+        <div style="display:flex;gap:10px;justify-content:center">
+          <button class="hv-btn hv-btn-edit" onclick="window.resetMttoForm()"><i class="bi bi-plus-lg"></i> Nueva Solicitud</button>
+          <button class="hv-btn hv-btn-cancel" onclick="window.navTo('inicio')"><i class="bi bi-house"></i> Inicio</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
 
   <!-- INSPECCIONES BIMENSUALES -->
@@ -1016,6 +1191,10 @@
           <div class="hv-suggest" id="hv-suggest"></div>
         </div>
         <div class="hv-actions">
+          <label class="hv-btn" style="background:var(--orange);color:var(--white);cursor:pointer" title="Cargar foto del equipo">
+            <i class="bi bi-camera"></i> Foto
+            <input type="file" id="hv-foto-input" accept="image/*" style="display:none">
+          </label>
           <label class="hv-btn hv-btn-import"><i class="bi bi-file-earmark-arrow-up"></i> Importar Excel<input type="file" id="hv-excel-input" accept=".xlsx,.xls"></label>
         </div>
       </div>
@@ -1148,9 +1327,21 @@
     <div style="padding:0 48px 28px">
       <div class="hmtto-tabs-wrap"><div class="hmtto-tabs" id="hmtto-tabs"></div></div>
       <div class="hmtto-toolbar" id="hmtto-toolbar" style="display:none">
-        <div class="hv-search-wrap" style="max-width:340px">
-          <input type="text" id="hmtto-search" placeholder="Buscar en historial…" oninput="window.hmttoFiltrar()" autocomplete="off">
+        <div class="hv-search-wrap" style="max-width:260px">
+          <input type="text" id="hmtto-search" placeholder="Buscar CEMA…" oninput="window.hmttoFiltrar()" autocomplete="off">
         </div>
+        <select id="hmtto-mes" onchange="window.hmttoFiltrar()" style="padding:10px 12px;border:1px solid var(--gray-200);border-radius:8px;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--gray-700);outline:none;min-width:140px">
+          <option value="">Todos los meses</option>
+          <option value="01">Enero</option><option value="02">Febrero</option>
+          <option value="03">Marzo</option><option value="04">Abril</option>
+          <option value="05">Mayo</option><option value="06">Junio</option>
+          <option value="07">Julio</option><option value="08">Agosto</option>
+          <option value="09">Septiembre</option><option value="10">Octubre</option>
+          <option value="11">Noviembre</option><option value="12">Diciembre</option>
+        </select>
+        <button class="hv-btn hv-btn-edit" onclick="window.hmttoDescargar()" title="Descargar historial" style="gap:6px">
+          <i class="bi bi-download"></i> Descargar
+        </button>
         <span id="hmtto-count" style="font-size:12px;color:var(--gray-400);margin-left:auto"></span>
       </div>
       <div id="hmtto-container"><div class="eq-loading"><i class="bi bi-arrow-repeat" style="animation:spin 1s linear infinite;display:inline-block"></i> Cargando…</div></div>
@@ -1191,7 +1382,7 @@
 import{initializeApp}from"https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
 import{getAuth,onAuthStateChanged,signInWithEmailAndPassword,createUserWithEmailAndPassword,signOut}from"https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
 // ALL imports needed: setDoc, writeBatch, onSnapshot
-import{collection,addDoc,setDoc,serverTimestamp,query,where,getDocs,doc,getDoc,getFirestore,orderBy,writeBatch,onSnapshot}from"https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+import{collection,addDoc,setDoc,serverTimestamp,query,where,getDocs,doc,getDoc,getFirestore,orderBy,limit,writeBatch,onSnapshot}from"https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
 
 const app=initializeApp({apiKey:"AIzaSyDlO-XhUuitM6QN6cpam3SkeqpGcktFbWw",authDomain:"fir-app-tuto-d20d5.firebaseapp.com",projectId:"fir-app-tuto-d20d5",storageBucket:"fir-app-tuto-d20d5.firebasestorage.app",messagingSenderId:"754290122904",appId:"1:754290122904:web:d543ae6297e15f9f0930ed"});
 const auth=getAuth(app),db=getFirestore(app);
@@ -1287,9 +1478,67 @@ function mostrarModalIPE(uid, pedirNombre=false){
   };
 }
 
-document.getElementById('loginForm').addEventListener('submit',async e=>{e.preventDefault();document.getElementById('loginError').textContent='';try{await signInWithEmailAndPassword(auth,document.getElementById('login-email').value,document.getElementById('login-password').value)}catch(err){document.getElementById('loginError').textContent=err.code==='auth/wrong-password'?'Contraseña incorrecta':err.code==='auth/user-not-found'?'Usuario no encontrado':'Error: '+err.message}});
-document.getElementById('registerForm').addEventListener('submit',async e=>{e.preventDefault();const nombre=document.getElementById('reg-nombre').value.trim(),em=document.getElementById('reg-email').value,ipe=document.getElementById('reg-ipe').value.trim().toUpperCase(),codigo=document.getElementById('reg-codigo').value.trim(),re=document.getElementById('regError');re.textContent='';if(!nombre){re.textContent='El nombre y apellido son obligatorios';return}if(!ipe){re.textContent='El IPE es obligatorio';return}if(codigo&&codigo!=='MOVA2026ADMIN'){re.textContent='Código de administrador incorrecto';return}const rol=codigo==='MOVA2026ADMIN'?'admin':'operador';try{const c=await createUserWithEmailAndPassword(auth,em,ipe);await setDoc(doc(db,"usuarios",c.user.uid),{email:em,nombre,ipe,rol,createdAt:serverTimestamp()});showToast('success','Cuenta creada. Bienvenido, '+nombre.split(' ')[0])}catch(err){re.textContent=err.code==='auth/email-already-in-use'?'Correo ya registrado':err.code==='auth/weak-password'?'IPE debe tener al menos 6 caracteres':'Error: '+err.message}});
+document.getElementById('loginForm').addEventListener('submit',async e=>{
+  e.preventDefault();
+  const errEl=document.getElementById('loginError');
+  errEl.textContent='';
+  const email=document.getElementById('login-email').value.trim();
+  const pass=document.getElementById('login-password').value;
+  if(!email||!pass){errEl.textContent='Ingresa tu correo y contraseña';return;}
+  const btn=e.target.querySelector('.auth-submit');
+  if(btn){btn.disabled=true;btn.innerHTML='<span style="display:inline-block;width:14px;height:14px;border:2px solid white;border-top-color:transparent;border-radius:50%;animation:spin .6s linear infinite"></span> Ingresando...';}
+  try{
+    await signInWithEmailAndPassword(auth,email,pass);
+  }catch(err){
+    const friendlyErrors={
+      'auth/wrong-password':'Correo o contraseña inválida',
+      'auth/user-not-found':'Correo o contraseña inválida',
+      'auth/invalid-credential':'Correo o contraseña inválida',
+      'auth/invalid-email':'El correo no es válido',
+      'auth/user-disabled':'Esta cuenta ha sido desactivada',
+      'auth/too-many-requests':'Demasiados intentos. Intenta más tarde',
+      'auth/network-request-failed':'Error de conexión. Verifica tu red',
+    };
+    errEl.textContent=friendlyErrors[err.code]||'Correo o contraseña inválida';
+    if(btn){btn.disabled=false;btn.innerHTML='<i class="bi bi-box-arrow-in-right"></i> Ingresar';}
+  }
+});
+document.getElementById('registerForm').addEventListener('submit',async e=>{
+  e.preventDefault();
+  const nombre=document.getElementById('reg-nombre').value.trim();
+  const em=document.getElementById('reg-email').value.trim();
+  const ipe=document.getElementById('reg-ipe').value.trim().toUpperCase();
+  const codigo=document.getElementById('reg-codigo').value.trim();
+  const re=document.getElementById('regError');
+  re.textContent='';
+  // Validaciones
+  if(!nombre){re.textContent='El nombre y apellido son obligatorios';return;}
+  if(!em||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){re.textContent='Ingresa un correo electrónico válido';return;}
+  if(!ipe){re.textContent='El IPE es obligatorio';return;}
+  if(ipe.length<4){re.textContent='El código IPE debe tener al menos 4 caracteres';return;}
+  if(codigo&&codigo!=='MOVA2026ADMIN'){re.textContent='Código de administrador incorrecto';return;}
+  const rol=codigo==='MOVA2026ADMIN'?'admin':'operador';
+  const btn=e.target.querySelector('.auth-submit');
+  if(btn){btn.disabled=true;btn.innerHTML='<span style="display:inline-block;width:14px;height:14px;border:2px solid white;border-top-color:transparent;border-radius:50%;animation:spin .6s linear infinite"></span> Creando cuenta...';}
+  try{
+    const c=await createUserWithEmailAndPassword(auth,em,ipe);
+    await setDoc(doc(db,'usuarios',c.user.uid),{email:em,nombre,ipe,rol,createdAt:serverTimestamp()});
+    showToast('success','Cuenta creada. Bienvenido, '+nombre.split(' ')[0]);
+  }catch(err){
+    const friendlyErrors={
+      'auth/email-already-in-use':'Este correo ya está registrado',
+      'auth/invalid-email':'El correo no es válido',
+      'auth/weak-password':'El IPE debe tener al menos 6 caracteres',
+      'auth/network-request-failed':'Error de conexión. Verifica tu red',
+    };
+    re.textContent=friendlyErrors[err.code]||'No se pudo crear la cuenta. Intenta de nuevo';
+    if(btn){btn.disabled=false;btn.innerHTML='<i class="bi bi-person-plus"></i> Crear Cuenta';}
+  }
+});
 window.cerrarSesion=()=>signOut(auth);
+// Exponer para módulos externos (formulario mtto, etc.)
+window._db=db;
+window._firestoreOps={addDoc,collection,serverTimestamp};
 
 // ===== CI SEGUIMIENTO — persistencia en Firestore =====
 window.ciGetOverrides=async function(sheetKey){
@@ -1445,8 +1694,14 @@ window.iniciarPreop=function(tipo){window.tipoLinea=tipo;window.coleccion=tipo==
 function renderFormPreop(tipo,items){
   window.itemsChecklist=items;const titulo=tipo==="amarilla"?"Línea Amarilla":"Línea Blanca";const c=document.getElementById('preopContent');
   let html=items.map(item=>{const n=nameFromText(item.text);return`<div class="checklist-row"><div class="checklist-text">${item.text}</div><div class="checklist-actions"><input type="radio" name="${n}" id="${n}_b" value="B"><label for="${n}_b"><i class="bi bi-check-lg"></i> B</label><input type="radio" name="${n}" id="${n}_m" value="M"><label for="${n}_m"><i class="bi bi-x-lg"></i> M</label><input type="radio" name="${n}" id="${n}_na" value="NA"><label for="${n}_na">N/A</label></div></div>`}).join('');
-  c.innerHTML=`<button class="back-btn" onclick="window.mostrarMenuPreop()"><i class="bi bi-arrow-left"></i> Volver</button><h2 style="font-family:'Space Grotesk',sans-serif;font-weight:700;color:var(--navy);font-size:20px;margin-bottom:20px">✅ Preoperacional — ${titulo}</h2><div class="preop-status-bar"><div class="preop-status-item"><i class="bi bi-person-circle"></i><div><div class="ps-label">Operador</div><div class="ps-value">${window.nombreOperador||'—'}</div></div></div><div class="preop-status-item"><i class="bi bi-tools"></i><div><div class="ps-label">IPE</div><div class="ps-value">${window.ipeActivo||'—'}</div></div></div></div><div class="preop-form-section"><h4><i class="bi bi-info-circle"></i> Datos del Equipo</h4><div class="form-row" style="margin-bottom:12px"><div class="form-group"><label class="form-label">CEMA *</label><input class="form-input" id="preop-cema" placeholder="Código CEMA" required></div><div class="form-group"><label class="form-label">COMEQ</label><input class="form-input" id="preop-comeq" placeholder="Código COMEQ"></div></div><div class="form-row" style="margin-bottom:12px"><div class="form-group"><label class="form-label">Tipo Equipo *</label><select class="form-select" id="preop-tipo"><option value="">Seleccionar...</option><option>Excavadora</option><option>Camión</option><option>Motoniveladora</option><option>Volqueta</option><option>Retroexcavadora</option><option>Compactador</option><option>Cargador</option><option>Grúa</option></select></div><div class="form-group"><label class="form-label">Horómetro</label><input class="form-input" id="preop-horometro" type="number" placeholder="Ej: 3245"></div></div><div class="form-group"><label class="form-label">Ubicación</label><input class="form-input" id="preop-ubicacion" placeholder="Frente de obra, taller..."></div></div><div class="preop-form-section"><h4><i class="bi bi-list-check" style="color:var(--yellow)"></i> Checklist — * Seg. Activa · ** Seg. Pasiva</h4><div style="max-height:500px;overflow-y:auto" id="preop-checklist">${html}</div></div><div class="preop-form-section"><h4><i class="bi bi-chat-text"></i> Observaciones</h4><textarea class="form-textarea" id="preop-obs" placeholder="Observaciones..."></textarea></div><div id="preop-post-actions" style="display:none"><div class="preop-post-actions"><div class="preop-post-btn" onclick="window.exportarPDF()"><i class="bi bi-file-earmark-pdf"></i>Exportar PDF</div><div class="preop-post-btn" onclick="window.verHistorial()"><i class="bi bi-clock-history"></i>Historial</div></div></div><button class="preop-save-btn disabled" id="preop-guardar" disabled onclick="window.guardarInspeccion()"><i class="bi bi-save"></i> Guardar Inspección</button>`;
+  c.innerHTML=`<button class="back-btn" onclick="window.mostrarMenuPreop()"><i class="bi bi-arrow-left"></i> Volver</button><h2 style="font-family:'Space Grotesk',sans-serif;font-weight:700;color:var(--navy);font-size:20px;margin-bottom:20px">✅ Preoperacional — ${titulo}</h2><div class="preop-status-bar"><div class="preop-status-item"><i class="bi bi-person-circle"></i><div><div class="ps-label">Operador</div><div class="ps-value">${window.nombreOperador||'—'}</div></div></div><div class="preop-status-item"><i class="bi bi-tools"></i><div><div class="ps-label">IPE</div><div class="ps-value">${window.ipeActivo||'—'}</div></div></div></div><div class="preop-form-section"><h4><i class="bi bi-info-circle"></i> Datos del Equipo</h4><div class="form-row" style="margin-bottom:12px"><div class="form-group"><label class="form-label">CEMA *</label><div class="hv-search-wrap" style="position:relative"><input class="form-input" id="preop-cema" placeholder="Buscar CEMA o nombre equipo..." required autocomplete="off"><div id="preop-cema-suggest" class="hv-suggest"></div></div></div><div class="form-group"><label class="form-label">COMEQ</label><input class="form-input" id="preop-comeq" placeholder="Código COMEQ"></div></div><div class="form-row" style="margin-bottom:12px"><div class="form-group"><label class="form-label">Tipo Equipo *</label><select class="form-select" id="preop-tipo"><option value="">Seleccionar...</option><option>Excavadora</option><option>Camión</option><option>Motoniveladora</option><option>Volqueta</option><option>Retroexcavadora</option><option>Compactador</option><option>Cargador</option><option>Grúa</option></select></div><div class="form-group"><label class="form-label">Horómetro</label><input class="form-input" id="preop-horometro" type="number" placeholder="Ej: 3245"></div></div><div class="form-group"><label class="form-label">Ubicación</label><input class="form-input" id="preop-ubicacion" placeholder="Frente de obra, taller..."></div></div><div class="preop-form-section"><h4><i class="bi bi-list-check" style="color:var(--yellow)"></i> Checklist — * Seg. Activa · ** Seg. Pasiva</h4><div style="max-height:500px;overflow-y:auto" id="preop-checklist">${html}</div></div><div class="preop-form-section"><h4><i class="bi bi-chat-text"></i> Observaciones</h4><textarea class="form-textarea" id="preop-obs" placeholder="Observaciones..."></textarea></div><div id="preop-post-actions" style="display:none"><div class="preop-post-actions"><div class="preop-post-btn" onclick="window.exportarPDF()"><i class="bi bi-file-earmark-pdf"></i>Exportar PDF</div><div class="preop-post-btn" onclick="window.verHistorial()"><i class="bi bi-clock-history"></i>Historial</div></div></div><button class="preop-save-btn disabled" id="preop-guardar" disabled onclick="window.guardarInspeccion()"><i class="bi bi-save"></i> Guardar Inspección</button>`;
   document.querySelectorAll('#preop-checklist input[type="radio"]').forEach(r=>r.addEventListener('change',validarChecklist));
+  // Wire CEMA autocomplete — nombre=CEMA, codigo=COMEQ
+  crearEquipoSuggest('preop-cema','preop-cema-suggest',function(eq){
+    var cq=document.getElementById('preop-comeq');if(cq)cq.value=eq.codigo||'';
+    var t=document.getElementById('preop-tipo');
+    if(t&&eq.tipo){var o=Array.from(t.options).find(function(x){return x.textContent.toLowerCase().includes((eq.tipo||'').toLowerCase());});if(o)t.value=o.value;}
+  });
 }
 // Pégalo así al final de tu script
 window.filtrarProyecto = function(elemento, nombreProyecto) {
@@ -1518,7 +1773,114 @@ window.activarContadoresGlobales = function() {
 // activarContadoresGlobales();
 function validarChecklist(){const ch={};document.querySelectorAll('#preop-checklist input[type="radio"]:checked').forEach(r=>ch[r.name]=r.value);const f=window.itemsChecklist.filter(i=>i.required).map(i=>nameFromText(i.text)).filter(n=>!["B","M","NA"].includes(ch[n]));const btn=document.getElementById('preop-guardar');if(f.length===0){btn.disabled=false;btn.className='preop-save-btn ready'}else{btn.disabled=true;btn.className='preop-save-btn disabled';btn.title=`Faltan ${f.length} ítems`}}
 
-window.guardarInspeccion=async function(){const btn=document.getElementById('preop-guardar');btn.innerHTML='<span style="display:inline-block;width:16px;height:16px;border:2px solid white;border-top-color:transparent;border-radius:50%;animation:spin .6s linear infinite"></span> Guardando...';btn.disabled=true;try{const cema=document.getElementById('preop-cema').value.trim(),tipo=document.getElementById('preop-tipo').value;if(!cema){showToast('error','CEMA obligatorio');throw new Error('CEMA')}if(!tipo){showToast('error','Seleccione tipo');throw new Error('Tipo')}if(!window.ipeActivo){showToast('error','IPE no definido');throw new Error('IPE')}const cl={};document.querySelectorAll('#preop-checklist input[type="radio"]:checked').forEach(r=>cl[r.name]=r.value);const data={equipo:{cema,comeq:document.getElementById('preop-comeq').value.trim()||"—",tipo,horometro:document.getElementById('preop-horometro').value.trim()||"—",ubicacion:document.getElementById('preop-ubicacion').value.trim()||"—"},operador:window.nombreOperador||window.operadorActivo,ipe:window.ipeActivo,checklist:cl,observaciones:document.getElementById('preop-obs').value.trim()||"Sin observaciones",fecha:serverTimestamp(),tipoLinea:window.tipoLinea};const ref=await addDoc(collection(db,window.coleccion),data);window.inspeccionActualId=ref.id;window.inspeccionActualData=data;window._lastCema=cema;document.querySelectorAll('.preop-form-section').forEach(s=>s.style.display='none');btn.style.display='none';document.getElementById('preop-post-actions').style.display='block';showToast('success','✅ Inspección guardada')}catch(err){console.error(err);showToast('error','Error: '+err.message);btn.innerHTML='<i class="bi bi-save"></i> Guardar Inspección';validarChecklist()}};
+window.guardarInspeccion=async function(){
+  const btn=document.getElementById('preop-guardar');
+  // ── Helpers de UI ──
+  function markError(id,msg){
+    const el=document.getElementById(id);
+    if(el){el.style.borderColor='var(--red)';el.style.boxShadow='0 0 0 3px rgba(229,57,53,.15)';}
+    showToast('error',msg);
+  }
+  function clearError(id){
+    const el=document.getElementById(id);
+    if(el){el.style.borderColor='';el.style.boxShadow='';}
+  }
+  ['preop-cema','preop-comeq','preop-tipo','preop-horometro','preop-ubicacion'].forEach(clearError);
+
+  // ── Leer valores ──
+  const cema     = document.getElementById('preop-cema').value.trim();
+  const comeq    = document.getElementById('preop-comeq').value.trim();
+  const tipo     = document.getElementById('preop-tipo').value;
+  const horoRaw  = document.getElementById('preop-horometro').value.trim();
+  const ubicacion= document.getElementById('preop-ubicacion').value.trim();
+  const esAmarilla= window.tipoLinea==='amarilla';
+
+  // ── Validaciones de campos obligatorios ──
+  if(!cema)        {markError('preop-cema','CEMA es obligatorio');return}
+  if(!comeq)       {markError('preop-comeq','COMEQ es obligatorio');return}
+  if(!tipo)        {markError('preop-tipo','Seleccione el tipo de equipo');return}
+  if(!horoRaw)     {markError('preop-horometro',esAmarilla?'Horómetro obligatorio':'Odómetro obligatorio');return}
+  if(!ubicacion)   {markError('preop-ubicacion','Ubicación es obligatoria');return}
+  if(!window.ipeActivo){showToast('error','IPE no definido');return}
+
+  const horoActual=parseFloat(horoRaw);
+  if(isNaN(horoActual)||horoActual<0){
+    markError('preop-horometro','Ingresa un valor numérico válido');return;
+  }
+
+  // ── Validación especial horómetro/odómetro vs último registro ──
+  btn.innerHTML='<span style="display:inline-block;width:16px;height:16px;border:2px solid white;border-top-color:transparent;border-radius:50%;animation:spin .6s linear infinite"></span> Validando...';
+  btn.disabled=true;
+  try{
+    // Buscar el último registro de este CEMA en la misma colección
+    const q=query(
+      collection(db,window.coleccion),
+      where('equipo.cema','==',cema),
+      orderBy('fecha','desc'),
+      limit(1)
+    );
+    const snap=await getDocs(q);
+    if(!snap.empty){
+      const ultimo=snap.docs[0].data();
+      const horoAnterior=parseFloat(ultimo.equipo?.horometro);
+      if(!isNaN(horoAnterior)){
+        const unidad=esAmarilla?'hrs':'km';
+        const limite=esAmarilla?15:250;
+        const diff=horoActual-horoAnterior;
+        if(horoActual<horoAnterior){
+          markError('preop-horometro',
+            `El ${esAmarilla?'horómetro':'odómetro'} no puede ser menor al anterior (${horoAnterior} ${unidad})`);
+          btn.innerHTML='<i class="bi bi-save"></i> Guardar Inspección';
+          validarChecklist();return;
+        }
+        if(diff>limite){
+          // Advertencia — requiere confirmación del supervisor
+          const confirmar=confirm(
+            `⚠️ Salto inusual detectado\n\nÚltimo registro: ${horoAnterior} ${unidad}\nActual: ${horoActual} ${unidad}\nDiferencia: ${diff.toFixed(1)} ${unidad} (límite: ${limite} ${unidad})\n\n¿Confirmas que el valor es correcto? Se registrará la advertencia.`
+          );
+          if(!confirmar){
+            markError('preop-horometro',
+              `Verifica el ${esAmarilla?'horómetro':'odómetro'}. Diferencia de ${diff.toFixed(1)} ${unidad} supera el límite de ${limite} ${unidad}`);
+            btn.innerHTML='<i class="bi bi-save"></i> Guardar Inspección';
+            validarChecklist();return;
+          }
+        }
+      }
+    }
+  }catch(qErr){
+    // Si falla la consulta (ej: índice faltante) continuamos sin validar
+    console.warn('Validación horómetro omitida:',qErr.message);
+  }
+
+  // ── Guardar ──
+  btn.innerHTML='<span style="display:inline-block;width:16px;height:16px;border:2px solid white;border-top-color:transparent;border-radius:50%;animation:spin .6s linear infinite"></span> Guardando...';
+  try{
+    const cl={};
+    document.querySelectorAll('#preop-checklist input[type="radio"]:checked').forEach(r=>cl[r.name]=r.value);
+    const data={
+      equipo:{cema,comeq,tipo,horometro:horoRaw,ubicacion},
+      operador:window.nombreOperador||window.operadorActivo,
+      ipe:window.ipeActivo,
+      checklist:cl,
+      observaciones:document.getElementById('preop-obs').value.trim()||'Sin observaciones',
+      fecha:serverTimestamp(),
+      tipoLinea:window.tipoLinea
+    };
+    const ref=await addDoc(collection(db,window.coleccion),data);
+    window.inspeccionActualId=ref.id;
+    window.inspeccionActualData=data;
+    window._lastCema=cema;
+    document.querySelectorAll('.preop-form-section').forEach(s=>s.style.display='none');
+    btn.style.display='none';
+    document.getElementById('preop-post-actions').style.display='block';
+    showToast('success','✅ Inspección guardada');
+  }catch(err){
+    console.error(err);
+    showToast('error','Error: '+err.message);
+    btn.innerHTML='<i class="bi bi-save"></i> Guardar Inspección';
+    validarChecklist();
+  }
+};
 
 // PDF
 window.exportarPDF=async function(id=null,colEx=null){let col=colEx||window.coleccion;if(!col){showToast('error','Colección no determinada');return}try{const{jsPDF}=window.jspdf;const pdf=new jsPDF("landscape","mm","a4");function nf(d){const dt=new Date(d);return new Date(Date.UTC(dt.getFullYear(),dt.getMonth(),dt.getDate()))}let db2;if(id){const s=await getDoc(doc(db,col,id));db2=s.data()}else{db2=window.inspeccionActualData}if(!db2?.equipo?.cema){showToast('error','Datos no válidos');return}const cema=db2.equipo.cema,fi=nf(db2.fecha?.toDate?db2.fecha.toDate():new Date());function gS(f){const b=nf(f),l=new Date(b);l.setUTCDate(b.getUTCDate()-b.getUTCDay()+1);l.setUTCHours(0,0,0,0);return Array.from({length:7},(_,i)=>{const d=new Date(l);d.setUTCDate(l.getUTCDate()+i);d.setUTCHours(0,0,0,0);return d})}function ff(d){return d.toLocaleDateString("es-CO")}const sem=gS(fi);const q2=query(collection(db,col),where("equipo.cema","==",cema));const sn=await getDocs(q2);const is=sn.docs.map(dc=>({id:dc.id,data:dc.data(),fecha:nf(dc.data().fecha?.toDate()||new Date())})).filter(i=>Math.abs((fi-i.fecha)/864e5)<=7).sort((a,b)=>b.fecha-a.fecha);if(!id&&window.inspeccionActualData)is.unshift({id:'actual',data:db2,fecha:fi});sem.forEach(dia=>{if(!is.some(i=>i.fecha.getTime()===dia.getTime()))is.push({id:'vacio',data:{checklist:{},operador:''},fecha:dia})});is.sort((a,b)=>b.fecha-a.fecha);const tl=(db2.tipoLinea||window.tipoLinea||"DESCONOCIDA").toUpperCase();pdf.setFont("helvetica","bold");pdf.setFontSize(22);pdf.text("INSPECCION PREOPERACIONAL",148,18,{align:"center"});pdf.setFontSize(18);pdf.text(tl,148,25,{align:"center"});pdf.setFontSize(14);pdf.text(`EQUIPO: ${cema}`,148,35,{align:"center"});pdf.setFontSize(12);pdf.text(`SEMANA | ${ff(sem[0])} - ${ff(sem[6])}`,148,43,{align:"center"});const eq=db2.equipo||{};pdf.autoTable({startY:55,theme:"grid",styles:{font:"helvetica",fontSize:10,cellPadding:4},head:[[{content:"DATOS DEL EQUIPO",colSpan:5,styles:{halign:"center",fontSize:13,fontStyle:"bold",fillColor:[40,40,40],textColor:255}}]],body:[[`CEMA: ${eq.cema}`,`COMEQ: ${eq.comeq}`,`TIPO: ${eq.tipo}`,`HORÓMETRO: ${eq.horometro}`,`UBICACIÓN: ${eq.ubicacion}`],[`OPERADOR: ${db2.operador||"---"}`,`IPE: ${db2.ipe||"---"}`,"","",""]]});let yP=pdf.lastAutoTable.finalY+10;if(!db2.checklist){showToast('error','Checklist no encontrado');return}const ES={B:{text:"X",bg:[39,174,96],color:255},M:{text:"X",bg:[192,57,43],color:255},NA:{text:"X",bg:[189,195,199],color:0}};const h1=[{content:"ITEM",rowSpan:2}];sem.forEach(d=>h1.push({content:ff(d),colSpan:3,styles:{halign:"center"}}));const h2=sem.flatMap(()=>["B","M","NA"]);const items=Object.keys(db2.checklist);const rows=items.map(item=>{const row=[item.replace(/_/g," ").toUpperCase()];sem.forEach(dia=>{const insp=is.find(i=>i.fecha.getTime()===dia.getTime());const est=insp?insp.data.checklist[item]:null;["B","M","NA"].forEach(k=>{row.push(est===k?{content:ES[k].text,styles:{fillColor:ES[k].bg,textColor:ES[k].color,fontStyle:"bold"}}:"")})});return row});pdf.autoTable({startY:yP+15,theme:"grid",head:[h1,h2],body:rows,styles:{fontSize:7,halign:"center",valign:"middle",lineWidth:.5,cellPadding:2,overflow:"linebreak"},headStyles:{fillColor:[41,128,185],textColor:255,fontStyle:"bold",fontSize:8},columnStyles:{0:{cellWidth:42,halign:"left"}}});pdf.save(`MOVA_${cema}_${ff(sem[0])}.pdf`);showToast('success','PDF generado')}catch(err){console.error("PDF Error:",err);showToast('error','Error PDF: '+err.message)}};
@@ -1526,11 +1888,11 @@ window.exportarPDF=async function(id=null,colEx=null){let col=colEx||window.cole
 // Historial
 window.verHistorial=async function(){let cema=window._lastCema;const ci=document.getElementById('preop-cema');if(ci&&ci.value.trim())cema=ci.value.trim();if(!cema){showToast('error','No hay equipo');return}const c=document.getElementById('preopContent');c.innerHTML=`<button class="back-btn" onclick="window.mostrarMenuPreop()"><i class="bi bi-arrow-left"></i> Volver</button><h2 style="font-family:'Space Grotesk',sans-serif;font-weight:700;color:var(--navy);font-size:20px;margin-bottom:20px">📚 Historial — ${cema}</h2><div id="historial-lista">Cargando...</div>`;try{const q2=query(collection(db,window.coleccion),where("equipo.cema","==",cema));const snap=await getDocs(q2);const lista=document.getElementById('historial-lista');if(snap.empty){lista.innerHTML='<p style="color:var(--gray-400);text-align:center;padding:40px">No hay historial</p>';return}const insp=Array.from(snap.docs).map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.fecha?.toDate()||0)-(a.fecha?.toDate()||0));lista.innerHTML=`<div class="historial-grid">${insp.map(i=>{const f=i.fecha?.toDate?i.fecha.toDate().toLocaleDateString("es-CO"):"Sin fecha";return`<div class="historial-card"><div class="h-date">${f}</div><div class="h-type">${i.equipo?.tipo||'—'} · ${i.tipoLinea||'—'}</div><button class="h-btn" onclick="window.exportarPDF('${i.id}','${window.coleccion}')"><i class="bi bi-download"></i> PDF</button></div>`}).join('')}</div>`}catch(err){document.getElementById('historial-lista').innerHTML=`<p style="color:var(--red)">Error: ${err.message}</p>`}};
 
-window.initPreopPage=function(){window.mostrarMenuPreop()};
+window.initPreopPage=function(){window.mostrarMenuPreop();};
 
 // ===== HOJA DE VIDA =====
 let hvEquipos=[],hvEquipoActual=null,hvUnsub=null,hvEditMode=false;
-const HV_FIELD_MAP={'placa':'placa','matricula':'matricula','tipo/clase':'tipo','tipoclase':'tipo','tipo':'tipo','marca':'marca','linea':'linea','modelo (ano)':'modelo','modelo':'modelo','serial':'serial','color':'color','propietario':'propietario','capacidad':'capacidad','servicio':'servicio','cilindraje':'cilindraje','fecha adquisicion':'fechaAdquisicion','n° motor':'nMotor','n motor':'nMotor','n° chasis':'nChasis','n chasis':'nChasis','n° llantas':'nLlantas','n llantas':'nLlantas','n° velocidades':'nVelocidades','n velocidades':'nVelocidades','n° cinturones':'nCinturones','n cinturones':'nCinturones','n° airbag':'nAirbag','n airbag':'nAirbag','combustible':'combustible','aceite motor':'aceiteMotor','aceite hidraulico':'aceiteHidraulico','refrigerante':'refrigerante','manifiesto import.':'manifiesto','manifiesto import':'manifiesto','rev. tecnomecanica':'tecnomecanica','rev tecnomecanica':'tecnomecanica','licencia transito':'licencia','poliza':'poliza','soat':'soat','ficha tecnica':'fichaTecnica','manual':'manual','periodicidad mtto.':'periodicidad','periodicidad mtto':'periodicidad','estado':'estado','observaciones':'observaciones'};
+const HV_FIELD_MAP={'placa':'placa','matricula':'matricula','tipo/clase':'tipo','tipoclase':'tipo','tipo':'tipo','marca':'marca','linea':'linea','modelo (ano)':'modelo','modelo':'modelo','serial':'serial','color':'color','propietario':'propietario','capacidad':'capacidad','servicio':'servicio','cilindraje':'cilindraje','fecha adquisicion':'fechaAdquisicion','n° motor':'nMotor','n motor':'nMotor','n° chasis':'nChasis','n chasis':'nChasis','n° llantas':'nLlantas','n llantas':'nLlantas','n° velocidades':'nVelocidades','n velocidades':'nVelocidades','n° cinturones':'nCinturones','n cinturones':'nCinturones','n° airbag':'nAirbag','n airbag':'nAirbag','combustible':'combustible','aceite motor':'aceiteMotor','aceite hidraulico':'aceiteHidraulico','refrigerante':'refrigerante','manifiesto import.':'manifiesto','manifiesto import':'manifiesto','rev. tecnomecanica':'tecnomecanica','rev tecnomecanica':'tecnomecanica','licencia transito':'licencia','poliza':'poliza','soat':'soat','ficha tecnica':'fichaTecnica','manual':'manual','periodicidad mtto.':'periodicidad','periodicidad mtto':'periodicidad','estado':'estado','observaciones':'observaciones','foto':'foto','url foto':'foto','url_foto':'foto','imagen':'foto','photo':'foto','link foto':'foto','link_foto':'foto','enlace foto':'foto','fotos':'foto','fotografía':'foto','fotografia':'foto','image':'foto'};
 function hvNormKey(s){return String(s||'').toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").trim()}
 function hvFormatFecha(f){if(!f)return '—';if(f.toDate)f=f.toDate();const d=new Date(f);if(isNaN(d))return String(f);return d.toLocaleDateString("es-CO",{year:'numeric',month:'short',day:'numeric'})}
 
@@ -1628,13 +1990,13 @@ function hvSetupImport(){
     reader.onload=async(ev)=>{
       try{
         const data=new Uint8Array(ev.target.result);
-        const wb=XLSX.read(data,{type:'array',cellDates:true});
+        const wb=XLSX.read(data,{type:'array',cellDates:true,cellHTML:false,cellStyles:false});
         const sheetName=wb.SheetNames.includes('BD')?'BD':wb.SheetNames[0];
         const ws=wb.Sheets[sheetName];
         const json=XLSX.utils.sheet_to_json(ws,{range:1,defval:''});
         if(!json.length){showToast('error','Sin datos');return}
         const batch=writeBatch(db);let count=0;
-        json.forEach(row=>{
+        json.forEach((row,rowIdx)=>{
           const eq={};
           Object.keys(row).forEach(k=>{
             const norm=hvNormKey(k);const target=HV_FIELD_MAP[norm];
@@ -1642,9 +2004,22 @@ function hvSetupImport(){
               let val=row[k];
               if(val instanceof Date)val=val.toISOString().slice(0,10);
               if(typeof val==='number'&&target==='modelo')val=String(Math.floor(val));
+              // Si es celda con hipervínculo (foto URL), SheetJS la expone como objeto con .h
+              if(val&&typeof val==='object'&&val.h)val=val.h.replace(/<[^>]+>/g,'').trim();
+              if(val&&typeof val==='object'&&val.v)val=String(val.v).trim();
               eq[target]=val!==''&&val!=null?String(val).trim():'';
             }
           });
+          // Columna AH (índice 33, clave "__EMPTY_32" o similar en SheetJS)
+          // Buscar foto por posición si no se mapeó por nombre
+          if(!eq.foto){
+            // SheetJS nombra columnas sin header como __EMPTY_N
+            const ahKeys=Object.keys(row).filter(k=>k==='__EMPTY_32'||k==='AH'||k.toUpperCase()==='AH');
+            for(const k of ahKeys){
+              const v=String(row[k]||'').trim();
+              if(v&&(v.startsWith('http')||v.startsWith('data:'))){eq.foto=v;break;}
+            }
+          }
           if(!eq.placa)return;
           const id=String(eq.placa).replace(/[^\w]/g,'_');
           batch.set(doc(db,"hojas_vida",id),{...eq,actualizado:serverTimestamp()},{merge:true});
@@ -2217,7 +2592,7 @@ window.enviarFalla = async function() {
     // 1. Guardar en Firestore
     await addDoc(collection(db, "reportes_fallas"), data);
 
-          // 2. Enviar email via EmailJS (si está configurado)
+// 2. Enviar email via EmailJS (si está configurado)
 try {
   if (typeof emailjs !== 'undefined' && window.EMAILJS_SERVICE_ID) {
     
@@ -2273,9 +2648,125 @@ window.resetFallaForm = function() {
   btn.disabled = false;
 };
 
+// ── Autocomplete de equipos (CEMA + datos) ──
+window.equiposCache=null;
+async function cargarEquiposCache(){
+  if(window.equiposCache)return window.equiposCache;
+  try{
+    const snap=await getDocs(collection(db,'equipos'));
+    window.equiposCache=snap.docs.map(d=>({id:d.id,...d.data()}));
+    return window.equiposCache;
+  }catch(e){return[]}
+}
+function crearEquipoSuggest(inputId,suggestId,onSelect){
+  const inp=document.getElementById(inputId);
+  const sug=document.getElementById(suggestId);
+  if(!inp||!sug)return;
+  let _matches=[];
+  inp.addEventListener('input',async()=>{
+    const term=inp.value.trim().toLowerCase();
+    if(term.length<2){sug.style.display='none';return;}
+    const equipos=await cargarEquiposCache();
+    _matches=equipos.filter(e=>{
+      // En Firestore: nombre=CEMA (2DC3182), codigo=nombre equipo (DC|FKM700)
+      const cema=(e.nombre||'').toLowerCase();
+      const cod=(e.codigo||'').toLowerCase();
+      const proy=(e.proyecto||'').toLowerCase();
+      return cema.includes(term)||cod.includes(term)||proy.includes(term);
+    }).slice(0,10);
+    if(!_matches.length){sug.style.display='none';return;}
+    sug.innerHTML=_matches.map((e,i)=>{
+      const cema=e.nombre||'--';
+      const equipo=e.codigo||'--';
+      const proyecto=e.proyecto||'';
+      return('<div class="hv-suggest-item" data-idx="'+i+'" style="cursor:pointer;padding:10px 14px;border-bottom:1px solid var(--gray-50)">'
+        +'<strong style="color:var(--navy);font-size:13px">'+cema+'</strong>'
+        +'<span style="color:var(--blue);margin-left:10px;font-size:12px;font-weight:600">'+equipo+'</span>'
+        +'<span class="sg-meta" style="display:block;margin-top:2px;font-size:11px;color:var(--gray-400)">'+proyecto+'</span>'
+        +'</div>');
+    }).join('');
+    sug.querySelectorAll('.hv-suggest-item').forEach(function(item){
+      item.addEventListener('mousedown',function(ev){
+        ev.preventDefault();
+        const idx=parseInt(item.dataset.idx);
+        if(!isNaN(idx)&&_matches[idx]){
+          const eq=_matches[idx];
+          inp.value=eq.nombre||''; // nombre = CEMA
+          onSelect(eq);
+          sug.style.display='none';
+        }
+      });
+    });
+    sug.style.display='block';
+  });
+  inp.addEventListener('blur',function(){setTimeout(function(){sug.style.display='none';},150);});
+  inp.addEventListener('keydown',function(e){if(e.key==='Escape')sug.style.display='none';});
+}
+
+window._mttoTipo=null;
+window.selectMttoTipo=function(el){document.querySelectorAll('#mttoTipoGrid .falla-tipo-opt').forEach(o=>o.classList.remove('selected'));el.classList.add('selected');window._mttoTipo=el.dataset.tipo;};
+window.enviarMtto=async function(){
+  const cema=document.getElementById('mtto-cema')?.value.trim();
+  const nombre=document.getElementById('mtto-nombre')?.value.trim();
+  const proyecto=document.getElementById('mtto-proyecto')?.value;
+  const horometro=document.getElementById('mtto-horometro')?.value;
+  const descripcion=document.getElementById('mtto-descripcion')?.value.trim();
+  const urgencia=document.querySelector('input[name="mtto-urgencia"]:checked')?.value||'Programable';
+  if(!cema){showToast('error','El CEMA es obligatorio');return}
+  if(!proyecto){showToast('error','Selecciona el proyecto');return}
+  if(!window._mttoTipo){showToast('error','Selecciona el tipo de mantenimiento');return}
+  const btn=document.getElementById('mttoSubmitBtn');
+  btn.innerHTML='<span style="display:inline-block;width:16px;height:16px;border:2px solid white;border-top-color:transparent;border-radius:50%;animation:spin .6s linear infinite"></span> Enviando...';
+  btn.disabled=true;
+  try{
+    const{addDoc,collection,serverTimestamp}=window._firestoreOps||{};
+    if(addDoc&&collection){
+      await addDoc(collection(window._db,'solicitudes_mtto'),{
+        cema,nombre:nombre||'—',proyecto,horometro:horometro||'—',
+        tipoMtto:window._mttoTipo,descripcion:descripcion||'Sin observaciones',
+        urgencia,solicitadoPor:window.nombreOperador||window.operadorActivo||'—',
+        estado:'pendiente',fecha:serverTimestamp()
+      });
+    }
+    document.getElementById('mttoForm').style.display='none';
+    document.getElementById('mttoSuccess').style.display='block';
+    showToast('success','Solicitud enviada');
+  }catch(e){
+    showToast('error','Error: '+e.message);
+    btn.innerHTML='<i class="bi bi-send"></i> Enviar Solicitud';
+    btn.disabled=false;
+  }
+};
+window.resetMttoForm=function(){
+  document.getElementById('mttoForm').style.display='block';
+  document.getElementById('mttoSuccess').style.display='none';
+  document.getElementById('mtto-cema').value='';
+  document.getElementById('mtto-nombre').value='';
+  document.getElementById('mtto-proyecto').value='';
+  document.getElementById('mtto-horometro').value='';
+  document.getElementById('mtto-descripcion').value='';
+  document.querySelectorAll('#mttoTipoGrid .falla-tipo-opt').forEach(o=>o.classList.remove('selected'));
+  window._mttoTipo=null;
+  const btn=document.getElementById('mttoSubmitBtn');
+  if(btn){btn.innerHTML='<i class="bi bi-send"></i> Enviar Solicitud';btn.disabled=false;}
+};
+window.initOrdenesPage=function(){
+  const sp=document.getElementById('mtto-solicitadopor');
+  if(sp)sp.value=window.nombreOperador||window.operadorActivo||'';
+  crearEquipoSuggest('mtto-cema','mtto-cema-suggest',function(e){
+    var nom=document.getElementById('mtto-nombre');if(nom)nom.value=e.codigo||'';
+    var proy=document.getElementById('mtto-proyecto');
+    if(proy&&e.proyecto){var opt=Array.from(proy.options).find(function(o){return o.value.toLowerCase().includes(e.proyecto.toLowerCase())||e.proyecto.toLowerCase().includes(o.value.toLowerCase());});if(opt)proy.value=opt.value;}
+  });
+};
 window.initFallaPage = function() {
   const rp = document.getElementById('falla-reportadopor');
   if (rp) rp.value = window.nombreOperador || window.operadorActivo || '';
+  crearEquipoSuggest('falla-cema','falla-cema-suggest',function(e){
+    var nom=document.getElementById('falla-nombre');if(nom)nom.value=e.codigo||'';
+    var proy=document.getElementById('falla-proyecto');
+    if(proy&&e.proyecto){var opt=Array.from(proy.options).find(function(o){return o.value.toLowerCase().includes(e.proyecto.toLowerCase())||e.proyecto.toLowerCase().includes(o.value.toLowerCase());});if(opt)proy.value=opt.value;}
+  });
 };
 
 // ===== EMAILJS CONFIG =====
@@ -2421,14 +2912,153 @@ const HIST_COLS=[
   {col:'insp_loc_talleres_areas',label:'Loc. Talleres Áreas',pdf:'insp'},
   {col:'insp_loc_oficinas',label:'Loc. Oficinas',pdf:'insp'},
   {col:'insp_loc_habitaciones',label:'Loc. Habitaciones',pdf:'insp'},
-  {col:'reportes_fallas',label:'Reportes de Falla',pdf:'falla'}
+  {col:'reportes_fallas',label:'Reportes de Falla',pdf:'falla'},
+  {col:'solicitudes_mtto',label:'Solicitudes Mtto.',pdf:'mtto'}
 ];
 window.histTab=function(tab){document.querySelectorAll('.hist-tab').forEach(t=>{const a=t.dataset.tab===tab;t.style.background=a?'var(--white)':'transparent';t.style.color=a?'var(--navy)':'var(--gray-500)';t.classList.toggle('active',a)});document.getElementById('hist-resumen').style.display=tab==='resumen'?'block':'none';document.getElementById('hist-busqueda').style.display=tab==='busqueda'?'block':'none'};
 window.histCargarResumen=async function(){const mes=document.getElementById('hist-mes').value;if(!mes){showToast('error','Selecciona un mes');return}const[y,m]=mes.split('-').map(Number);const ini=new Date(y,m-1,1),fin=new Date(y,m,1);const cont=document.getElementById('hist-cards');cont.innerHTML='<div class="eq-loading">Cargando...</div>';const counts=[];for(const c of HIST_COLS){try{const snap=await getDocs(collection(db,c.col));const n=snap.docs.filter(d=>{const f=d.data().fecha?.toDate?.();return f&&f>=ini&&f<fin}).length;counts.push({...c,n})}catch(e){counts.push({...c,n:0})}}cont.innerHTML=counts.map(c=>`<div class="nav-card" onclick="window.histVerTipo('${c.col}','${c.label}')"><div class="nav-icon all"><i class="bi bi-clipboard-check"></i></div><div class="nav-info"><span class="nav-label">${c.label}</span><h2 class="nav-value">${c.n}</h2></div></div>`).join('')};
 window.histVerTipo=function(col,label){window.histTab('busqueda');document.getElementById('hist-tipo-filter').value=col;document.getElementById('hist-search').value='';window.histBuscar()};
 window.histBuscar=async function(){const term=document.getElementById('hist-search').value.trim().toLowerCase();const tipoF=document.getElementById('hist-tipo-filter').value;const cont=document.getElementById('hist-resultados');cont.innerHTML='<div class="eq-loading">Buscando...</div>';const cols=tipoF?HIST_COLS.filter(c=>c.col===tipoF):HIST_COLS;const results=[];for(const c of cols){try{const snap=await getDocs(collection(db,c.col));snap.docs.forEach(d=>{const data=d.data();const id=(data.identificacion||data.equipo?.cema||data.cema||'').toString().toLowerCase();if(!term||id.includes(term))results.push({id:d.id,col:c.col,label:c.label,pdf:c.pdf,data})})}catch(e){}}results.sort((a,b)=>(b.data.fecha?.toDate?.()||0)-(a.data.fecha?.toDate?.()||0));if(results.length===0){cont.innerHTML='<div class="eq-empty"><i class="bi bi-inbox"></i><p>Sin resultados</p></div>';return}cont.innerHTML=`<div class="card"><div class="card-body" style="padding:0;overflow-x:auto"><table class="eq-table"><thead><tr><th>Fecha</th><th>Tipo</th><th>Identificación</th><th>Inspector</th><th>PDF</th></tr></thead><tbody>${results.map(r=>{const f=r.data.fecha?.toDate?.()?.toLocaleDateString('es-CO')||'—';const id=r.data.identificacion||r.data.equipo?.cema||r.data.cema||'—';const ins=r.data.inspector||r.data.operador||'—';return`<tr><td>${f}</td><td>${r.label}</td><td class="eq-name">${id}</td><td>${ins}</td><td><button class="btn btn-sm btn-primary" onclick="window.histPDF('${r.col}','${r.id}','${r.pdf}')"><i class="bi bi-download"></i></button></td></tr>`}).join('')}</tbody></table></div></div><p style="margin-top:12px;color:var(--gray-400);font-size:12px">${results.length} resultado(s)</p>`};
-window.histPDF=function(col,id,tipo){window._inspCol=col;if(tipo==='preop'){window.coleccion=col;window.exportarPDF(id,col)}else if(tipo==='insp'){window.inspExportarPDF(id)}else{showToast('info','PDF de fallas no disponible')}};
+window.histPDF=function(col,id,tipo){window._inspCol=col;if(tipo==='preop'){window.coleccion=col;window.exportarPDF(id,col)}else if(tipo==='insp'){window.inspExportarPDF(id)}else if(tipo==='falla'){window.fallaExportarPDF(col,id)}else if(tipo==='mtto'){window.mttoExportarPDF(col,id)}else{showToast('info','PDF no disponible')}};
 window.initHistorialPage=function(){const t=document.getElementById('hist-tipo-filter');if(t&&t.options.length<2)HIST_COLS.forEach(c=>{const o=document.createElement('option');o.value=c.col;o.textContent=c.label;t.appendChild(o)});const m=document.getElementById('hist-mes');if(m&&!m.value){const d=new Date();m.value=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')}};
+
+// ── PDF Reporte de Falla ──
+window.fallaExportarPDF=async function(col,id){
+  try{
+    const snap=await getDoc(doc(db,col,id));
+    if(!snap.exists()){showToast('error','Registro no encontrado');return}
+    const d=snap.data();
+    const{jsPDF}=window.jspdf;
+    const pdf=new jsPDF('portrait','mm','a4');
+    const fecha=d.fecha?.toDate?.()?.toLocaleDateString('es-CO')||new Date().toLocaleDateString('es-CO');
+    const hora=d.fecha?.toDate?.()?.toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit'})||'';
+    // Header navy
+    pdf.setFillColor(15,33,55);pdf.rect(0,0,210,28,'F');
+    pdf.setTextColor(255,255,255);pdf.setFont('helvetica','bold');pdf.setFontSize(14);
+    pdf.text('REPORTE DE FALLA',105,12,{align:'center'});
+    pdf.setFontSize(8);pdf.setTextColor(244,180,0);
+    pdf.text('MM&E MOVA — Mantenimiento, Maquinaria & Equipos',105,20,{align:'center'});
+    // Código doc
+    pdf.setTextColor(180,180,180);pdf.setFontSize(7);pdf.setFont('helvetica','normal');
+    pdf.text('Código: A4-F-XXX  |  Vigencia: 01/01/2026',196,6,{align:'right'});
+    // Cuerpo
+    pdf.setTextColor(0,0,0);pdf.setFontSize(10);
+    let y=38;
+    const row=(l,v,x=14,w=90)=>{
+      pdf.setFont('helvetica','bold');pdf.setFontSize(8);pdf.setTextColor(100,100,100);
+      pdf.text(l.toUpperCase(),x,y);
+      pdf.setFont('helvetica','normal');pdf.setFontSize(10);pdf.setTextColor(0,0,0);
+      pdf.text(String(v||'—'),x,y+5);
+    };
+    // Fila 1
+    row('Fecha de Reporte',`${fecha} ${hora}`,14);
+    row('Reportado por',d.reportadoPor||'—',110);
+    y+=14;
+    row('CEMA / Código Equipo',d.cema||'—',14);
+    row('Nombre del Equipo',d.nombre||'—',110);
+    y+=14;
+    row('Proyecto / Ubicación',d.proyecto||'—',14);
+    row('Horómetro / Odómetro',d.horometro||'—',110);
+    y+=14;
+    // Tipo + prioridad con badges
+    pdf.setFillColor(229,57,53);pdf.roundedRect(14,y,55,10,2,2,'F');
+    pdf.setTextColor(255,255,255);pdf.setFont('helvetica','bold');pdf.setFontSize(9);
+    pdf.text(`FALLA: ${(d.tipoFalla||'—').toUpperCase()}`,41,y+7,{align:'center'});
+    const prioColor={Alta:[229,57,53],Media:[255,152,0],Baja:[76,175,80]}[d.prioridad]||[100,100,100];
+    pdf.setFillColor(...prioColor);pdf.roundedRect(75,y,40,10,2,2,'F');
+    pdf.setTextColor(255,255,255);pdf.text(`${(d.prioridad||'—').toUpperCase()}`,95,y+7,{align:'center'});
+    const operable=d.operable==='SI'?'Sí, con restricciones':'No, equipo detenido';
+    pdf.setFillColor(240,240,240);pdf.roundedRect(122,y,74,10,2,2,'F');
+    pdf.setTextColor(60,60,60);pdf.text(`Operable: ${operable}`,159,y+7,{align:'center'});
+    y+=18;
+    // Descripción
+    pdf.setFont('helvetica','bold');pdf.setFontSize(8);pdf.setTextColor(100,100,100);
+    pdf.text('DESCRIPCIÓN DE LA FALLA',14,y);y+=5;
+    pdf.setFillColor(248,250,252);pdf.rect(14,y,182,35,'F');
+    pdf.setDrawColor(200,200,200);pdf.rect(14,y,182,35,'S');
+    pdf.setFont('helvetica','normal');pdf.setFontSize(9);pdf.setTextColor(0,0,0);
+    const desc=pdf.splitTextToSize(d.descripcion||'Sin descripción',174);
+    pdf.text(desc,18,y+5);
+    y+=42;
+    // Estado
+    const estadoColor=d.estado==='abierta'?[229,57,53]:[76,175,80];
+    pdf.setFont('helvetica','bold');pdf.setFontSize(9);pdf.setTextColor(...estadoColor);
+    pdf.text(`Estado: ${(d.estado||'ABIERTA').toUpperCase()}`,14,y);
+    y+=12;
+    // Firma
+    pdf.setDrawColor(180,180,180);pdf.line(14,y+15,80,y+15);pdf.line(120,y+15,196,y+15);
+    pdf.setFont('helvetica','normal');pdf.setFontSize(8);pdf.setTextColor(120,120,120);
+    pdf.text('Firma Operador',14,y+20);pdf.text('Firma Supervisor',120,y+20);
+    // Footer
+    pdf.setFillColor(15,33,55);pdf.rect(0,280,210,17,'F');
+    pdf.setTextColor(180,180,180);pdf.setFontSize(7);
+    pdf.text(`Generado: ${new Date().toLocaleString('es-CO')}  |  MM&E MOVA`,105,289,{align:'center'});
+    pdf.save(`MOVA_Falla_${d.cema||'equipo'}_${fecha.replace(/\//g,'-')}.pdf`);
+    showToast('success','PDF generado');
+  }catch(e){console.error(e);showToast('error','Error PDF: '+e.message)}
+};
+
+// ── PDF Solicitud de Mantenimiento ──
+window.mttoExportarPDF=async function(col,id){
+  try{
+    const snap=await getDoc(doc(db,col,id));
+    if(!snap.exists()){showToast('error','Registro no encontrado');return}
+    const d=snap.data();
+    const{jsPDF}=window.jspdf;
+    const pdf=new jsPDF('portrait','mm','a4');
+    const fecha=d.fecha?.toDate?.()?.toLocaleDateString('es-CO')||new Date().toLocaleDateString('es-CO');
+    // Header
+    pdf.setFillColor(46,117,182);pdf.rect(0,0,210,28,'F');
+    pdf.setTextColor(255,255,255);pdf.setFont('helvetica','bold');pdf.setFontSize(14);
+    pdf.text('SOLICITUD DE MANTENIMIENTO PREVENTIVO',105,12,{align:'center'});
+    pdf.setFontSize(8);pdf.setTextColor(244,180,0);
+    pdf.text('MM&E MOVA — Mantenimiento, Maquinaria & Equipos',105,20,{align:'center'});
+    pdf.setTextColor(180,180,180);pdf.setFontSize(7);pdf.setFont('helvetica','normal');
+    pdf.text('Código: A4-F-XXX  |  Vigencia: 01/01/2026',196,6,{align:'right'});
+    let y=38;
+    const row=(l,v,x=14)=>{
+      pdf.setFont('helvetica','bold');pdf.setFontSize(8);pdf.setTextColor(100,100,100);
+      pdf.text(l.toUpperCase(),x,y);
+      pdf.setFont('helvetica','normal');pdf.setFontSize(10);pdf.setTextColor(0,0,0);
+      pdf.text(String(v||'—'),x,y+5);
+    };
+    row('Fecha de Solicitud',fecha,14);row('Solicitado por',d.solicitadoPor||'—',110);y+=14;
+    row('CEMA / Código Equipo',d.cema||'—',14);row('Nombre del Equipo',d.nombre||'—',110);y+=14;
+    row('Proyecto / Ubicación',d.proyecto||'—',14);row('Horómetro / Odómetro',d.horometro||'—',110);y+=14;
+    // Tipo mantenimiento
+    pdf.setFillColor(46,117,182);pdf.roundedRect(14,y,182,12,2,2,'F');
+    pdf.setTextColor(255,255,255);pdf.setFont('helvetica','bold');pdf.setFontSize(10);
+    pdf.text(`TIPO: ${(d.tipoMtto||'—').toUpperCase()}`,105,y+8,{align:'center'});
+    y+=18;
+    // Urgencia
+    const urgColor={Urgente:[229,57,53],'Esta semana':[255,152,0],Programable:[76,175,80]}[d.urgencia]||[100,100,100];
+    pdf.setFillColor(...urgColor);pdf.roundedRect(14,y,60,10,2,2,'F');
+    pdf.setTextColor(255,255,255);pdf.setFont('helvetica','bold');pdf.setFontSize(9);
+    pdf.text(`Urgencia: ${d.urgencia||'Programable'}`,44,y+7,{align:'center'});
+    // Estado
+    pdf.setFillColor(240,240,240);pdf.roundedRect(82,y,60,10,2,2,'F');
+    pdf.setTextColor(60,60,60);pdf.text(`Estado: ${(d.estado||'PENDIENTE').toUpperCase()}`,112,y+7,{align:'center'});
+    y+=18;
+    // Descripción
+    pdf.setFont('helvetica','bold');pdf.setFontSize(8);pdf.setTextColor(100,100,100);
+    pdf.text('DESCRIPCIÓN / OBSERVACIONES',14,y);y+=5;
+    pdf.setFillColor(248,250,252);pdf.rect(14,y,182,35,'F');
+    pdf.setDrawColor(200,200,200);pdf.rect(14,y,182,35,'S');
+    pdf.setFont('helvetica','normal');pdf.setFontSize(9);pdf.setTextColor(0,0,0);
+    const obs=pdf.splitTextToSize(d.descripcion||'Sin observaciones',174);
+    pdf.text(obs,18,y+5);y+=42;
+    // Firmas
+    pdf.setDrawColor(180,180,180);pdf.line(14,y+15,80,y+15);pdf.line(120,y+15,196,y+15);
+    pdf.setFont('helvetica','normal');pdf.setFontSize(8);pdf.setTextColor(120,120,120);
+    pdf.text('Firma Solicitante',14,y+20);pdf.text('Firma Responsable Mtto.',120,y+20);
+    // Footer
+    pdf.setFillColor(46,117,182);pdf.rect(0,280,210,17,'F');
+    pdf.setTextColor(255,255,255);pdf.setFontSize(7);
+    pdf.text(`Generado: ${new Date().toLocaleString('es-CO')}  |  MM&E MOVA`,105,289,{align:'center'});
+    pdf.save(`MOVA_Mtto_${d.cema||'equipo'}_${fecha.replace(/\//g,'-')}.pdf`);
+    showToast('success','PDF generado');
+  }catch(e){console.error(e);showToast('error','Error PDF: '+e.message)}
+};
 
 // ===== CONTROL & SEGUIMIENTO (Google Sheets) =====
 const CSEG_URL='https://script.google.com/macros/s/AKfycbxVL9dvF5inJZa3bUtwXJZBccNmrmfUZjbqfXvNMZBQK9bOWraDvD5bMcT-BXGp6SEmVA/exec';
@@ -2437,6 +3067,49 @@ function csegHeaderRow(s){const n=s.toUpperCase();if(n.includes('CAT')&&n.includ
 function csegTipoHoja(s){const n=s.toUpperCase();if(n.includes('CAT')&&n.includes('LOGO'))return'catalogo';if(n.includes('DASHBOARD'))return'dashboard';if(n.includes('CRONOGRAMA'))return'cronograma';if(n.includes('C.I.')||n.includes('BIMENSUAL')||n.includes('LOCATIVA'))return'ci';if(n.includes('CONTROL PREOP')||n.includes('CTRL PREOP'))return'preop';return'tabla';}
 function csegSheetKey(s){return s.toLowerCase().replace(/[^a-z0-9]/g,'_');}
 function csegTimestamp(){const t=new Date().toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit'});const el=document.getElementById('cseg-last-update');if(el)el.innerHTML=`<span class="hmtto-sync-dot"></span>Actualizado a las ${t}`;}
+
+// ── Metadatos del documento (código, vigencia, título) ──
+function parseMeta(meta){
+  // Código, Vigencia, Revisión están en columnas V(21) y W(22), filas 1-3
+  // meta[0]=fila1, meta[1]=fila2, meta[2]=fila3
+  let codigo='',vigencia='',revision='',titulo='';
+  if(meta&&meta.length>=1){
+    // Col W (índice 22) contiene el valor; col V (21) la etiqueta
+    const row0=meta[0]||[], row1=meta[1]||[], row2=meta[2]||[];
+    codigo  = String(row0[22]||row0[21]||'').trim();
+    vigencia= String(row1[22]||row1[21]||'').trim();
+    revision= String(row2[22]||row2[21]||'').trim();
+    // Limpiar prefijos de etiqueta si el valor los incluye
+    codigo  = codigo.replace(/^[Cc][oó]digo\s*[:\s]*/,'').trim();
+    vigencia= vigencia.replace(/^[Vv]igencia\s*[:\s]*/,'').trim();
+    revision= revision.replace(/^[Rr]evisión?\s*[:\s]*/,'').trim();
+    // Título: buscar en toda la meta la celda más larga que no sea la empresa ni un código/fecha
+    const flat=meta.flat().map(v=>String(v).trim()).filter(v=>v.length>10);
+    const candidatos=flat.filter(v=>!v.toUpperCase().includes('MORENO VARGAS')&&!v.match(/^[A-Z0-9]{1,4}-[A-Z]-\d+$/)&&!v.match(/^\d{1,2}[\/\-]\d/));
+    if(candidatos.length)titulo=candidatos.reduce((a,b)=>b.length>a.length?b:a,'');
+  }
+  return{codigo,vigencia,revision,titulo};
+}
+function renderDocHeader(meta,fallbackTitle){
+  const{codigo,vigencia,revision,titulo}=parseMeta(meta||[]);
+  const tituloFinal=(titulo||fallbackTitle||'').toUpperCase();
+  return`<div style="display:grid;grid-template-columns:220px 1fr 180px;border:2px solid var(--gray-300);border-bottom:none;border-radius:8px 8px 0 0;overflow:hidden;background:var(--white);font-family:'DM Sans',sans-serif">
+    <div style="border-right:2px solid var(--gray-300);padding:12px 14px;display:flex;align-items:center;gap:10px">
+      <div style="width:36px;height:36px;background:var(--yellow);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;color:var(--navy);flex-shrink:0;font-family:'Space Grotesk',sans-serif;line-height:1.1;text-align:center">MM&amp;E</div>
+      <span style="font-size:10px;font-weight:700;color:var(--navy);line-height:1.35;text-transform:uppercase">MORENO VARGAS<br>SOCIEDAD ANÓNIMA</span>
+    </div>
+    <div style="border-right:2px solid var(--gray-300);padding:12px 20px;display:flex;align-items:center;justify-content:center">
+      <span style="font-size:13px;font-weight:700;color:var(--navy);text-align:center;text-transform:uppercase;letter-spacing:.3px">${tituloFinal}</span>
+    </div>
+    <div style="padding:10px 14px;font-size:10px;color:var(--gray-700)">
+      <div style="display:grid;grid-template-columns:60px 1fr;gap:2px 6px;line-height:1.9">
+        <span style="font-weight:600;color:var(--gray-500)">Código:</span><span>${codigo||'—'}</span>
+        <span style="font-weight:600;color:var(--gray-500)">Vigencia:</span><span>${vigencia||'—'}</span>
+        <span style="font-weight:600;color:var(--gray-500)">Revisión:</span><span>${revision||'—'}</span>
+      </div>
+    </div>
+  </div>`;
+}
 let csegSheets=[],csegActiva='',csegData={},csegInterval=null,csegOverrides={};
 
 function csegRenderCatalogo(sheet,filtro){
@@ -2590,11 +3263,14 @@ async function csegRenderTabla(sheet,filtro=''){
   const n=term?d.rows.filter(r=>Object.values(r).some(v=>String(v).toLowerCase().includes(term))).length:d.rows.length;
   if(countEl)countEl.textContent=`${n} de ${d.rows.length} registros`;
   let html='';
+  const docHdr=renderDocHeader(d.meta||[],sheet);
   if(d.tipo==='catalogo')html=csegRenderCatalogo(sheet,filtro);
   else if(d.tipo==='ci')html=await csegRenderCI(sheet,filtro);
   else if(d.tipo==='preop')html=csegRenderPreop(sheet,filtro);
   else html=csegRenderTablaEstandar(sheet,filtro);
-  cont.innerHTML=html;
+  // Wrap tabla con encabezado documental (quitar border-radius top de la tabla)
+  const tableWrap=html.replace('border-radius:12px','border-radius:0 0 12px 12px').replace('border-radius:8px 8px 0 0','border-radius:0');
+  cont.innerHTML=docHdr+tableWrap;
 }
 
 async function csegCargarTab(sheet){
@@ -2606,7 +3282,7 @@ async function csegCargarTab(sheet){
   try{
     const hr=csegHeaderRow(sheet);
     const json=await hmttoFetch(`${CSEG_URL}?sheet=${encodeURIComponent(sheet)}&hr=${hr}`);
-    csegData[sheet]={headers:json.headers||[],rows:json.rows||[],tipo:csegTipoHoja(sheet)};
+    csegData[sheet]={headers:json.headers||[],rows:json.rows||[],tipo:csegTipoHoja(sheet),meta:json.meta||[]};
     csegTimestamp();
     await csegRenderTabla(sheet);
   }catch(e){
@@ -2709,7 +3385,7 @@ async function hmttoCargarTab(sheet){
   toolbar.style.display='none';
   try{
     const json=await hmttoFetch(HMTTO_URL+'?sheet='+encodeURIComponent(sheet));
-    hmttoData[sheet]={headers:json.headers||[],rows:json.rows||[]};
+    hmttoData[sheet]={headers:json.headers||[],rows:json.rows||[],meta:json.meta||[]};
     hmttoTimestamp();
     hmttoRenderTabla(sheet);
   }catch(e){
@@ -2743,7 +3419,7 @@ function hmttoRowClass(row,headers){
   return'';
 }
 
-function hmttoRenderTabla(sheet,filtro=''){
+function hmttoRenderTabla(sheet,filtro='',mes=''){
   const {headers,rows}=hmttoData[sheet]||{headers:[],rows:[]};
   const cont=document.getElementById('hmtto-container');
   const toolbar=document.getElementById('hmtto-toolbar');
@@ -2752,8 +3428,25 @@ function hmttoRenderTabla(sheet,filtro=''){
     cont.innerHTML='<div style="text-align:center;padding:60px 20px;color:var(--gray-400)"><i class="bi bi-inbox" style="font-size:40px;display:block;margin-bottom:12px;opacity:.4"></i><p>Sin registros en esta pestaña</p></div>';
     toolbar.style.display='none';return;
   }
+  // Detectar columna de fecha principal
+  const fechaH=headers.find(h=>{const u=h.toUpperCase();return u.includes('FECHA')&&(u.includes('REPORTE')||u.includes('APERTURA')||u.includes('INICIO'))||u==='FECHA';}) || headers.find(h=>h.toUpperCase().includes('FECHA'));
   const term=filtro.toLowerCase();
-  const filtered=term?rows.filter(r=>Object.values(r).some(v=>String(v).toLowerCase().includes(term))):rows;
+  let filtered=term?rows.filter(r=>Object.values(r).some(v=>String(v).toLowerCase().includes(term))):rows;
+  // Filtrar por mes si se seleccionó
+  if(mes&&fechaH){
+    filtered=filtered.filter(r=>{
+      const v=String(r[fechaH]??'').trim();
+      if(!v)return false;
+      // Soporta formatos: DD/MM/YYYY, MM/DD/YYYY, YYYY-MM-DD, "01/01/2026"
+      const parts=v.split(/[\/\-]/);
+      if(parts.length>=2){
+        // Intentar detectar mes
+        const candidates=[parts[1],parts[0]];
+        return candidates.some(p=>p.padStart(2,'0')===mes);
+      }
+      return false;
+    });
+  }
   toolbar.style.display='flex';
   countEl.textContent=`${filtered.length} de ${rows.length} registros`;
   if(!filtered.length){
@@ -2766,8 +3459,10 @@ function hmttoRenderTabla(sheet,filtro=''){
     const tds=headers.map(h=>`<td style="font-size:12px;white-space:nowrap">${hmttoFormatVal(row[h],h)}</td>`).join('');
     return`<tr class="hmtto-row${cls}">${tds}</tr>`;
   }).join('');
-  cont.innerHTML=`
-    <div style="background:var(--white);border-radius:12px;border:1px solid var(--gray-200);overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.04)">
+  const {meta:hmttoMeta}=hmttoData[sheet]||{};
+  const hmttoHdr=renderDocHeader(hmttoMeta||[],sheet.replace(/H\.?\s*MTTO\.?\s*/i,'HISTORIAL DE MANTENIMIENTO ').trim());
+  cont.innerHTML=hmttoHdr+`
+    <div style="background:var(--white);border-radius:0 0 12px 12px;border:1px solid var(--gray-200);border-top:none;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.04)">
       <div style="overflow-x:auto;max-height:calc(100vh - 280px)">
         <table style="width:100%;border-collapse:collapse;font-family:'DM Sans',sans-serif">
           <thead>
@@ -2798,10 +3493,35 @@ window.hmttoSelTab=async function(sheet){
 };
 
 window.hmttoFiltrar=function(){
-  const term=document.getElementById('hmtto-search').value;
-  hmttoRenderTabla(hmttoActiva,term);
+  const term=document.getElementById('hmtto-search').value.trim();
+  const mes=document.getElementById('hmtto-mes')?.value||'';
+  hmttoRenderTabla(hmttoActiva,term,mes);
 };
 
+window.hmttoDescargar=function(){
+  const {headers,rows}=hmttoData[hmttoActiva]||{headers:[],rows:[]};
+  if(!rows.length){showToast('error','Sin datos para descargar');return}
+  const term=document.getElementById('hmtto-search')?.value.trim()||'';
+  const mes=document.getElementById('hmtto-mes')?.value||'';
+  const fechaH=headers.find(h=>{const u=h.toUpperCase();return u.includes('FECHA')&&(u.includes('REPORTE')||u.includes('APERTURA'))||u==='FECHA';})||headers.find(h=>h.toUpperCase().includes('FECHA'));
+  let data=term?rows.filter(r=>Object.values(r).some(v=>String(v).toLowerCase().includes(term.toLowerCase()))):rows;
+  if(mes&&fechaH)data=data.filter(r=>{const v=String(r[fechaH]??'');const p=v.split(/[\/\-]/);return p.length>=2&&[p[0],p[1]].some(x=>x.padStart(2,'0')===mes);});
+  // Generar CSV con BOM UTF-8 para Excel
+  const bom='﻿';
+  const sep=';';
+  const escape=v=>{const s=String(v??'');return s.includes(sep)||s.includes('"')||s.includes('\n')?'"'+s.replace(/"/g,'""')+'"':s;};
+  const csv=bom+[headers.map(escape).join(sep),...data.map(r=>headers.map(h=>escape(r[h]??'')).join(sep))].join('\n');
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  const proj=hmttoTabLabel(hmttoActiva);
+  const sufijo=term?`_${term}`:'';
+  const mesSufijo=mes?`_mes${mes}`:'';
+  a.href=url;a.download=`MOVA_Historial_${proj}${sufijo}${mesSufijo}.csv`;
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('success',`Descargando ${data.length} registros`);
+};
 window.hmttoRefresh=async function(){
   const icon=document.getElementById('hmtto-refresh-icon');
   if(icon){icon.style.animation='spin .6s linear infinite';icon.style.display='inline-block'}
@@ -2834,12 +3554,562 @@ window.initHistMttoPage=function(){
   },60000);
 };
 
+
+// ===== DASHBOARD KPIs DINÁMICO =====
+const DASH_MESES=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+const DASH_COLORS=['blue','green','red','yellow','purple','blue','green','red','yellow'];
+const HMTTO_SHEETS_FILTER=s=>s.toUpperCase().includes('H. MTTO')||s.toUpperCase().includes('H.MTTO');
+let _dashAnio=2026,_dashCache={};
+
+// ── Helpers ──
+function dashGetAnio(){return parseInt(document.getElementById('dash-anio')?.value||new Date().getFullYear());}
+function dashCategoria(cema){return cema?cema.substring(0,3).toUpperCase():'???';}
+function dashFmt(n){return n>=1000?(n/1000).toFixed(1)+'k':String(n);}
+function dashSpinner(id){const el=document.getElementById(id);if(el)el.style.display='block';}
+function dashHide(id){const el=document.getElementById(id);if(el)el.style.display='none';}
+function dashShow(id,html){const el=document.getElementById(id);if(el){el.innerHTML=html||'';el.style.display='block';}}
+
+function dashBarChart(items,maxVal,colorFn){
+  if(!items.length)return'<p style="color:var(--gray-300);font-size:12px;text-align:center;padding:20px">Sin datos</p>';
+  const max=maxVal||Math.max(...items.map(i=>i.n),1);
+  return items.map(i=>{
+    const pct=Math.round((i.n/max)*100);
+    const color=colorFn?colorFn(i):DASH_COLORS[items.indexOf(i)%DASH_COLORS.length];
+    return`<div class="dash-bar-row">
+      <span class="dash-bar-label wide" title="${i.label}">${i.label}</span>
+      <div class="dash-bar-track"><div class="dash-bar-fill ${color}" style="width:${pct}%">${i.n>0&&pct>15?i.n:''}</div></div>
+      <span class="dash-bar-count">${i.n}</span>
+    </div>`;
+  }).join('');
+}
+
+function dashMonthGrid(monthly,color,onClick){
+  const max=Math.max(...monthly.map(m=>m.n),1);
+  return`<div class="dash-month-grid">${monthly.map((m,i)=>`
+    <div class="dash-month-cell" onclick="${onClick?`${onClick}(${i})`:''}">
+      <div class="mc-name">${DASH_MESES[i]}</div>
+      <div class="mc-val">${m.n}</div>
+      <div class="mc-bar" style="width:${Math.round((m.n/max)*100)%101}%;background:var(--${color||'blue'})"></div>
+    </div>`).join('')}</div>`;
+}
+
+function dashDrilldown(title, html){
+  document.getElementById('dash-drill-title').textContent=title;
+  document.getElementById('dash-drill-body').innerHTML=html;
+  const ov=document.getElementById('dash-drill-overlay');
+  ov.style.display='flex';
+}
+
+// ── Tab navigation ──
+window.dashTab=function(tab){
+  document.querySelectorAll('.dash-tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===tab));
+  document.querySelectorAll('.dash-tab-content').forEach(el=>el.style.display='none');
+  const content=document.getElementById('dash-tab-'+tab);
+  if(content)content.style.display='block';
+};
+
+// ════════════════════════════════════════
+// TAB 1: MANTENIMIENTO (Google Sheets)
+// ════════════════════════════════════════
+async function dashLoadMtto(anio){
+  dashSpinner('dash-mtto-loading');dashHide('dash-mtto-content');
+  try{
+    // Fetch all H.MTTO sheets
+    const sheetsResp=await fetch(HMTTO_URL);
+    const sheetsJson=await sheetsResp.json();
+    const mttoSheets=(sheetsJson.sheets||[]).filter(HMTTO_SHEETS_FILTER);
+
+    let totalPrev=0,totalCorr=0,totalAll=0;
+    const byCategoria={},byMesPrev=Array(12).fill(0),byMesCorr=Array(12).fill(0);
+    const byEquipo={};
+
+    for(const sheet of mttoSheets){
+      const resp=await fetch(`${HMTTO_URL}?sheet=${encodeURIComponent(sheet)}&hr=4`);
+      const json=await resp.json();
+      const rows=(json.rows||[]).filter(r=>{
+        const fechaKey=Object.keys(r).find(k=>k.toUpperCase().includes('FECHA')&&(k.toUpperCase().includes('REPORTE')||k.toUpperCase().includes('APERTURA')));
+        if(!fechaKey)return true;
+        const v=String(r[fechaKey]||'').trim();
+        if(!v)return false;
+        const parts=v.split('/');
+        if(parts.length>=3){const yr=parseInt(parts[2]);return yr===anio;}
+        return true;
+      });
+      rows.forEach(row=>{
+        const tipoKey=Object.keys(row).find(k=>k.toUpperCase().includes('TIPO')&&k.toUpperCase().includes('MANT'));
+        const cemaKey=Object.keys(row).find(k=>k.toUpperCase()==='CEMA'||k.toUpperCase().includes('CEMA'));
+        const fechaKey=Object.keys(row).find(k=>k.toUpperCase().includes('FECHA')&&(k.toUpperCase().includes('REPORTE')||k.toUpperCase().includes('APERTURA')));
+        const tipo=String(row[tipoKey]||'').toUpperCase();
+        const cema=String(row[cemaKey]||'').trim();
+        const cat=dashCategoria(cema);
+        const fecha=String(row[fechaKey]||'').trim();
+        // Parse month
+        let mes=-1;
+        if(fecha){const p=fecha.split('/');if(p.length>=2)mes=parseInt(p[1])-1;}
+        const isPrev=tipo.includes('PREV');
+        const isCorr=tipo.includes('CORR');
+        if(isPrev){totalPrev++;if(mes>=0&&mes<12)byMesPrev[mes]++;}
+        if(isCorr){totalCorr++;if(mes>=0&&mes<12)byMesCorr[mes]++;}
+        if(isPrev||isCorr)totalAll++;
+        if(cat&&cat!=='???'){byCategoria[cat]=(byCategoria[cat]||0)+1;}
+        if(cema){byEquipo[cema]=(byEquipo[cema]||0)+1;}
+      });
+    }
+
+    const pctPrev=totalAll?Math.round(totalPrev/totalAll*100):0;
+    const topCats=Object.entries(byCategoria).sort((a,b)=>b[1]-a[1]).slice(0,8).map(([k,v])=>({label:k,n:v}));
+    const topEquipos=Object.entries(byEquipo).sort((a,b)=>b[1]-a[1]).slice(0,5).map(([k,v])=>({label:k,n:v}));
+    const maxMes=Math.max(...byMesPrev.map((v,i)=>v+byMesCorr[i]),1);
+
+    const html=`
+    <div class="dash-section">
+      <div class="dash-section-title">🔧 Resumen de Mantenimiento ${anio}</div>
+      <div class="dash-kpi-grid">
+        <div class="dash-kpi green" onclick="dashOpenDrill('mtto_prev')">
+          <div class="dash-kpi-label">Preventivos</div>
+          <div class="dash-kpi-value">${dashFmt(totalPrev)}</div>
+          <div class="dash-kpi-sub">${pctPrev}% del total</div>
+          <div class="dash-kpi-hint">👆 Ver por mes</div>
+        </div>
+        <div class="dash-kpi red" onclick="dashOpenDrill('mtto_corr')">
+          <div class="dash-kpi-label">Correctivos</div>
+          <div class="dash-kpi-value">${dashFmt(totalCorr)}</div>
+          <div class="dash-kpi-sub">${100-pctPrev}% del total</div>
+          <div class="dash-kpi-hint">👆 Ver por mes</div>
+        </div>
+        <div class="dash-kpi blue" onclick="dashOpenDrill('mtto_total')">
+          <div class="dash-kpi-label">Total Intervenciones</div>
+          <div class="dash-kpi-value">${dashFmt(totalAll)}</div>
+          <div class="dash-kpi-sub">Todos los proyectos</div>
+          <div class="dash-kpi-hint">👆 Ver por mes</div>
+        </div>
+        <div class="dash-kpi ${pctPrev>=70?'green':'yellow'}">
+          <div class="dash-kpi-label">Índice Preventivo</div>
+          <div class="dash-kpi-value">${pctPrev}%</div>
+          <div class="dash-kpi-sub">Meta: ≥ 70%</div>
+          <div class="dash-kpi-hint">${pctPrev>=70?'✅ Dentro de meta':'⚠️ Por debajo de meta'}</div>
+        </div>
+      </div>
+    </div>
+    <div class="dash-two-col">
+      <div class="dash-card">
+        <div class="dash-card-title">📊 Preventivo vs Correctivo por mes
+          <span class="dash-badge blue">Barras apiladas</span>
+        </div>
+        ${byMesPrev.map((v,i)=>{
+          const corr=byMesCorr[i];const total=v+corr;const pp=total?Math.round(v/total*100):0;
+          return`<div class="dash-bar-row">
+            <span class="dash-bar-label">${DASH_MESES[i]}</span>
+            <div class="dash-bar-track" style="height:18px;position:relative" title="Prev:${v} Corr:${corr}">
+              <div style="position:absolute;left:0;top:0;height:100%;width:${pp}%;background:var(--green);border-radius:10px 0 0 10px;opacity:.8"></div>
+              <div style="position:absolute;left:${pp}%;top:0;height:100%;width:${100-pp}%;background:var(--red);border-radius:0 10px 10px 0;opacity:.8"></div>
+            </div>
+            <span class="dash-bar-count">${total}</span>
+          </div>`;
+        }).join('')}
+        <div style="display:flex;gap:16px;margin-top:10px;font-size:11px;color:var(--gray-500)">
+          <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:var(--green);margin-right:4px"></span>Preventivo</span>
+          <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:var(--red);margin-right:4px"></span>Correctivo</span>
+        </div>
+      </div>
+      <div class="dash-card">
+        <div class="dash-card-title">🏷️ Intervenciones por Categoría</div>
+        ${dashBarChart(topCats,null,(_,i)=>DASH_COLORS[i%DASH_COLORS.length])}
+        <div class="dash-card-title" style="margin-top:16px">🚜 Top 5 Equipos</div>
+        ${dashBarChart(topEquipos,null,()=>'blue')}
+      </div>
+    </div>`;
+
+    dashStoreDrill('mtto_prev',`Preventivos por mes ${anio}`,byMesPrev,'green','Preventivos');
+    dashStoreDrill('mtto_corr',`Correctivos por mes ${anio}`,byMesCorr,'red','Correctivos');
+    dashStoreDrill('mtto_total',`Total intervenciones por mes ${anio}`,byMesPrev.map((v,i)=>v+byMesCorr[i]),'blue','Total');
+    dashHide('dash-mtto-loading');
+    dashShow('dash-mtto-content',html);
+  }catch(e){
+    dashHide('dash-mtto-loading');
+    dashShow('dash-mtto-content',`<div class="eq-empty" style="text-align:center;padding:40px"><i class="bi bi-exclamation-triangle"></i><p>Error cargando mantenimiento: ${e.message}</p></div>`);
+  }
+}
+
+// Cache for drilldown data (avoids embedding HTML in onclick attributes)
+window._dashDrillCache={};
+function dashStoreDrill(key,title,arr,color,label){
+  const max=Math.max(...arr,1);
+  const rows=DASH_MESES.map((m,i)=>`
+    <div class="dash-bar-row">
+      <span class="dash-bar-label">${m}</span>
+      <div class="dash-bar-track"><div class="dash-bar-fill ${color}" style="width:${Math.round(arr[i]/max*100)}%">${arr[i]>0&&Math.round(arr[i]/max*100)>15?arr[i]:''}</div></div>
+      <span class="dash-bar-count">${arr[i]}</span>
+    </div>`).join('');
+  const total=arr.reduce((a,b)=>a+b,0);
+  window._dashDrillCache[key]={
+    title,
+    html:`<div style="margin-bottom:12px"><strong style="font-family:'Space Grotesk',sans-serif;color:var(--navy)">${label}: ${total} total</strong></div>${rows}`
+  };
+}
+window.dashOpenDrill=function(key){
+  const d=window._dashDrillCache[key];
+  if(d)dashDrilldown(d.title,d.html);
+};
+function dashMonthDrillHtml(arr,color,label){
+  const max=Math.max(...arr,1);
+  const rows=DASH_MESES.map((m,i)=>`
+    <div class="dash-bar-row">
+      <span class="dash-bar-label">${m}</span>
+      <div class="dash-bar-track"><div class="dash-bar-fill ${color}" style="width:${Math.round(arr[i]/max*100)}%">${arr[i]>0&&Math.round(arr[i]/max*100)>15?arr[i]:''}</div></div>
+      <span class="dash-bar-count">${arr[i]}</span>
+    </div>`).join('');
+  const total=arr.reduce((a,b)=>a+b,0);
+  return`<div style="margin-bottom:12px"><strong style="font-family:'Space Grotesk',sans-serif;color:var(--navy)">${label}: ${total} en ${_dashAnio}</strong></div>${rows}`;
+}
+
+// ════════════════════════════════════════
+// TAB 2: PREOPERACIONALES (Firestore)
+// ════════════════════════════════════════
+async function dashLoadPreop(anio){
+  dashSpinner('dash-preop-loading');dashHide('dash-preop-content');
+  try{
+    const cols=['inspecciones_linea_amarilla','inspecciones_linea_blanca'];
+    const hoy=new Date();hoy.setHours(0,0,0,0);
+    const ayer=new Date(hoy);ayer.setDate(ayer.getDate()-1);
+    const manana=new Date(hoy);manana.setDate(manana.getDate()+1);
+    const ini=new Date(anio,0,1),fin=new Date(anio+1,0,1);
+    let totalAnio=0,totalAmarilla=0,totalBlanca=0,hoyN=0,ayerN=0;
+    const byCategoria={},byProyecto={},byMes=Array(12).fill(0);
+    const byDia=Array(7).fill(0); // último 7 días
+    for(const col of cols){
+      const snap=await getDocs(collection(db,col));
+      snap.docs.forEach(d=>{
+        const data=d.data();
+        const f=data.fecha?.toDate?.();
+        if(!f)return;
+        if(f>=ini&&f<fin){
+          totalAnio++;
+          if(col.includes('amarilla'))totalAmarilla++;else totalBlanca++;
+          const mes=f.getMonth();byMes[mes]++;
+          const cema=data.equipo?.cema||data.cema||'';
+          const cat=dashCategoria(cema);
+          if(cat&&cat!=='???')byCategoria[cat]=(byCategoria[cat]||0)+1;
+          const proy=data.equipo?.ubicacion||data.proyecto||'Sin proyecto';
+          const proyNorm=String(proy).split(' ')[0].toUpperCase().substring(0,10);
+          byProyecto[proyNorm]=(byProyecto[proyNorm]||0)+1;
+        }
+        if(f>=hoy&&f<manana)hoyN++;
+        if(f>=ayer&&f<hoy)ayerN++;
+      });
+    }
+    const varDia=ayerN>0?Math.round((hoyN-ayerN)/ayerN*100):null;
+    const topCats=Object.entries(byCategoria).sort((a,b)=>b[1]-a[1]).slice(0,8).map(([k,v])=>({label:k,n:v}));
+    const topProys=Object.entries(byProyecto).sort((a,b)=>b[1]-a[1]).slice(0,6).map(([k,v])=>({label:k,n:v}));
+    const maxMes=Math.max(...byMes,1);
+
+    const html=`
+    <div class="dash-section">
+      <div class="dash-section-title">✅ Preoperacionales ${anio}</div>
+      <div class="dash-kpi-grid">
+        <div class="dash-kpi blue" onclick="dashOpenDrill('preop_total')">
+          <div class="dash-kpi-label">Total Año ${anio}</div>
+          <div class="dash-kpi-value">${dashFmt(totalAnio)}</div>
+          <div class="dash-kpi-sub">Amarilla: ${totalAmarilla} · Blanca: ${totalBlanca}</div>
+          <div class="dash-kpi-hint">👆 Ver por mes</div>
+        </div>
+        <div class="dash-kpi ${hoyN>0?'green':'yellow'}">
+          <div class="dash-kpi-label">Hoy</div>
+          <div class="dash-kpi-value">${hoyN}</div>
+          <div class="dash-kpi-sub">Ayer: ${ayerN}</div>
+          <div class="dash-kpi-hint">${varDia!==null?(varDia>=0?'▲ +'+varDia+'%':'▼ '+varDia+'%'):'Sin datos ayer'}</div>
+        </div>
+        <div class="dash-kpi blue">
+          <div class="dash-kpi-label">Línea Amarilla</div>
+          <div class="dash-kpi-value">${dashFmt(totalAmarilla)}</div>
+          <div class="dash-kpi-sub">${totalAnio?Math.round(totalAmarilla/totalAnio*100):0}% del total</div>
+        </div>
+        <div class="dash-kpi green">
+          <div class="dash-kpi-label">Línea Blanca</div>
+          <div class="dash-kpi-value">${dashFmt(totalBlanca)}</div>
+          <div class="dash-kpi-sub">${totalAnio?Math.round(totalBlanca/totalAnio*100):0}% del total</div>
+        </div>
+      </div>
+    </div>
+    <div class="dash-two-col">
+      <div class="dash-card">
+        <div class="dash-card-title">🏷️ Por Categoría de Equipo</div>
+        ${dashBarChart(topCats,null,(_,i)=>DASH_COLORS[i%DASH_COLORS.length])}
+      </div>
+      <div class="dash-card">
+        <div class="dash-card-title">📍 Por Proyecto / Ubicación</div>
+        ${dashBarChart(topProys,null,()=>'blue')}
+        <div class="dash-card-title" style="margin-top:16px">📅 Por Mes</div>
+        ${byMes.map((v,i)=>`<div class="dash-bar-row">
+          <span class="dash-bar-label">${DASH_MESES[i]}</span>
+          <div class="dash-bar-track"><div class="dash-bar-fill blue" style="width:${Math.round(v/maxMes*100)}%">${v>0&&Math.round(v/maxMes*100)>15?v:''}</div></div>
+          <span class="dash-bar-count">${v}</span>
+        </div>`).join('')}
+      </div>
+    </div>`;
+
+    dashStoreDrill('preop_total',`Preoperacionales por mes ${anio}`,byMes,'blue','Total');
+    dashHide('dash-preop-loading');
+    dashShow('dash-preop-content',html);
+  }catch(e){
+    dashHide('dash-preop-loading');
+    dashShow('dash-preop-content',`<div class="eq-empty" style="text-align:center;padding:40px"><i class="bi bi-exclamation-triangle"></i><p>Error: ${e.message}</p></div>`);
+  }
+}
+
+// ════════════════════════════════════════
+// TAB 3: INSPECCIONES (Bimensuales + Locativas)
+// ════════════════════════════════════════
+async function dashLoadInsp(anio){
+  dashSpinner('dash-insp-loading');dashHide('dash-insp-content');
+  try{
+    const ini=new Date(anio,0,1),fin=new Date(anio+1,0,1);
+    const hoy=new Date();hoy.setHours(0,0,0,0);
+    const ayer=new Date(hoy);ayer.setDate(ayer.getDate()-1);
+    const manana=new Date(hoy);manana.setDate(manana.getDate()+1);
+
+    const colsBim=['insp_bimensual_amarilla','insp_bimensual_blanca'];
+    const colsLoc=['insp_loc_instalaciones','insp_loc_redes','insp_loc_talleres_eq','insp_loc_talleres_areas','insp_loc_oficinas','insp_loc_habitaciones'];
+
+    let totalBim=0,totalLoc=0,bimHoy=0,bimAyer=0,locHoy=0,locAyer=0;
+    const byMesBim=Array(12).fill(0),byMesLoc=Array(12).fill(0);
+    const byTipoLoc={};
+
+    for(const col of colsBim){
+      const snap=await getDocs(collection(db,col));
+      snap.docs.forEach(d=>{
+        const f=d.data().fecha?.toDate?.();if(!f)return;
+        if(f>=ini&&f<fin){totalBim++;byMesBim[f.getMonth()]++;}
+        if(f>=hoy&&f<manana)bimHoy++;
+        if(f>=ayer&&f<hoy)bimAyer++;
+      });
+    }
+    for(const col of colsLoc){
+      const snap=await getDocs(collection(db,col));
+      const label=col.replace('insp_loc_','').replace(/_/g,' ');
+      snap.docs.forEach(d=>{
+        const f=d.data().fecha?.toDate?.();if(!f)return;
+        if(f>=ini&&f<fin){totalLoc++;byMesLoc[f.getMonth()]++;byTipoLoc[label]=(byTipoLoc[label]||0)+1;}
+        if(f>=hoy&&f<manana)locHoy++;
+        if(f>=ayer&&f<hoy)locAyer++;
+      });
+    }
+
+    const maxBim=Math.max(...byMesBim,1),maxLoc=Math.max(...byMesLoc,1);
+    const topLoc=Object.entries(byTipoLoc).sort((a,b)=>b[1]-a[1]).map(([k,v])=>({label:k,n:v}));
+    const bimVar=bimAyer>0?Math.round((bimHoy-bimAyer)/bimAyer*100):null;
+
+    const html=`
+    <div class="dash-section">
+      <div class="dash-section-title">🔍 Inspecciones ${anio}</div>
+      <div class="dash-kpi-grid">
+        <div class="dash-kpi green" onclick="dashOpenDrill('insp_bim')">
+          <div class="dash-kpi-label">Bimensuales</div>
+          <div class="dash-kpi-value">${dashFmt(totalBim)}</div>
+          <div class="dash-kpi-sub">Amarilla + Blanca</div>
+          <div class="dash-kpi-hint">👆 Ver por mes</div>
+        </div>
+        <div class="dash-kpi blue" onclick="dashOpenDrill('insp_loc')">
+          <div class="dash-kpi-label">Locativas</div>
+          <div class="dash-kpi-value">${dashFmt(totalLoc)}</div>
+          <div class="dash-kpi-sub">6 tipos</div>
+          <div class="dash-kpi-hint">👆 Ver por mes</div>
+        </div>
+        <div class="dash-kpi ${bimHoy>0?'green':'yellow'}">
+          <div class="dash-kpi-label">Bimensuales Hoy</div>
+          <div class="dash-kpi-value">${bimHoy}</div>
+          <div class="dash-kpi-sub">Ayer: ${bimAyer}</div>
+          <div class="dash-kpi-hint">${bimVar!==null?(bimVar>=0?'▲ +'+bimVar+'%':'▼ '+bimVar+'%'):'—'}</div>
+        </div>
+        <div class="dash-kpi blue">
+          <div class="dash-kpi-label">Total Inspecciones</div>
+          <div class="dash-kpi-value">${dashFmt(totalBim+totalLoc)}</div>
+          <div class="dash-kpi-sub">Bim + Locativas</div>
+        </div>
+      </div>
+    </div>
+    <div class="dash-two-col">
+      <div class="dash-card">
+        <div class="dash-card-title">📊 Bimensuales por mes</div>
+        ${byMesBim.map((v,i)=>`<div class="dash-bar-row">
+          <span class="dash-bar-label">${DASH_MESES[i]}</span>
+          <div class="dash-bar-track"><div class="dash-bar-fill green" style="width:${Math.round(v/maxBim*100)}%">${v>0&&Math.round(v/maxBim*100)>15?v:''}</div></div>
+          <span class="dash-bar-count">${v}</span>
+        </div>`).join('')}
+      </div>
+      <div class="dash-card">
+        <div class="dash-card-title">🏢 Locativas por tipo</div>
+        ${dashBarChart(topLoc,null,(_,i)=>DASH_COLORS[i%DASH_COLORS.length])}
+        <div class="dash-card-title" style="margin-top:16px">📅 Locativas por mes</div>
+        ${byMesLoc.map((v,i)=>`<div class="dash-bar-row">
+          <span class="dash-bar-label">${DASH_MESES[i]}</span>
+          <div class="dash-bar-track"><div class="dash-bar-fill blue" style="width:${Math.round(v/maxLoc*100)}%">${v>0&&Math.round(v/maxLoc*100)>15?v:''}</div></div>
+          <span class="dash-bar-count">${v}</span>
+        </div>`).join('')}
+      </div>
+    </div>`;
+
+    dashStoreDrill('insp_bim',`Bimensuales por mes ${anio}`,byMesBim,'green','Bimensuales');
+    dashStoreDrill('insp_loc',`Locativas por mes ${anio}`,byMesLoc,'blue','Locativas');
+    dashHide('dash-insp-loading');
+    dashShow('dash-insp-content',html);
+  }catch(e){
+    dashHide('dash-insp-loading');
+    dashShow('dash-insp-content',`<div class="eq-empty" style="text-align:center;padding:40px"><i class="bi bi-exclamation-triangle"></i><p>Error: ${e.message}</p></div>`);
+  }
+}
+
+// ════════════════════════════════════════
+// TAB 4: FALLAS (Firestore)
+// ════════════════════════════════════════
+async function dashLoadFallas(anio){
+  dashSpinner('dash-fallas-loading');dashHide('dash-fallas-content');
+  try{
+    const ini=new Date(anio,0,1),fin=new Date(anio+1,0,1);
+    const snap=await getDocs(collection(db,'reportes_fallas'));
+    let total=0,abiertas=0,cerradas=0;
+    const byTipo={},byPrio={},byMes=Array(12).fill(0),byCategoria={};
+    let ultimaFalla=null,diasSinFalla=0;
+
+    snap.docs.forEach(d=>{
+      const data=d.data();
+      const f=data.fecha?.toDate?.();
+      if(f&&f>=ini&&f<fin){
+        total++;
+        if(data.estado==='abierta')abiertas++;else cerradas++;
+        const mes=f.getMonth();byMes[mes]++;
+        const tipo=data.tipoFalla||'Sin tipo';byTipo[tipo]=(byTipo[tipo]||0)+1;
+        const prio=data.prioridad||'Sin prioridad';byPrio[prio]=(byPrio[prio]||0)+1;
+        const cat=dashCategoria(data.cema||'');if(cat!=='???')byCategoria[cat]=(byCategoria[cat]||0)+1;
+        if(!ultimaFalla||f>ultimaFalla)ultimaFalla=f;
+      }
+    });
+
+    if(ultimaFalla){
+      const diffMs=new Date()-ultimaFalla;
+      diasSinFalla=Math.floor(diffMs/(1000*60*60*24));
+    }
+
+    const topTipos=Object.entries(byTipo).sort((a,b)=>b[1]-a[1]).map(([k,v])=>({label:k,n:v}));
+    const topCats=Object.entries(byCategoria).sort((a,b)=>b[1]-a[1]).slice(0,6).map(([k,v])=>({label:k,n:v}));
+    const maxMes=Math.max(...byMes,1);
+    const prioColors={'Alta':'red','Media':'yellow','Baja':'green'};
+
+    const html=`
+    <div class="dash-section">
+      <div class="dash-section-title">⚠️ Fallas ${anio}</div>
+      <div class="dash-kpi-grid">
+        <div class="dash-kpi ${abiertas>0?'red':'green'}" onclick="dashOpenDrill('fallas_mes')">
+          <div class="dash-kpi-label">Total Fallas</div>
+          <div class="dash-kpi-value">${total}</div>
+          <div class="dash-kpi-sub">Abiertas: ${abiertas} · Cerradas: ${cerradas}</div>
+          <div class="dash-kpi-hint">👆 Ver por mes</div>
+        </div>
+        <div class="dash-kpi red">
+          <div class="dash-kpi-label">Abiertas</div>
+          <div class="dash-kpi-value">${abiertas}</div>
+          <div class="dash-kpi-sub">${total?Math.round(abiertas/total*100):0}% pendientes</div>
+        </div>
+        <div class="dash-kpi ${diasSinFalla>7?'green':diasSinFalla>3?'yellow':'red'}">
+          <div class="dash-kpi-label">Días sin Falla</div>
+          <div class="dash-kpi-value">${diasSinFalla}</div>
+          <div class="dash-kpi-sub">${ultimaFalla?'Última: '+ultimaFalla.toLocaleDateString('es-CO'):'Sin registro'}</div>
+        </div>
+        <div class="dash-kpi ${byPrio['Alta']>0?'yellow':'green'}">
+          <div class="dash-kpi-label">Alta Prioridad</div>
+          <div class="dash-kpi-value">${byPrio['Alta']||0}</div>
+          <div class="dash-kpi-sub">Media: ${byPrio['Media']||0} · Baja: ${byPrio['Baja']||0}</div>
+        </div>
+      </div>
+    </div>
+    <div class="dash-two-col">
+      <div class="dash-card">
+        <div class="dash-card-title">📊 Fallas por mes</div>
+        ${byMes.map((v,i)=>`<div class="dash-bar-row">
+          <span class="dash-bar-label">${DASH_MESES[i]}</span>
+          <div class="dash-bar-track"><div class="dash-bar-fill red" style="width:${Math.round(v/maxMes*100)}%">${v>0&&Math.round(v/maxMes*100)>15?v:''}</div></div>
+          <span class="dash-bar-count">${v}</span>
+        </div>`).join('')}
+      </div>
+      <div class="dash-card">
+        <div class="dash-card-title">⚙️ Por Tipo de Falla</div>
+        ${dashBarChart(topTipos,null,()=>'red')}
+        <div class="dash-card-title" style="margin-top:16px">🏷️ Por Categoría de Equipo</div>
+        ${dashBarChart(topCats,null,(_,i)=>DASH_COLORS[i%DASH_COLORS.length])}
+        <div class="dash-card-title" style="margin-top:16px">🚨 Por Prioridad</div>
+        ${Object.entries(byPrio).map(([k,v])=>`<div class="dash-bar-row">
+          <span class="dash-bar-label">${k}</span>
+          <div class="dash-bar-track"><div class="dash-bar-fill ${prioColors[k]||'blue'}" style="width:${total?Math.round(v/total*100):0}%">${v>0&&total&&Math.round(v/total*100)>15?v:''}</div></div>
+          <span class="dash-bar-count">${v}</span>
+        </div>`).join('')}
+      </div>
+    </div>`;
+
+    dashStoreDrill('fallas_mes',`Fallas por mes ${anio}`,byMes,'red','Fallas');
+    dashHide('dash-fallas-loading');
+    dashShow('dash-fallas-content',html);
+  }catch(e){
+    dashHide('dash-fallas-loading');
+    dashShow('dash-fallas-content',`<div class="eq-empty" style="text-align:center;padding:40px"><i class="bi bi-exclamation-triangle"></i><p>Error: ${e.message}</p></div>`);
+  }
+}
+
+// ── Init principal ──
+window.initDashboardPage=async function(){
+  window.scrollTo({top:0,behavior:'instant'});
+  _dashAnio=dashGetAnio();
+  const icon=document.getElementById('dash-refresh-icon');
+  if(icon){icon.style.animation='spin .6s linear infinite';icon.style.display='inline-block';}
+  document.getElementById('dash-subtitle').textContent=`Año ${_dashAnio} · Actualizando...`;
+  // Reset all tabs content
+  ['mtto','preop','insp','fallas'].forEach(t=>{
+    const c=document.getElementById('dash-tab-'+t+'-content');if(c)c.style.display='none';
+    dashSpinner('dash-'+t+'-loading');
+  });
+  // Load all tabs in parallel
+  await Promise.allSettled([
+    dashLoadMtto(_dashAnio),
+    dashLoadPreop(_dashAnio),
+    dashLoadInsp(_dashAnio),
+    dashLoadFallas(_dashAnio)
+  ]);
+  const ahora=new Date().toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit'});
+  document.getElementById('dash-subtitle').textContent=`Año ${_dashAnio} · Actualizado a las ${ahora}`;
+  if(icon)icon.style.animation='';
+};
+
 window.initHojaVidaPage=function(){
   hvSubscribir();hvSetupSearch();hvSetupImport();
   document.getElementById('hv-btn-edit')?.addEventListener('click',hvToggleEdit);
   document.getElementById('hv-btn-save')?.addEventListener('click',hvGuardarEdicion);
   document.getElementById('hv-btn-cancel')?.addEventListener('click',hvCancelarEdicion);
   document.getElementById('hv-btn-pdf')?.addEventListener('click',hvExportarPDF);
+  // Carga manual de foto
+  const fotoInput=document.getElementById('hv-foto-input');
+  if(fotoInput&&!fotoInput.dataset.bound){
+    fotoInput.dataset.bound='1';
+    fotoInput.addEventListener('change',async(e)=>{
+      const file=e.target.files[0];if(!file||!hvEquipoActual)return;
+      if(!file.type.startsWith('image/')){showToast('error','Solo se admiten imágenes');return;}
+      showToast('info','Subiendo foto...');
+      const reader=new FileReader();
+      reader.onload=async(ev)=>{
+        // Guardar como base64 en Firestore (para fotos pequeñas <500KB)
+        if(file.size>600000){showToast('error','Foto muy grande (máx 600KB). Usa una URL externa.');return;}
+        const b64=ev.target.result;
+        const id=String(hvEquipoActual.placa).replace(/[^\w]/g,'_');
+        try{
+          const{setDoc,doc,serverTimestamp}=window._firestoreOps||{};
+          if(setDoc&&doc){await setDoc(doc(window._db,'hojas_vida',id),{foto:b64,actualizado:serverTimestamp()},{merge:true});}
+          hvEquipoActual.foto=b64;
+          document.getElementById('hv-photo').innerHTML=`<img src="${b64}" alt="Foto" style="width:100%;height:100%;object-fit:cover;border-radius:8px">`;
+          showToast('success','Foto actualizada');
+        }catch(err){showToast('error','Error: '+err.message);}
+      };
+      reader.readAsDataURL(file);
+      e.target.value='';
+    });
+  }
 };
 </script>
 
@@ -2852,8 +4122,9 @@ window.navTo=function(page){
     showToast('error','No tienes permiso para acceder a este módulo');return;
   }document.querySelectorAll('.page-section').forEach(s=>s.classList.remove('active'));const t=document.getElementById('page-'+page);if(t){t.classList.add('active');t.querySelectorAll('.fade-in').forEach(el=>{el.style.animation='none';el.offsetHeight;el.style.animation=''});
   // Agregar botón "Volver al inicio" en todas las páginas excepto inicio
-  if(page!=='inicio'){let bb=t.querySelector('.auto-back-btn');if(!bb){bb=document.createElement('a');bb.className='auto-back-btn';bb.innerHTML='<i class="bi bi-arrow-left"></i> Volver al Inicio';bb.style.cssText='display:inline-flex;align-items:center;gap:6px;padding:8px 16px;margin:16px 0 0 48px;border-radius:8px;border:1px solid var(--gray-200);background:var(--white);color:var(--gray-600);font-size:12px;font-weight:500;cursor:pointer;transition:all .2s;font-family:DM Sans,sans-serif;text-decoration:none';bb.onmouseover=function(){this.style.background='var(--gray-50)'};bb.onmouseout=function(){this.style.background='var(--white)'};bb.onclick=function(){window.navTo("inicio")};const ph=t.querySelector('.page-header,.preop-container,.falla-container,.hv-container');if(ph)t.insertBefore(bb,ph);else t.prepend(bb)}}
-}document.querySelectorAll('#topNav a').forEach(a=>a.classList.remove('active'));const tl=document.querySelector(`#topNav a[data-page="${page}"]`);if(tl)tl.classList.add('active');document.querySelectorAll('.sidebar-item').forEach(s=>s.classList.remove('active'));const sl=document.querySelector(`.sidebar-item[data-page="${page}"]`);if(sl)sl.classList.add('active');if(page==='fallas'&&window.initFallaPage)window.initFallaPage();if(page==='preoperacionales'&&window.initPreopPage)window.initPreopPage();if(page==='bimensuales'&&window.initBimensualPage)window.initBimensualPage();if(page==='locativas'&&window.initLocativaPage)window.initLocativaPage();if(page==='historial'&&window.initHistorialPage)window.initHistorialPage();if(page==='hojavida'&&window.initHojaVidaPage)window.initHojaVidaPage();
+  if(page!=='inicio'&&page!=='preoperacionales'&&page!=='bimensuales'&&page!=='locativas'){let bb=t.querySelector('.auto-back-btn');if(!bb){bb=document.createElement('a');bb.className='auto-back-btn';bb.innerHTML='<i class="bi bi-arrow-left"></i> Volver al Inicio';bb.style.cssText='display:inline-flex;align-items:center;gap:6px;padding:8px 16px;margin:16px 0 0 48px;border-radius:8px;border:1px solid var(--gray-200);background:var(--white);color:var(--gray-600);font-size:12px;font-weight:500;cursor:pointer;transition:all .2s;font-family:DM Sans,sans-serif;text-decoration:none';bb.onmouseover=function(){this.style.background='var(--gray-50)'};bb.onmouseout=function(){this.style.background='var(--white)'};bb.onclick=function(){window.navTo("inicio")};const ph=t.querySelector('.page-header,.preop-container,.falla-container,.hv-container');if(ph)t.insertBefore(bb,ph);else t.prepend(bb)}}
+}document.querySelectorAll('#topNav a').forEach(a=>a.classList.remove('active'));const tl=document.querySelector(`#topNav a[data-page="${page}"]`);if(tl)tl.classList.add('active');document.querySelectorAll('.sidebar-item').forEach(s=>s.classList.remove('active'));const sl=document.querySelector(`.sidebar-item[data-page="${page}"]`);if(sl)sl.classList.add('active');if(page==='fallas'&&window.initFallaPage)window.initFallaPage();if(page==='preoperacionales'&&window.initPreopPage)window.initPreopPage();if(page==='bimensuales'&&window.initBimensualPage)window.initBimensualPage();if(page==='locativas'&&window.initLocativaPage)window.initLocativaPage();if(page==='historial'&&window.initHistorialPage)window.initHistorialPage();if(page==='dashboard'&&window.initDashboardPage)window.initDashboardPage();if(page==='hojavida'&&window.initHojaVidaPage)window.initHojaVidaPage();
+if(page==='ordenes'&&window.initOrdenesPage)window.initOrdenesPage();
 if(page==='hist-mtto'&&window.initHistMttoPage)window.initHistMttoPage();
 if(page==='ctrl-seg'&&window.initCtrlSegPage)window.initCtrlSegPage();if(page==='equipos'&&window.cargarEquipos)window.cargarEquipos(document.querySelector('.project-btn.active')?.dataset.project||'todos');if(page==='inicio'){if(window._initHeroCarousel)window._initHeroCarousel();setTimeout(()=>{document.querySelectorAll('.progress-fill').forEach(b=>{b.style.width='0';setTimeout(()=>{b.style.width=b.dataset.target+'%'},100)})},300)}window.scrollTo({top:0,behavior:'smooth'});document.getElementById('sidebar')?.classList.remove('mobile-open');document.getElementById('sidebarOverlay')?.classList.remove('show')};
 
