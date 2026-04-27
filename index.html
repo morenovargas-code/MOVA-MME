@@ -6088,19 +6088,7 @@ async function plCargar(){
 
 window.initPlannerPage=async function(){
   // Render proj bar
-  if(window._proyectos&&window._proyectos.length){
-    var c=document.getElementById('planner-proj-btns');
-    if(c){
-      var html='<button class="proj-btn'+(!window._proyectoActivo?' active todos':'')+'" data-proj-id="todos" onclick="window.seleccionarProyecto(this.dataset.projId)"><div class="proj-btn-icon">⊞</div><div class="proj-btn-info"><span class="proj-btn-label">Proyecto</span><span class="proj-btn-name">Todos</span></div></button>';
-      window._proyectos.forEach(function(p){
-        var isActive=window._proyectoActivo&&window._proyectoActivo.id===p.id;
-        var colorCls=typeof proyColorClass==='function'?proyColorClass(p.nombre):'default';
-        var emoji=typeof proyEmoji==='function'?proyEmoji(p.nombre):'📁';
-        html+='<button class="proj-btn'+(isActive?' active '+colorCls:'')+'" data-proj-id="'+p.id+'" onclick="window.seleccionarProyecto(this.dataset.projId)"><div class="proj-btn-icon">'+emoji+'</div><div class="proj-btn-info"><span class="proj-btn-label">Proyecto</span><span class="proj-btn-name">'+p.nombre+'</span></div></button>';
-      });
-      c.innerHTML=html;
-    }
-  }
+  if(typeof renderProjBtns==='function')renderProjBtns('planner-proj-btns');
   await plCargar();
   plRender();
 };
@@ -6558,19 +6546,7 @@ async function tribCargarInformes(){
 // Init page
 window.initTribologiaPage=async function(){
   // Render proj bar
-  if(window._proyectos&&window._proyectos.length){
-    var c=document.getElementById('trib-proj-btns');
-    if(c){
-      var html='<button class="proj-btn'+(!window._proyectoActivo?' active todos':'')+'" data-proj-id="todos" onclick="window.seleccionarProyecto(this.dataset.projId)"><div class="proj-btn-icon">⊞</div><div class="proj-btn-info"><span class="proj-btn-label">Proyecto</span><span class="proj-btn-name">Todos</span></div></button>';
-      window._proyectos.forEach(function(p){
-        var isActive=window._proyectoActivo&&window._proyectoActivo.id===p.id;
-        var colorCls=typeof proyColorClass==='function'?proyColorClass(p.nombre):'default';
-        var emoji=typeof proyEmoji==='function'?proyEmoji(p.nombre):'📁';
-        html+='<button class="proj-btn'+(isActive?' active '+colorCls:'')+'" data-proj-id="'+p.id+'" onclick="window.seleccionarProyecto(this.dataset.projId)"><div class="proj-btn-icon">'+emoji+'</div><div class="proj-btn-info"><span class="proj-btn-label">Proyecto</span><span class="proj-btn-name">'+p.nombre+'</span></div></button>';
-      });
-      c.innerHTML=html;
-    }
-  }
+  if(typeof renderProjBtns==='function')renderProjBtns('trib-proj-btns');
   await Promise.all([tribCargarParametros(),tribCargarAPIConfig(),tribCargarInformes()]);
   tribRenderLista();
 };
@@ -7081,19 +7057,7 @@ async function cpCargarRegistros(){
 
 window.initCuentasPage=async function(){
   // Render proj bar
-  if(window._proyectos&&window._proyectos.length){
-    var c=document.getElementById('cuentas-proj-btns');
-    if(c){
-      var html='<button class="proj-btn'+(!window._proyectoActivo?' active todos':'')+'" data-proj-id="todos" onclick="window.seleccionarProyecto(this.dataset.projId)"><div class="proj-btn-icon">⊞</div><div class="proj-btn-info"><span class="proj-btn-label">Proyecto</span><span class="proj-btn-name">Todos</span></div></button>';
-      window._proyectos.forEach(function(p){
-        var isActive=window._proyectoActivo&&window._proyectoActivo.id===p.id;
-        var colorCls=typeof proyColorClass==='function'?proyColorClass(p.nombre):'default';
-        var emoji=typeof proyEmoji==='function'?proyEmoji(p.nombre):'📁';
-        html+='<button class="proj-btn'+(isActive?' active '+colorCls:'')+'" data-proj-id="'+p.id+'" onclick="window.seleccionarProyecto(this.dataset.projId)"><div class="proj-btn-icon">'+emoji+'</div><div class="proj-btn-info"><span class="proj-btn-label">Proyecto</span><span class="proj-btn-name">'+p.nombre+'</span></div></button>';
-      });
-      c.innerHTML=html;
-    }
-  }
+  if(typeof renderProjBtns==='function')renderProjBtns('cuentas-proj-btns');
   await cpCargarTarifas();
   await cpCargarRegistros();
   cpRenderTodo();
@@ -8172,27 +8136,56 @@ function renderProjBtns(containerId){
 }
 
 window.seleccionarProyecto=async function(proyId){
-  var proy=window._proyectos.find(function(p){return p.id===proyId;});
-  if(!proy)return;
-  window._proyectoActivo=proy;
-  ['dash-proj-btns','hmtto-proj-btns','cseg-proj-btns'].forEach(function(bid){
-    var c=document.getElementById(bid);if(!c)return;
-    c.querySelectorAll('.proj-btn').forEach(function(b){b.classList.remove('active');});
-    var active=c.querySelector('[data-proj-id="'+proyId+'"]');
-    if(active)active.classList.add('active');
-  });
-  hmttoCache={};hmttoCacheTs={};clearFsCache(); // clear sheet cache for new project
-  showToast('info','Proyecto: '+proy.nombre);
-  // Reload dashboard indicators if on dashboard
-  if(typeof _dashAnio!=='undefined'){
-    dashStoreStaticDrill();
-    dashLoadDispCumpl(_dashAnio);
+  // Handle "todos" — clear active project
+  if(proyId==='todos'){
+    window._proyectoActivo=null;
+  }else{
+    var proy=window._proyectos.find(function(p){return p.id===proyId;});
+    if(!proy)return;
+    window._proyectoActivo=proy;
   }
+  // Sync ALL project button bars in the app
+  var allBars=['dash-proj-btns','hmtto-proj-btns','cseg-proj-btns','cuentas-proj-btns','trib-proj-btns','planner-proj-btns'];
+  allBars.forEach(function(bid){
+    var c=document.getElementById(bid);if(!c)return;
+    c.querySelectorAll('.proj-btn').forEach(function(b){
+      var pid=b.dataset.projId;
+      var isActive=(proyId==='todos'?pid==='todos':pid===proyId);
+      // Remove all active classes
+      b.classList.remove('active','todos','rubiales','scatec','guajira','default');
+      if(isActive){
+        b.classList.add('active');
+        if(pid==='todos'){b.classList.add('todos');}
+        else if(window._proyectoActivo){
+          var colorCls=typeof proyColorClass==='function'?proyColorClass(window._proyectoActivo.nombre):'default';
+          b.classList.add(colorCls);
+        }
+      }
+    });
+  });
+  hmttoCache={};hmttoCacheTs={};
+  if(typeof clearFsCache==='function')clearFsCache();
+  var label=window._proyectoActivo?window._proyectoActivo.nombre:'Todos los proyectos';
+  showToast('info','Proyecto: '+label);
+  // Reload current page
   var page=document.querySelector('.page-section.active');
   var pageId=page?page.id.replace('page-',''):'';
-  if(pageId==='dashboard'&&window.initDashboardPage)window.initDashboardPage();
+  // Always update inicio KPIs and carousels
+  if(window.loadInicioKPIs)window.loadInicioKPIs();
+  if(window.inicioCarouselInit)setTimeout(window.inicioCarouselInit,300);
+  // Page-specific reload
+  if(pageId==='dashboard'&&window.initDashboardPage){
+    if(typeof _dashAnio!=='undefined'){dashStoreStaticDrill&&dashStoreStaticDrill();dashLoadDispCumpl&&dashLoadDispCumpl(_dashAnio);}
+    window.initDashboardPage();
+  }
   else if(pageId==='hist-mtto'&&window.initHistMttoPage)window.initHistMttoPage();
   else if(pageId==='ctrl-seg'&&window.initCtrlSegPage)window.initCtrlSegPage();
+  else if(pageId==='cuentas'&&window.initCuentasPage)window.initCuentasPage();
+  else if(pageId==='tribologia'&&window.initTribologiaPage)window.initTribologiaPage();
+  else if(pageId==='planner'&&window.initPlannerPage)window.initPlannerPage();
+  else if(pageId==='galeria'&&window.initGaleriaPage)window.initGaleriaPage();
+  else if(pageId==='qrgen'&&window.initQrGenPage)window.initQrGenPage();
+  else if(pageId==='equipos'&&window.cargarEquipos)window.cargarEquipos('todos');
 };
 
 function getProyectoUrl(){
@@ -8206,7 +8199,7 @@ window.getProyectoUrl=getProyectoUrl;
 
 async function initProjBars(){
   if(!window._proyectos.length)await cargarProyectos();
-  ['dash-proj-btns','hmtto-proj-btns','cseg-proj-btns'].forEach(renderProjBtns);
+  ['dash-proj-btns','hmtto-proj-btns','cseg-proj-btns','cuentas-proj-btns','trib-proj-btns','planner-proj-btns'].forEach(renderProjBtns);
 }
 window.initProjBars=initProjBars;
 
