@@ -9,6 +9,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
@@ -632,27 +633,6 @@
   /* Historial Mantenimiento — dentro de .main, hereda layout normalmente */
   #page-hist-mtto .page-header{padding:28px 48px 0}
   /* QR EQUIPO MENU */
-  .qr-menu-overlay{position:fixed;inset:0;z-index:9700;background:linear-gradient(135deg,rgba(15,33,55,.95),rgba(46,117,182,.85));backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:20px}
-  .qr-menu-card{background:var(--white);border-radius:20px;width:100%;max-width:480px;max-height:92vh;overflow-y:auto;box-shadow:0 30px 80px rgba(0,0,0,.3);overflow:hidden}
-  .qr-menu-header{background:linear-gradient(135deg,var(--navy),var(--blue));color:#fff;padding:24px 24px 20px;text-align:center;position:relative}
-  .qr-menu-icon{font-size:36px;margin-bottom:8px}
-  .qr-menu-cema{font-family:'Space Grotesk',sans-serif;font-size:24px;font-weight:800;letter-spacing:.5px}
-  .qr-menu-sub{font-size:11px;opacity:.85;margin-top:4px;text-transform:uppercase;letter-spacing:.5px}
-  .qr-menu-close{position:absolute;top:12px;right:12px;background:rgba(255,255,255,.15);border:none;color:#fff;width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:16px}
-  .qr-menu-body{padding:20px}
-  .qr-menu-actions{display:grid;gap:10px}
-  .qr-menu-btn{display:flex;align-items:center;gap:14px;padding:16px 18px;border-radius:12px;border:1.5px solid var(--gray-200);background:var(--white);cursor:pointer;transition:all .2s;text-align:left;font-family:'DM Sans',sans-serif}
-  .qr-menu-btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.08)}
-  .qr-menu-btn-icon{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;color:#fff}
-  .qr-menu-btn-icon.preop{background:linear-gradient(135deg,#22c55e,#16a34a)}
-  .qr-menu-btn-icon.falla{background:linear-gradient(135deg,#ef4444,#dc2626)}
-  .qr-menu-btn-icon.mtto{background:linear-gradient(135deg,#f59e0b,#d97706)}
-  .qr-menu-btn-icon.hv{background:linear-gradient(135deg,#3b82f6,#2563eb)}
-  .qr-menu-btn-info{flex:1}
-  .qr-menu-btn-title{font-weight:700;color:var(--navy);font-size:14px;margin-bottom:1px}
-  .qr-menu-btn-desc{font-size:11px;color:var(--gray-400)}
-  .qr-menu-btn-arrow{color:var(--gray-300);font-size:16px}
-  .qr-menu-btn:hover{border-color:var(--blue)}
   .qr-menu-btn:hover .qr-menu-btn-arrow{color:var(--blue);transform:translateX(3px)}
   /* QR PRINT MODAL */
   .qr-print-modal{position:fixed;inset:0;z-index:9600;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;padding:20px}
@@ -1020,13 +1000,13 @@
     <a class="sidebar-item admin-only" data-page="documentos" onclick="window.navTo('documentos')"><span class="sidebar-icon">📂</span>Listado Maestro</a></div>
   <div class="sidebar-section"><div class="sidebar-label">Operaciones</div>
     <a class="sidebar-item" data-page="fallas" onclick="window.navTo('fallas')"><span class="sidebar-icon">⚠️</span>Reportar Falla</a>
+    <a class="sidebar-item" data-page="ordenes" onclick="window.navTo('ordenes')"><span class="sidebar-icon">📝</span>Solicitar Mantenimiento</a>
     <a class="sidebar-item admin-only" data-page="danos" onclick="window.navTo('danos')"><span class="sidebar-icon">🛠️</span>Reporte de Daño</a>
     <a class="sidebar-item admin-only" data-page="cuentas" onclick="window.navTo('cuentas')"><span class="sidebar-icon">💰</span>Cuentas por Pagar</a>
     <a class="sidebar-item admin-only" data-page="tribologia" onclick="window.navTo('tribologia')"><span class="sidebar-icon">🧪</span>Tribología</a>
     <a class="sidebar-item admin-only" data-page="planner" onclick="window.navTo('planner')"><span class="sidebar-icon">📋</span>Planner</a>
     <a class="sidebar-item admin-only" data-page="equipos" onclick="window.navTo('equipos')"><span class="sidebar-icon">🚜</span>Equipos</a>
     <a class="sidebar-item" data-page="preoperacionales" onclick="window.navTo('preoperacionales')"><span class="sidebar-icon">✅</span>Preoperacionales</a>
-    <a class="sidebar-item" data-page="ordenes" onclick="window.navTo('ordenes')"><span class="sidebar-icon">🔧</span>Solicitar Mantenimiento</a>
     <a class="sidebar-item admin-only" data-page="bimensuales" onclick="window.navTo('bimensuales')"><span class="sidebar-icon">🔍</span>Insp. Bimensuales</a>
     <a class="sidebar-item admin-only" data-page="locativas" onclick="window.navTo('locativas')"><span class="sidebar-icon">🏢</span>Insp. Locativas</a>
     <a class="sidebar-item admin-only" data-page="historial" onclick="window.navTo('historial')"><span class="sidebar-icon">📚</span>Historial</a>
@@ -1151,9 +1131,9 @@
             </div>
           </div>
         </div>
-        <div class="card fade-in delay-3"><div class="card-header"><div class="card-title"><span class="card-title-icon" style="background:rgba(46,117,182,.1);color:var(--blue)">📅</span>Próximos Mantenimientos</div></div><div class="card-body"><div class="cal-item"><div class="cal-date"><span class="cal-date-day">10</span><span class="cal-date-month">Abr</span></div><div class="cal-info"><div class="cal-info-title">Mtto. Preventivo — PC350</div><div class="cal-info-sub">Cambio aceite hidráulico · 4h</div><span class="cal-info-tag cal-tag-prev">Preventivo</span></div></div><div class="cal-item"><div class="cal-date" style="background:linear-gradient(135deg,var(--red),#EF5350)"><span class="cal-date-day">11</span><span class="cal-date-month">Abr</span></div><div class="cal-info"><div class="cal-info-title">Reparación — 120K</div><div class="cal-info-sub">Transmisión · Prioridad alta</div><span class="cal-info-tag cal-tag-corr">Correctivo</span></div></div></div></div>
+        <div class="card fade-in delay-3"><div class="card-header"><div class="card-title"><span class="card-title-icon" style="background:rgba(46,117,182,.1);color:var(--blue)">📅</span>Próximos Mantenimientos</div><a class="card-action admin-only" onclick="window.navTo('ctrl-seg')">Ver cronograma →</a></div><div class="card-body" id="inicio-prox-mtto"><div class="eq-loading" style="font-size:12px;padding:14px"><i class="bi bi-arrow-repeat" style="animation:spin 1s linear infinite;display:inline-block"></i> Cargando...</div></div></div>
         <div class="card fade-in delay-4"><div class="card-header"><div class="card-title"><span class="card-title-icon" style="background:rgba(244,180,0,.1);color:var(--yellow)">📈</span>Avance del Programa</div></div><div class="card-body" id="progressBars"></div></div>
-        <div class="card fade-in delay-5"><div class="card-header"><div class="card-title"><span class="card-title-icon" style="background:rgba(46,117,182,.1);color:var(--blue)">💬</span>Actividad Reciente</div></div><div class="card-body"><div class="activity-item"><div class="activity-avatar" style="background:linear-gradient(135deg,#2E75B6,#3B8DD4)">CM</div><div><div class="activity-text"><strong>Carlos M.</strong> actualizó <strong>A4-PR-001</strong></div><div class="activity-time">Hace 2h</div></div></div><div class="activity-item"><div class="activity-avatar" style="background:linear-gradient(135deg,#4CAF50,#66BB6A)">LP</div><div><div class="activity-text"><strong>Laura P.</strong> completó inspección <strong>EQ-003</strong></div><div class="activity-time">Hace 4h</div></div></div></div></div>
+        <div class="card fade-in delay-5"><div class="card-header"><div class="card-title"><span class="card-title-icon" style="background:rgba(46,117,182,.1);color:var(--blue)">💬</span>Actividad Reciente</div></div><div class="card-body" id="inicio-actividad"><div class="eq-loading" style="font-size:12px;padding:14px"><i class="bi bi-arrow-repeat" style="animation:spin 1s linear infinite;display:inline-block"></i> Cargando...</div></div></div>
       </div>
     </div>
   </div>
@@ -1375,19 +1355,30 @@
         <tbody></tbody>
       </table>
 
-      <!-- Tendencia mensual -->
-      <h3 style="font-family:'Space Grotesk',sans-serif;color:var(--navy);font-size:14px;margin-bottom:10px">Tendencia Mensual</h3>
-      <table class="cp-table" id="cp-tabla-mes" style="margin-bottom:24px">
-        <thead><tr><th>Mes</th><th>L. Blanca</th><th>L. Amarilla</th><th>Equipo Menor</th><th>Total</th><th>Unidades</th></tr></thead>
-        <tbody></tbody>
-      </table>
+      <!-- Tendencia mensual con gráfico combinado -->
+      <h3 style="font-family:'Space Grotesk',sans-serif;color:var(--navy);font-size:14px;margin-bottom:10px">📈 Tendencia Mensual</h3>
+      <div style="background:var(--white);border:1px solid var(--gray-200);border-radius:12px;padding:18px;margin-bottom:24px">
+        <canvas id="cp-chart-tendencia" style="max-height:300px"></canvas>
+      </div>
 
-      <!-- Detalle por categoría -->
-      <h3 style="font-family:'Space Grotesk',sans-serif;color:var(--navy);font-size:14px;margin-bottom:10px">Análisis por Tipo de Equipo</h3>
-      <table class="cp-table" id="cp-tabla-cat">
-        <thead><tr><th>Categoría</th><th>Tipo de Equipo</th><th>Línea</th><th>Unidades</th><th>Costo Total</th><th>%</th></tr></thead>
-        <tbody></tbody>
-      </table>
+      <!-- Detalle por categoría con barras -->
+      <h3 style="font-family:'Space Grotesk',sans-serif;color:var(--navy);font-size:14px;margin-bottom:10px">📊 Análisis por Tipo de Equipo</h3>
+      <div style="background:var(--white);border:1px solid var(--gray-200);border-radius:12px;padding:18px;margin-bottom:24px">
+        <canvas id="cp-chart-categoria" style="max-height:400px"></canvas>
+      </div>
+
+      <!-- Tablas en estilo accordion (opcional, cerradas por defecto) -->
+      <details style="margin-bottom:24px">
+        <summary style="cursor:pointer;font-size:12px;color:var(--gray-500);padding:8px 0">Ver datos en tabla</summary>
+        <table class="cp-table" id="cp-tabla-mes" style="margin-top:10px;margin-bottom:14px">
+          <thead><tr><th>Mes</th><th>L. Blanca</th><th>L. Amarilla</th><th>Equipo Menor</th><th>Total</th><th>Unidades</th></tr></thead>
+          <tbody></tbody>
+        </table>
+        <table class="cp-table" id="cp-tabla-cat">
+          <thead><tr><th>Categoría</th><th>Tipo de Equipo</th><th>Línea</th><th>Unidades</th><th>Costo Total</th><th>%</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </details>
 
       <!-- Lista de períodos registrados -->
       <h3 style="font-family:'Space Grotesk',sans-serif;color:var(--navy);font-size:14px;margin:24px 0 10px">Períodos Registrados</h3>
@@ -2160,6 +2151,9 @@
     <div class="page-header">
       <div><h1>📱 Códigos QR de Equipos</h1><div class="page-header-subtitle">Imprime una etiqueta por equipo (10×10 cm)</div></div>
       <div style="display:flex;gap:8px">
+        <button class="hv-btn" onclick="window.qrgenDescargarTodos()" style="background:var(--white);border:1px solid var(--gray-200);color:var(--navy)">
+          <i class="bi bi-download"></i> Descargar ZIP
+        </button>
         <button class="hv-btn" onclick="window.qrgenImprimir()" style="background:var(--navy);color:#fff;border-color:var(--navy)">
           <i class="bi bi-printer"></i> Imprimir Todos
         </button>
@@ -2238,6 +2232,14 @@
         <input type="file" id="nov-foto-input" accept="image/*" style="display:none" onchange="window.novCargarFoto(this)">
         <img id="nov-foto-preview" src="" style="width:100%;max-height:160px;object-fit:cover;border-radius:8px;display:none;margin-top:10px">
       </div>
+      <div style="margin-bottom:14px">
+        <label class="form-label">PDF Adjunto <span style="color:var(--gray-400);font-size:11px">(opcional, máx 4MB)</span></label>
+        <div onclick="document.getElementById('nov-pdf-input').click()" style="border:2px dashed var(--gray-300);border-radius:10px;padding:14px;text-align:center;cursor:pointer;background:var(--gray-50)">
+          <i class="bi bi-file-pdf" style="font-size:22px;color:var(--red)"></i>
+          <div style="font-size:11px;color:var(--gray-500);margin-top:4px" id="nov-pdf-label">Click para subir PDF</div>
+        </div>
+        <input type="file" id="nov-pdf-input" accept="application/pdf" style="display:none" onchange="window.novCargarPDF(this)">
+      </div>
       <div style="display:flex;gap:10px;justify-content:flex-end">
         <button onclick="document.getElementById('nov-modal-overlay').style.display='none'" style="padding:10px 20px;border-radius:8px;border:1px solid var(--gray-200);background:var(--white);font-size:13px;cursor:pointer">Cancelar</button>
         <button onclick="window.novGuardar()" style="padding:10px 24px;border-radius:8px;border:none;background:var(--navy);color:#fff;font-size:13px;font-weight:600;cursor:pointer"><i class="bi bi-save"></i> Publicar</button>
@@ -2254,7 +2256,8 @@
         <span id="nov-lightbox-tag" class="nov-slide-tag" style="font-size:10px;padding:3px 10px;border-radius:10px;font-weight:700;text-transform:uppercase"></span>
         <h2 id="nov-lightbox-title" style="font-family:'Space Grotesk',sans-serif;color:var(--navy);font-size:20px;margin:10px 0"></h2>
         <p id="nov-lightbox-desc" style="font-size:14px;color:var(--gray-600);line-height:1.6;white-space:pre-wrap"></p>
-        <div id="nov-lightbox-meta" style="font-size:12px;color:var(--gray-400);margin-top:14px;padding-top:14px;border-top:1px solid var(--gray-100)"></div>
+        <div id="nov-lightbox-pdf" style="margin-top:14px;display:none"><a id="nov-lightbox-pdf-link" href="" target="_blank" style="display:inline-flex;align-items:center;gap:8px;padding:8px 16px;background:var(--red);color:#fff;border-radius:8px;text-decoration:none;font-size:13px;font-weight:600"><i class="bi bi-file-pdf"></i> Ver PDF adjunto</a></div>
+      <div id="nov-lightbox-meta" style="font-size:12px;color:var(--gray-400);margin-top:14px;padding-top:14px;border-top:1px solid var(--gray-100)"></div>
         <button onclick="document.getElementById('nov-lightbox').style.display='none'" style="margin-top:14px;padding:8px 20px;border-radius:8px;border:1px solid var(--gray-200);background:var(--white);cursor:pointer;font-size:13px">Cerrar</button>
       </div>
     </div>
@@ -2418,7 +2421,7 @@ onAuthStateChanged(auth, async user => {
     setTimeout(function(){initProjBars();},800);
     setTimeout(function(){inicioGaleriaCargar();},2000);
     // Cargar KPIs del inicio en segundo plano
-    setTimeout(()=>{if(window.loadInicioKPIs)window.loadInicioKPIs();},1500);
+    setTimeout(()=>{if(window.loadInicioKPIs)window.loadInicioKPIs();if(window.cargarInicioProxMtto)window.cargarInicioProxMtto();if(window.cargarInicioActividad)window.cargarInicioActividad();},1500);
     setTimeout(()=>{if(window._qrPendingMenu)window._qrPendingMenu();},2000);
 
   } else {
@@ -2588,9 +2591,68 @@ function cargarEquipos(proyecto){
     if(countEl)countEl.textContent=`${equipos.length} equipo${equipos.length!==1?'s':''}`;
     const stMap={operativo:'active',mantenimiento:'maint',fuera_servicio:'down',stand_by:'standby'};
     const stLabel={operativo:'Operativo',mantenimiento:'En Mtto.',fuera_servicio:'Fuera Servicio',stand_by:'Stand By'};
-    container.innerHTML=`<div class="card"><div class="card-body" style="padding:0;overflow-x:auto"><table class="eq-table"><thead><tr><th>Equipo</th><th>Código</th><th>Estado</th><th>Proyecto</th></tr></thead><tbody>${equipos.map(eq=>{
-      const st=stMap[eq.estado]||'active';const sl=stLabel[eq.estado]||eq.estado||'—';
-      return`<tr><td class="eq-name">${eq.nombre||'—'}</td><td>${eq.codigo||'—'}</td><td><span class="eq-status ${st}" style="cursor:pointer" onclick="window.cambiarEstadoEquipo('${eq.id}','${eq.estado||'operativo'}')" title="Click para cambiar estado"><span class="eq-status-dot"></span>${sl} <i class="bi bi-chevron-down" style="font-size:10px;opacity:.6"></i></span></td><td style="text-transform:capitalize">${eq.proyecto||'—'}</td></tr>`}).join('')}</tbody></table></div></div>`;
+
+    // Resumen por categoría — extraer prefijo (3-4 chars) del nombre/CEMA
+    const TIPO_LABELS={
+      '2DC':'Camionetas','9DD':'Volquetas','2BS':'Buses','9TS':'Turbos','9TC':'Tractocamiones',
+      '9TT':'Carrotanques agua','3SD':'Carrotanques combustible','9TG1':'Camión grúa 13T','9TG2':'Camión grúa 20T',
+      '7EO1':'Excavadoras PC200','7EO2':'Excavadoras PC300','7EO':'Excavadoras','7TO':'Bulldozers',
+      '8CC':'Compactadores','8MN':'Motoniveladoras','6FC':'Hormigoneras','7CF':'Mini cargadores',
+      '4MC':'Mezcladoras','4GE1':'Generadores planta','4GE2':'Generadores','4ES':'Equipos soldadura',
+      '4CS':'Canguros','4CM':'Compactadores monorodillo'
+    };
+    function getTipoFromCema(c){
+      var s=String(c||'').toUpperCase();
+      // Probar prefijos de 4 chars primero
+      for(var i=0;i<2;i++){
+        var len=4-i;
+        var pre=s.substring(0,len);
+        if(TIPO_LABELS[pre])return{cat:pre,label:TIPO_LABELS[pre]};
+      }
+      return{cat:s.substring(0,3),label:'Otros'};
+    }
+    var resumen={};
+    equipos.forEach(function(eq){
+      var t=getTipoFromCema(eq.nombre||eq.codigo||'');
+      if(!resumen[t.cat])resumen[t.cat]={cat:t.cat,label:t.label,total:0,operativos:0,mtto:0,fuera:0};
+      resumen[t.cat].total++;
+      var est=(eq.estado||'').toLowerCase();
+      if(est.includes('mant'))resumen[t.cat].mtto++;
+      else if(est.includes('fuera')||est.includes('varad')||est.includes('baja'))resumen[t.cat].fuera++;
+      else resumen[t.cat].operativos++;
+    });
+    var resumenArr=Object.values(resumen).sort(function(a,b){return b.total-a.total;});
+
+    var totalOp=equipos.filter(function(e){var s=(e.estado||'').toLowerCase();return !s.includes('mant')&&!s.includes('fuera')&&!s.includes('varad')&&!s.includes('baja');}).length;
+    var totalMtto=equipos.filter(function(e){return (e.estado||'').toLowerCase().includes('mant');}).length;
+    var totalFuera=equipos.length-totalOp-totalMtto;
+
+    var resumenHTML='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px">'
+      +'<div style="background:linear-gradient(135deg,#1565C0,#1976D2);color:#fff;border-radius:12px;padding:16px"><div style="font-size:11px;opacity:.85;text-transform:uppercase;font-weight:600">Total Equipos</div><div style="font-family:\'Space Grotesk\',sans-serif;font-size:28px;font-weight:700;margin-top:4px">'+equipos.length+'</div></div>'
+      +'<div style="background:linear-gradient(135deg,#2E7D32,#43A047);color:#fff;border-radius:12px;padding:16px"><div style="font-size:11px;opacity:.85;text-transform:uppercase;font-weight:600">Operativos</div><div style="font-family:\'Space Grotesk\',sans-serif;font-size:28px;font-weight:700;margin-top:4px">'+totalOp+'</div></div>'
+      +'<div style="background:linear-gradient(135deg,#E65100,#FB8C00);color:#fff;border-radius:12px;padding:16px"><div style="font-size:11px;opacity:.85;text-transform:uppercase;font-weight:600">En Mtto.</div><div style="font-family:\'Space Grotesk\',sans-serif;font-size:28px;font-weight:700;margin-top:4px">'+totalMtto+'</div></div>'
+      +'<div style="background:linear-gradient(135deg,#C62828,#E53935);color:#fff;border-radius:12px;padding:16px"><div style="font-size:11px;opacity:.85;text-transform:uppercase;font-weight:600">Fuera Servicio</div><div style="font-family:\'Space Grotesk\',sans-serif;font-size:28px;font-weight:700;margin-top:4px">'+totalFuera+'</div></div>'
+      +'</div>';
+
+    resumenHTML+='<div style="background:var(--white);border:1px solid var(--gray-200);border-radius:12px;padding:18px;margin-bottom:16px">'
+      +'<h3 style="font-family:\'Space Grotesk\',sans-serif;color:var(--navy);font-size:13px;font-weight:700;text-transform:uppercase;margin-bottom:12px">📊 Resumen por Categoría</h3>'
+      +'<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px">';
+    resumenArr.forEach(function(r){
+      resumenHTML+='<div style="background:var(--gray-50);border:1px solid var(--gray-200);border-radius:10px;padding:12px 14px">'
+        +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px"><strong style="font-family:\'Space Grotesk\',sans-serif;color:var(--navy);font-size:13px">'+r.cat+'</strong><span style="font-family:\'Space Grotesk\',sans-serif;font-size:18px;font-weight:700;color:var(--navy)">'+r.total+'</span></div>'
+        +'<div style="font-size:11px;color:var(--gray-500);margin-bottom:6px">'+r.label+'</div>'
+        +'<div style="display:flex;gap:6px;font-size:10px">'
+        +(r.operativos>0?'<span style="background:rgba(46,125,50,.12);color:#2E7D32;padding:2px 6px;border-radius:6px;font-weight:700">✓ '+r.operativos+'</span>':'')
+        +(r.mtto>0?'<span style="background:rgba(230,81,0,.12);color:#E65100;padding:2px 6px;border-radius:6px;font-weight:700">🔧 '+r.mtto+'</span>':'')
+        +(r.fuera>0?'<span style="background:rgba(198,40,40,.12);color:#C62828;padding:2px 6px;border-radius:6px;font-weight:700">⚠ '+r.fuera+'</span>':'')
+        +'</div></div>';
+    });
+    resumenHTML+='</div></div>';
+
+    container.innerHTML=resumenHTML+`<div class="card"><div class="card-body" style="padding:0;overflow-x:auto"><table class="eq-table"><thead><tr><th>Equipo</th><th>Código</th><th>Estado</th><th>Proyecto</th></tr></thead><tbody>`+equipos.map(function(eq){
+      var st=stMap[eq.estado]||'active';var sl=stLabel[eq.estado]||eq.estado||'—';
+      return'<tr><td class="eq-name">'+(eq.nombre||'—')+'</td><td>'+(eq.codigo||'—')+'</td><td><span class="eq-status '+st+'" style="cursor:pointer" onclick="window.cambiarEstadoEquipo(\''+eq.id+'\',\''+(eq.estado||'operativo')+'\')" title="Click para cambiar estado"><span class="eq-status-dot"></span>'+sl+' <i class="bi bi-chevron-down" style="font-size:10px;opacity:.6"></i></span></td><td style="text-transform:capitalize">'+(eq.proyecto||'—')+'</td></tr>';
+    }).join('')+'</tbody></table></div></div>';
   },(error)=>{
     console.error("Error onSnapshot:",error);
     if(error.code==='failed-precondition'){container.innerHTML='<div class="eq-empty"><i class="bi bi-exclamation-triangle"></i><p>Se requiere un índice en Firebase Console.<br>Revisa la consola del navegador para el enlace.</p></div>'}
@@ -3050,32 +3112,224 @@ function hvSetupImport(){
   });
 }
 
-function hvExportarPDF(){
+async function hvExportarPDF(){
   if(!hvEquipoActual){showToast('error','Selecciona un equipo');return}
+  var btn=document.getElementById('hv-btn-pdf');
+  if(btn){btn.disabled=true;btn.innerHTML='<i class="bi bi-hourglass-split"></i> Generando...';}
   try{
-    const{jsPDF}=window.jspdf;const pdf=new jsPDF("portrait","mm","a4");const eq=hvEquipoActual;
-    pdf.setFillColor(15,33,55);pdf.rect(0,0,210,25,'F');
-    pdf.setTextColor(255,255,255);pdf.setFont("helvetica","bold");pdf.setFontSize(14);
-    pdf.text("CERTIFICADO DE INTEGRIDAD MECÁNICA",105,12,{align:"center"});
-    pdf.setFontSize(9);pdf.setTextColor(244,180,0);
-    pdf.text("MM&E MOVA — Mantenimiento, Maquinaria & Equipos",105,19,{align:"center"});
-    pdf.setTextColor(0,0,0);pdf.setFontSize(11);
-    pdf.text(`PLACA: ${eq.placa||'—'}`,14,35);
-    pdf.text(`FECHA ADQUISICIÓN: ${hvFormatFecha(eq.fechaAdquisicion)}`,130,35);
-    const sec=(title,rows,startY)=>{
-      pdf.autoTable({startY,theme:"grid",head:[[{content:title,colSpan:2,styles:{fillColor:[40,40,40],textColor:255,fontStyle:'bold',fontSize:10,halign:'center'}}]],body:rows,styles:{fontSize:9,cellPadding:2.5},columnStyles:{0:{cellWidth:55,fontStyle:'bold',fillColor:[245,247,250]},1:{cellWidth:'auto'}}});
+    var{jsPDF}=window.jspdf;
+    var eq=hvEquipoActual;
+    var cema=eq.placa||eq.cema||eq.nombre||'';
+
+    // 1. Buscar últimos 4 preventivos y 4 correctivos del cema en Google Sheets H.MTTO
+    var prevs=[],corrs=[];
+    try{
+      var urlsToFetch=[];
+      if(window._proyectoActivo&&window._proyectoActivo.url)urlsToFetch=[window._proyectoActivo.url];
+      else urlsToFetch=(window._proyectos||[]).filter(function(p){return p.url;}).map(function(p){return p.url;});
+      if(!urlsToFetch.length)urlsToFetch=[CSEG_URL];
+      for(var iU=0;iU<urlsToFetch.length;iU++){
+        try{
+          var sR=await fetch(urlsToFetch[iU]);var sJ=await sR.json();
+          var hojas=(sJ.sheets||[]).filter(function(s){return s.toUpperCase().includes('H. MTTO')||s.toUpperCase().includes('H.MTTO');});
+          for(var iH=0;iH<hojas.length;iH++){
+            var rH=await fetch(urlsToFetch[iU]+'?sheet='+encodeURIComponent(hojas[iH])+'&hr=4');
+            var jH=await rH.json();
+            (jH.rows||[]).forEach(function(row){
+              var keys=Object.keys(row);
+              var cemaKey=keys.find(function(k){return k.toUpperCase().includes('CEMA');});
+              if(!cemaKey)return;
+              var rowCema=String(row[cemaKey]||'').trim().toUpperCase();
+              if(rowCema!==String(cema).toUpperCase())return;
+              var tipoKey=keys.find(function(k){return k.toUpperCase().includes('TIPO')&&k.toUpperCase().includes('MANT');});
+              var tipo=String(row[tipoKey]||'').toUpperCase();
+              var fechaKey=keys.find(function(k){return k.toUpperCase().includes('FECHA');});
+              var fecha=String(row[fechaKey]||'').trim();
+              var horoKey=keys.find(function(k){var u=k.toUpperCase();return u.includes('HOROMETRO')||u.includes('HORÓMETRO')||u.includes('KILOMETRAJE')||u.includes('KM');});
+              var horometro=String(row[horoKey]||'').trim();
+              var descKey=keys.find(function(k){var u=k.toUpperCase();return u.includes('DESCRIP')||u.includes('TRABAJO')||u.includes('REPARA');});
+              var descripcion=String(row[descKey]||'').trim();
+              var otKey=keys.find(function(k){var u=k.toUpperCase().replace(/\s/g,'');return u==='OT'||u.startsWith('OT')||u.includes('ORDEN');})||(keys.length>18?keys[18]:null);
+              var ot=String(row[otKey]||'').trim();
+              var rec={fecha:fecha,horometro:horometro,descripcion:descripcion,ot:ot};
+              if(tipo.includes('PREV'))prevs.push(rec);
+              else if(tipo.includes('CORR'))corrs.push(rec);
+            });
+          }
+        }catch(eU){}
+      }
+      function parseFech(f){var p=f.replace(/-/g,'/').split('/');if(p.length>=3){return new Date(parseInt(p[2]),parseInt(p[1])-1,parseInt(p[0])).getTime();}return 0;}
+      prevs.sort(function(a,b){return parseFech(b.fecha)-parseFech(a.fecha);});
+      corrs.sort(function(a,b){return parseFech(b.fecha)-parseFech(a.fecha);});
+      prevs=prevs.slice(0,4);corrs=corrs.slice(0,4);
+    }catch(eM){console.warn('mtto fetch:',eM);}
+
+    // 2. Build PDF with rich design
+    var pdf=new jsPDF('portrait','mm','a4');
+    var pageW=210,pageH=297,marginX=14;
+
+    // ── HEADER bar ──
+    pdf.setFillColor(15,33,55);pdf.rect(0,0,pageW,28,'F');
+    pdf.setFillColor(244,180,0);pdf.rect(0,28,pageW,2,'F');
+    pdf.setTextColor(255,255,255);
+    pdf.setFont('helvetica','bold');pdf.setFontSize(16);
+    pdf.text('HOJA DE VIDA',marginX,13);
+    pdf.setFontSize(10);pdf.setTextColor(244,180,0);
+    pdf.setFont('helvetica','bold');pdf.text('MM&E MOVA',marginX,20);
+    pdf.setFont('helvetica','normal');pdf.setFontSize(8);pdf.setTextColor(255,255,255);
+    pdf.text('Mantenimiento, Maquinaria & Equipos',marginX,25);
+    // Right side: CEMA badge
+    pdf.setFillColor(244,180,0);pdf.roundedRect(pageW-65,8,50,16,2,2,'F');
+    pdf.setTextColor(15,33,55);pdf.setFont('helvetica','bold');pdf.setFontSize(9);
+    pdf.text('CEMA',pageW-40,14,{align:'center'});
+    pdf.setFontSize(13);
+    pdf.text(String(cema),pageW-40,21,{align:'center'});
+
+    var y=38;
+
+    // ── PHOTO + identification block ──
+    var photoSize=36;
+    if(eq.foto){
+      try{pdf.addImage(eq.foto,'JPEG',marginX,y,photoSize,photoSize,'','FAST');}
+      catch(eF){pdf.setFillColor(240,242,245);pdf.rect(marginX,y,photoSize,photoSize,'F');}
+    }else{
+      pdf.setFillColor(240,242,245);pdf.rect(marginX,y,photoSize,photoSize,'F');
+      pdf.setTextColor(150,150,150);pdf.setFontSize(20);pdf.text('📷',marginX+photoSize/2,y+photoSize/2+3,{align:'center'});
+    }
+    pdf.setDrawColor(220,220,220);pdf.rect(marginX,y,photoSize,photoSize);
+    // Identificación
+    var infoX=marginX+photoSize+6;
+    pdf.setTextColor(15,33,55);pdf.setFont('helvetica','bold');pdf.setFontSize(13);
+    pdf.text(String(eq.tipo||'Equipo'),infoX,y+5);
+    pdf.setFont('helvetica','normal');pdf.setFontSize(9);pdf.setTextColor(80,80,80);
+    function infoLine(label,val,offsetY){
+      pdf.setFont('helvetica','bold');pdf.text(label+':',infoX,y+offsetY);
+      pdf.setFont('helvetica','normal');pdf.text(String(val||'—'),infoX+30,y+offsetY);
+    }
+    infoLine('Marca',eq.marca,11);
+    infoLine('Modelo',eq.modelo,16);
+    infoLine('Serial',eq.serial,21);
+    infoLine('Matrícula',eq.matricula,26);
+    infoLine('Adquirido',hvFormatFecha(eq.fechaAdquisicion),31);
+    // Estado badge top right
+    var estado=String(eq.estado||'OPERATIVO').toUpperCase();
+    var estColor=estado.includes('OPERAT')?[34,197,94]:estado.includes('MANT')?[245,158,11]:[239,68,68];
+    pdf.setFillColor.apply(pdf,estColor);
+    pdf.roundedRect(pageW-marginX-32,y+1,32,7,1.5,1.5,'F');
+    pdf.setTextColor(255,255,255);pdf.setFont('helvetica','bold');pdf.setFontSize(8);
+    pdf.text(estado,pageW-marginX-16,y+5.5,{align:'center'});
+    y+=42;
+
+    // ── 2 columns of properties ──
+    function renderTable(title,rows,startY,color){
+      pdf.autoTable({
+        startY:startY,
+        theme:'plain',
+        head:[[{content:title,colSpan:2,styles:{fillColor:color||[15,33,55],textColor:255,fontStyle:'bold',fontSize:9,halign:'left',cellPadding:{top:2.5,bottom:2.5,left:5,right:5}}}]],
+        body:rows,
+        styles:{fontSize:8,cellPadding:1.8,lineColor:[230,230,235],lineWidth:0.1},
+        columnStyles:{0:{cellWidth:38,fontStyle:'bold',fillColor:[248,250,252],textColor:[60,60,60]},1:{cellWidth:'auto',textColor:[40,40,40]}},
+        margin:{left:marginX,right:marginX}
+      });
       return pdf.lastAutoTable.finalY;
-    };
-    let y=42;
-    y=sec("CARACTERÍSTICAS GENERALES",[["Matrícula",eq.matricula||"—"],["Tipo/Clase",eq.tipo||"—"],["Marca",eq.marca||"—"],["Línea",eq.linea||"—"],["Modelo",eq.modelo||"—"],["Serial",eq.serial||"—"],["Color",eq.color||"—"],["Propietario",eq.propietario||"—"],["Capacidad",eq.capacidad||"—"],["Servicio",eq.servicio||"—"],["Cilindraje",eq.cilindraje||"—"]],y+4);
-    y=sec("CARACTERÍSTICAS TÉCNICAS",[["N° Motor",eq.nMotor||"—"],["N° Chasis",eq.nChasis||"—"],["N° Llantas",eq.nLlantas||"—"],["N° Velocidades",eq.nVelocidades||"—"],["N° Cinturones",eq.nCinturones||"—"],["N° Airbag",eq.nAirbag||"—"]],y+4);
-    y=sec("ELEMENTOS DE CONSUMO",[["Combustible",eq.combustible||"—"],["Aceite Motor",eq.aceiteMotor||"—"],["Aceite Hidráulico",eq.aceiteHidraulico||"—"],["Refrigerante",eq.refrigerante||"—"]],y+4);
-    if(y>230){pdf.addPage();y=14}
-    y=sec("DOCUMENTACIÓN",[["Manifiesto Import.",eq.manifiesto||"—"],["Rev. Tecnomecánica",eq.tecnomecanica||"—"],["Licencia Tránsito",eq.licencia||"—"],["Póliza",eq.poliza||"—"],["SOAT",eq.soat||"—"]],y+4);
-    y=sec("CONTROL DE MANTENIMIENTO",[["Ficha Técnica",eq.fichaTecnica||"—"],["Manual",eq.manual||"—"],["Periodicidad Mtto.",eq.periodicidad||"—"],["Estado",eq.estado||"—"]],y+4);
-    pdf.save(`HojaVida_${eq.placa}.pdf`);
-    showToast('success','PDF generado');
-  }catch(err){console.error(err);showToast('error','Error PDF: '+err.message)}
+    }
+
+    // Side by side: Características (left) + Técnicas (right)
+    // Use separate tables for left and right columns
+    var colW=(pageW-marginX*2-3)/2;
+    pdf.autoTable({
+      startY:y,
+      theme:'plain',
+      head:[[{content:'CARACTERÍSTICAS GENERALES',colSpan:2,styles:{fillColor:[15,33,55],textColor:255,fontStyle:'bold',fontSize:8,halign:'left',cellPadding:{top:2,bottom:2,left:4,right:4}}}]],
+      body:[['Tipo/Clase',eq.tipo||'—'],['Línea',eq.linea||'—'],['Color',eq.color||'—'],['Capacidad',eq.capacidad||'—'],['Servicio',eq.servicio||'—'],['Cilindraje',eq.cilindraje||'—'],['Propietario',eq.propietario||'—']],
+      styles:{fontSize:7.5,cellPadding:1.5,lineColor:[230,230,235],lineWidth:0.1},
+      columnStyles:{0:{cellWidth:25,fontStyle:'bold',fillColor:[248,250,252]},1:{cellWidth:colW-25}},
+      margin:{left:marginX},
+      tableWidth:colW
+    });
+    var leftEnd=pdf.lastAutoTable.finalY;
+    pdf.autoTable({
+      startY:y,
+      theme:'plain',
+      head:[[{content:'CARACTERÍSTICAS TÉCNICAS',colSpan:2,styles:{fillColor:[15,33,55],textColor:255,fontStyle:'bold',fontSize:8,halign:'left',cellPadding:{top:2,bottom:2,left:4,right:4}}}]],
+      body:[['N° Motor',eq.nMotor||'—'],['N° Chasis',eq.nChasis||'—'],['N° Llantas',eq.nLlantas||'—'],['N° Velocid.',eq.nVelocidades||'—'],['N° Cinturones',eq.nCinturones||'—'],['N° Airbag',eq.nAirbag||'—'],['',' ']],
+      styles:{fontSize:7.5,cellPadding:1.5,lineColor:[230,230,235],lineWidth:0.1},
+      columnStyles:{0:{cellWidth:25,fontStyle:'bold',fillColor:[248,250,252]},1:{cellWidth:colW-25}},
+      margin:{left:marginX+colW+3},
+      tableWidth:colW
+    });
+    var rightEnd=pdf.lastAutoTable.finalY;
+    y=Math.max(leftEnd,rightEnd)+4;
+
+    // Consumibles + Documentación side by side
+    pdf.autoTable({
+      startY:y,theme:'plain',
+      head:[[{content:'ELEMENTOS DE CONSUMO',colSpan:2,styles:{fillColor:[46,117,182],textColor:255,fontStyle:'bold',fontSize:8,halign:'left',cellPadding:{top:2,bottom:2,left:4,right:4}}}]],
+      body:[['Combustible',eq.combustible||'—'],['Aceite Motor',eq.aceiteMotor||'—'],['Aceite Hidr.',eq.aceiteHidraulico||'—'],['Refrigerante',eq.refrigerante||'—']],
+      styles:{fontSize:7.5,cellPadding:1.5,lineColor:[230,230,235],lineWidth:0.1},
+      columnStyles:{0:{cellWidth:28,fontStyle:'bold',fillColor:[248,250,252]},1:{cellWidth:colW-28}},
+      margin:{left:marginX},tableWidth:colW
+    });
+    leftEnd=pdf.lastAutoTable.finalY;
+    pdf.autoTable({
+      startY:y,theme:'plain',
+      head:[[{content:'DOCUMENTACIÓN',colSpan:2,styles:{fillColor:[46,117,182],textColor:255,fontStyle:'bold',fontSize:8,halign:'left',cellPadding:{top:2,bottom:2,left:4,right:4}}}]],
+      body:[['Tecnomecánica',eq.tecnomecanica||'—'],['Lic. Tránsito',eq.licencia||'—'],['Póliza',eq.poliza||'—'],['SOAT',eq.soat||'—']],
+      styles:{fontSize:7.5,cellPadding:1.5,lineColor:[230,230,235],lineWidth:0.1},
+      columnStyles:{0:{cellWidth:28,fontStyle:'bold',fillColor:[248,250,252]},1:{cellWidth:colW-28}},
+      margin:{left:marginX+colW+3},tableWidth:colW
+    });
+    rightEnd=pdf.lastAutoTable.finalY;
+    y=Math.max(leftEnd,rightEnd)+5;
+
+    // ── Mantenimientos preventivos (últimos 4) ──
+    if(y>250){pdf.addPage();y=14;}
+    pdf.autoTable({
+      startY:y,
+      theme:'plain',
+      head:[[
+        {content:'ÚLTIMOS 4 MANTENIMIENTOS PREVENTIVOS',colSpan:5,styles:{fillColor:[34,197,94],textColor:255,fontStyle:'bold',fontSize:9,halign:'left',cellPadding:{top:2.5,bottom:2.5,left:5,right:5}}}
+      ],['#','Fecha','Horómetro/Km','Descripción','OT'].map(function(h){return{content:h,styles:{fillColor:[230,242,235],textColor:[15,33,55],fontStyle:'bold',fontSize:7.5,halign:'left'}};})],
+      body:(prevs.length?prevs:[{}]).map(function(r,i){return[String(i+1),r.fecha||'—',r.horometro||'—',r.descripcion||(prevs.length?'—':'Sin registros'),r.ot||'—'];}),
+      styles:{fontSize:7.5,cellPadding:1.8,lineColor:[230,230,235],lineWidth:0.1,valign:'middle'},
+      columnStyles:{0:{cellWidth:8,halign:'center'},1:{cellWidth:22},2:{cellWidth:25},3:{cellWidth:'auto'},4:{cellWidth:25}},
+      margin:{left:marginX,right:marginX}
+    });
+    y=pdf.lastAutoTable.finalY+4;
+
+    // ── Mantenimientos correctivos ──
+    if(y>250){pdf.addPage();y=14;}
+    pdf.autoTable({
+      startY:y,
+      theme:'plain',
+      head:[[
+        {content:'ÚLTIMOS 4 MANTENIMIENTOS CORRECTIVOS',colSpan:5,styles:{fillColor:[239,68,68],textColor:255,fontStyle:'bold',fontSize:9,halign:'left',cellPadding:{top:2.5,bottom:2.5,left:5,right:5}}}
+      ],['#','Fecha','Horómetro/Km','Descripción','OT'].map(function(h){return{content:h,styles:{fillColor:[252,232,232],textColor:[15,33,55],fontStyle:'bold',fontSize:7.5,halign:'left'}};})],
+      body:(corrs.length?corrs:[{}]).map(function(r,i){return[String(i+1),r.fecha||'—',r.horometro||'—',r.descripcion||(corrs.length?'—':'Sin registros'),r.ot||'—'];}),
+      styles:{fontSize:7.5,cellPadding:1.8,lineColor:[230,230,235],lineWidth:0.1,valign:'middle'},
+      columnStyles:{0:{cellWidth:8,halign:'center'},1:{cellWidth:22},2:{cellWidth:25},3:{cellWidth:'auto'},4:{cellWidth:25}},
+      margin:{left:marginX,right:marginX}
+    });
+    y=pdf.lastAutoTable.finalY+5;
+
+    // ── Footer en todas las páginas ──
+    var pages=pdf.internal.getNumberOfPages();
+    for(var p=1;p<=pages;p++){
+      pdf.setPage(p);
+      pdf.setDrawColor(220,220,220);pdf.line(marginX,pageH-12,pageW-marginX,pageH-12);
+      pdf.setFont('helvetica','normal');pdf.setFontSize(7);pdf.setTextColor(120,120,120);
+      var fechaGen=new Date().toLocaleDateString('es-CO',{day:'2-digit',month:'long',year:'numeric'});
+      pdf.text('Generado: '+fechaGen,marginX,pageH-7);
+      pdf.text('MM&E MOVA — Sistema de Gestión de Mantenimiento',pageW/2,pageH-7,{align:'center'});
+      pdf.text('Página '+p+' de '+pages,pageW-marginX,pageH-7,{align:'right'});
+    }
+
+    pdf.save('HojaVida_'+cema+'.pdf');
+    showToast('success','PDF generado con últimos mantenimientos');
+  }catch(err){console.error(err);showToast('error','Error PDF: '+err.message);}
+  finally{
+    if(btn){btn.disabled=false;btn.innerHTML='<i class="bi bi-download"></i> Descargar PDF';}
+  }
 }
 
 
@@ -3929,12 +4183,13 @@ const HIST_COLS=[
   {col:'insp_loc_oficinas',label:'Loc. Oficinas',pdf:'insp'},
   {col:'insp_loc_habitaciones',label:'Loc. Habitaciones',pdf:'insp'},
   {col:'reportes_fallas',label:'Reportes de Falla',pdf:'falla'},
+  {col:'reportes_danos',label:'Daños Mala Operación',pdf:'dano'},
   {col:'solicitudes_mtto',label:'Solicitudes Mtto.',pdf:'mtto'}
 ];
 window.histTab=function(tab){document.querySelectorAll('.hist-tab').forEach(t=>{const a=t.dataset.tab===tab;t.style.background=a?'var(--white)':'transparent';t.style.color=a?'var(--navy)':'var(--gray-500)';t.classList.toggle('active',a)});document.getElementById('hist-resumen').style.display=tab==='resumen'?'block':'none';document.getElementById('hist-busqueda').style.display=tab==='busqueda'?'block':'none'};
 window.histCargarResumen=async function(){const mes=document.getElementById('hist-mes').value;if(!mes){showToast('error','Selecciona un mes');return}const[y,m]=mes.split('-').map(Number);const ini=new Date(y,m-1,1),fin=new Date(y,m,1);const cont=document.getElementById('hist-cards');cont.innerHTML='<div class="eq-loading">Cargando...</div>';const counts=[];for(const c of HIST_COLS){try{const snap=await getDocs(collection(db,c.col));const n=snap.docs.filter(d=>{const f=d.data().fecha?.toDate?.();return f&&f>=ini&&f<fin}).length;counts.push({...c,n})}catch(e){counts.push({...c,n:0})}}cont.innerHTML=counts.map(c=>`<div class="nav-card" onclick="window.histVerTipo('${c.col}','${c.label}')"><div class="nav-icon all"><i class="bi bi-clipboard-check"></i></div><div class="nav-info"><span class="nav-label">${c.label}</span><h2 class="nav-value">${c.n}</h2></div></div>`).join('')};
 window.histVerTipo=function(col,label){window.histTab('busqueda');document.getElementById('hist-tipo-filter').value=col;document.getElementById('hist-search').value='';window.histBuscar()};
-window.histBuscar=async function(){const term=document.getElementById('hist-search').value.trim().toLowerCase();const tipoF=document.getElementById('hist-tipo-filter').value;const cont=document.getElementById('hist-resultados');cont.innerHTML='<div class="eq-loading">Buscando...</div>';const cols=tipoF?HIST_COLS.filter(c=>c.col===tipoF):HIST_COLS;const results=[];for(const c of cols){try{const snap=await getDocs(collection(db,c.col));snap.docs.forEach(d=>{const data=d.data();const id=(data.identificacion||data.equipo?.cema||data.cema||'').toString().toLowerCase();if(!term||id.includes(term))results.push({id:d.id,col:c.col,label:c.label,pdf:c.pdf,data})})}catch(e){}}results.sort((a,b)=>(b.data.fecha?.toDate?.()||0)-(a.data.fecha?.toDate?.()||0));if(results.length===0){cont.innerHTML='<div class="eq-empty"><i class="bi bi-inbox"></i><p>Sin resultados</p></div>';return}cont.innerHTML=`<div class="card"><div class="card-body" style="padding:0;overflow-x:auto"><table class="eq-table"><thead><tr><th>Fecha</th><th>Tipo</th><th>Identificación</th><th>Inspector</th><th>PDF</th></tr></thead><tbody>${results.map(r=>{const f=r.data.fecha?.toDate?.()?.toLocaleDateString('es-CO')||'—';const id=r.data.identificacion||r.data.equipo?.cema||r.data.cema||'—';const ins=r.data.inspector||r.data.operador||'—';const esFalla=(r.col==='reportes_fallas');const estaAbierta=esFalla&&(r.data.estado==='abierta'||!r.data.estado);const badge=esFalla?(estaAbierta?'<span style="background:rgba(229,57,53,.12);color:var(--red);padding:2px 8px;border-radius:8px;font-size:10px;font-weight:700">Abierta</span>':'<span style="background:rgba(76,175,80,.12);color:#2e7d32;padding:2px 8px;border-radius:8px;font-size:10px;font-weight:700">Cerrada</span>'):'';return`<tr><td>${f}</td><td>${r.label} ${badge}</td><td class="eq-name">${id}</td><td>${ins}</td><td style="display:flex;gap:4px"><button class="btn btn-sm btn-primary" data-col="${r.col}" data-id="${r.id}" data-pdf="${r.pdf}" onclick="window.histPDF(this.dataset.col,this.dataset.id,this.dataset.pdf)"><i class="bi bi-download"></i></button>${estaAbierta?'<button class="btn-cerrar-falla" data-id="'+r.id+'" onclick="window.abrirCierreFalla(this.dataset.id)" style="padding:4px 10px;background:#2e7d32;color:#fff;border:none;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer"><i class="bi bi-check-lg"></i> Cerrar</button>':''}</td></tr>`}).join('')}</tbody></table></div></div><p style="margin-top:12px;color:var(--gray-400);font-size:12px">${results.length} resultado(s)</p>`};
+window.histBuscar=async function(){const term=document.getElementById('hist-search').value.trim().toLowerCase();const tipoF=document.getElementById('hist-tipo-filter').value;const cont=document.getElementById('hist-resultados');cont.innerHTML='<div class="eq-loading">Buscando...</div>';const cols=tipoF?HIST_COLS.filter(c=>c.col===tipoF):HIST_COLS;const results=[];for(const c of cols){try{const snap=await getDocs(collection(db,c.col));snap.docs.forEach(d=>{const data=d.data();const id=(data.identificacion||data.equipo?.cema||data.cema||'').toString().toLowerCase();if(!term||id.includes(term))results.push({id:d.id,col:c.col,label:c.label,pdf:c.pdf,data})})}catch(e){}}results.sort((a,b)=>(b.data.fecha?.toDate?.()||0)-(a.data.fecha?.toDate?.()||0));if(results.length===0){cont.innerHTML='<div class="eq-empty"><i class="bi bi-inbox"></i><p>Sin resultados</p></div>';return}cont.innerHTML=`<div class="card"><div class="card-body" style="padding:0;overflow-x:auto"><table class="eq-table"><thead><tr><th>Fecha</th><th>Tipo</th><th>Identificación</th><th>Inspector</th><th>PDF</th></tr></thead><tbody>${results.map(r=>{const f=r.data.fecha?.toDate?.()?.toLocaleDateString('es-CO')||'—';const id=r.data.identificacion||r.data.equipo?.cema||r.data.cema||'—';const ins=r.data.inspector||r.data.operador||'—';const esFalla=(r.col==='reportes_fallas');const esDano=(r.col==='reportes_danos');const cerrable=(esFalla||esDano);const estaAbierta=cerrable&&(r.data.estado==='abierta'||r.data.estado==='abierto'||!r.data.estado);const badge=cerrable?(estaAbierta?'<span style="background:rgba(229,57,53,.12);color:var(--red);padding:2px 8px;border-radius:8px;font-size:10px;font-weight:700">Abierto</span>':'<span style="background:rgba(76,175,80,.12);color:#2e7d32;padding:2px 8px;border-radius:8px;font-size:10px;font-weight:700">Cerrado</span>'):'';return`<tr><td>${f}</td><td>${r.label} ${badge}</td><td class="eq-name">${id}</td><td>${ins}</td><td style="display:flex;gap:4px"><button class="btn btn-sm btn-primary" data-col="${r.col}" data-id="${r.id}" data-pdf="${r.pdf}" onclick="window.histPDF(this.dataset.col,this.dataset.id,this.dataset.pdf)"><i class="bi bi-download"></i></button>${estaAbierta?'<button data-id="'+r.id+'" data-col="'+r.col+'" onclick="window.abrirCierreGenerico(this.dataset.id,this.dataset.col)" style="padding:4px 10px;background:#2e7d32;color:#fff;border:none;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer"><i class="bi bi-check-lg"></i> Cerrar</button>':''}</td></tr>`}).join('')}</tbody></table></div></div><p style="margin-top:12px;color:var(--gray-400);font-size:12px">${results.length} resultado(s)</p>`};
 window.histPDF=function(col,id,tipo){window._inspCol=col;if(tipo==='preop'){window.coleccion=col;window.exportarPDF(id,col)}else if(tipo==='insp'){window.inspExportarPDF(id)}else if(tipo==='falla'){window.fallaExportarPDF(col,id)}else if(tipo==='mtto'){window.mttoExportarPDF(col,id)}else{showToast('info','PDF no disponible')}};
 window.initHistorialPage=function(){const t=document.getElementById('hist-tipo-filter');if(t&&t.options.length<2)HIST_COLS.forEach(c=>{const o=document.createElement('option');o.value=c.col;o.textContent=c.label;t.appendChild(o)});const m=document.getElementById('hist-mes');if(m&&!m.value){const d=new Date();m.value=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')}};
 
@@ -4376,9 +4631,28 @@ async function hmttoCargarSheets(){
   const tabsEl=document.getElementById('hmtto-tabs');
   tabsEl.innerHTML='<div class="hmtto-tab-skeleton"></div><div class="hmtto-tab-skeleton" style="width:80px"></div><div class="hmtto-tab-skeleton" style="width:100px"></div>';
   try{
-    const json=await hmttoFetch(activeUrl());
-    // Filtrar solo hojas de historial de mantenimiento
-    hmttoSheets=(json.sheets||[]).filter(HMTTO_FILTER);
+    // Determinar URLs: si hay proyecto activo solo esa, si "Todos" todas
+    var urlsToFetch=[];
+    if(window._proyectoActivo&&window._proyectoActivo.url){
+      urlsToFetch=[{url:window._proyectoActivo.url,proyecto:window._proyectoActivo.nombre}];
+    }else{
+      urlsToFetch=(window._proyectos||[]).filter(function(p){return p.url;}).map(function(p){return{url:p.url,proyecto:p.nombre};});
+      if(!urlsToFetch.length)urlsToFetch=[{url:activeUrl(),proyecto:''}];
+    }
+    var sheetsAll=[];
+    window._hmttoSheetUrls={};
+    for(var iU=0;iU<urlsToFetch.length;iU++){
+      try{
+        var jsonU=await hmttoFetch(urlsToFetch[iU].url);
+        (jsonU.sheets||[]).filter(HMTTO_FILTER).forEach(function(s){
+          var tag=urlsToFetch.length>1?' · '+urlsToFetch[iU].proyecto:'';
+          var display=s+tag;
+          sheetsAll.push(display);
+          window._hmttoSheetUrls[display]={url:urlsToFetch[iU].url,realName:s,proyecto:urlsToFetch[iU].proyecto};
+        });
+      }catch(eU){console.warn('[hmtto] error proyecto:',eU);}
+    }
+    hmttoSheets=sheetsAll;
     if(!hmttoSheets.length){
       tabsEl.innerHTML='<p style="color:var(--gray-400);font-size:13px;padding:10px 0">Sin hojas de historial de mantenimiento encontradas</p>';
       document.getElementById('hmtto-container').innerHTML='';
@@ -4403,7 +4677,10 @@ async function hmttoCargarTab(sheet){
   cont.innerHTML=`<div class="eq-loading"><i class="bi bi-arrow-repeat" style="animation:spin 1s linear infinite;display:inline-block"></i> Cargando ${hmttoTabLabel(sheet)}…</div>`;
   toolbar.style.display='none';
   try{
-    const json=await hmttoFetch(activeUrl()+'?sheet='+encodeURIComponent(sheet));
+    var sheetInfo=window._hmttoSheetUrls&&window._hmttoSheetUrls[sheet];
+    var urlToUse=sheetInfo?sheetInfo.url:activeUrl();
+    var realSheetName=sheetInfo?sheetInfo.realName:sheet;
+    const json=await hmttoFetch(urlToUse+'?sheet='+encodeURIComponent(realSheetName));
     hmttoData[sheet]={headers:json.headers||[],rows:json.rows||[],meta:json.meta||[]};
     hmttoTimestamp();
     hmttoRenderTabla(sheet);
@@ -4669,81 +4946,104 @@ window.dashTab=function(tab){
 async function dashLoadMtto(anio,mes=-1){
   dashSpinner('dash-mtto-loading');dashHide('dash-mtto-content');
   try{
-    // Fetch all H.MTTO sheets
-    const sheetsResp=await fetch(activeUrl());
-    const sheetsJson=await sheetsResp.json();
-    const mttoSheets=(sheetsJson.sheets||[]).filter(HMTTO_SHEETS_FILTER);
+    // Determinar URLs a consultar: si hay proyecto activo, solo esa; si no, todas las URLs configuradas
+    var urlsToQuery=[];
+    if(window._proyectoActivo&&window._proyectoActivo.url){
+      urlsToQuery=[window._proyectoActivo.url];
+    }else{
+      urlsToQuery=(window._proyectos||[]).filter(function(p){return p.url;}).map(function(p){return p.url;});
+      if(!urlsToQuery.length)urlsToQuery=[CSEG_URL];
+    }
 
     let totalPrev=0,totalCorr=0,totalAll=0,totalOT=0;
     const byMesPrevFull=Array(12).fill(0),byMesCorrFull=Array(12).fill(0);
     const byCategoria={},byMesPrev=Array(12).fill(0),byMesCorr=Array(12).fill(0);
     const byEquipo={};
 
-    // Fetch ALL sheets in PARALLEL (both pass1 and pass2 combined)
-    const sheetResults=await Promise.allSettled(
-      mttoSheets.map(sheet=>fetch(activeUrl()+'?sheet='+encodeURIComponent(sheet)+'&hr=4').then(r=>r.json()))
-    );
-    sheetResults.forEach(result=>{
-      if(result.status!=='fulfilled')return;
-      const json0=result.value;
-      (json0.rows||[]).forEach(row=>{
-        const fd0=parseFechaRow(row);if(!fd0||fd0.yr!==anio)return;
-        const tipoKey0=Object.keys(row).find(k=>k.toUpperCase().includes('TIPO')&&k.toUpperCase().includes('MANT'));
-        const tipo0=String(row[tipoKey0]||'').toUpperCase();
-        const m0=fd0.mes;
-        if(m0>=0&&m0<12){
-          if(tipo0.includes('PREV'))byMesPrevFull[m0]++;
-          if(tipo0.includes('CORR'))byMesCorrFull[m0]++;
-        }
-      });
-    });
-    // Pass 2: use already-fetched sheetResults, apply mes filter
-    sheetResults.forEach((result,sheetIdx)=>{
-      if(result.status!=='fulfilled')return;
-      const sheet=mttoSheets[sheetIdx];
-      const json=result.value;
-      // parseFechaRow defined below
-      const rows=(json.rows||[]).filter(r=>{
-        const fd=parseFechaRow(r);
-        if(!fd)return true;
-        if(fd.yr!==anio)return false;
-        if(mes>=0&&fd.mes!==mes)return false;
-        return true;
-      });
-      rows.forEach(row=>{
-        // Normalizar clave quitando tildes para comparar
-        function norm(s){return String(s).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase();}
-        const tipoKey=Object.keys(row).find(k=>norm(k).includes('TIPO')&&norm(k).includes('MANT'));
-        const cemaKey=Object.keys(row).find(k=>norm(k)==='CEMA'||norm(k).includes('CEMA'));
-        // OT: buscar columna S (~índice 18) o por nombre — muy permisivo
-        const rowKeys=Object.keys(row);
-        const otKey=rowKeys.find(k=>{
-          const n=norm(k);
-          return n==='OT'||n.startsWith('OT ')||n.startsWith('OT#')||
-                 n.includes('ORDEN')&&n.includes('TRAB')||
-                 n.includes('NUMERO')&&n.includes('OT')||
-                 n.includes('N OT')||n.includes('NO OT')||
-                 k.toUpperCase()==='OT N°'||k.toUpperCase()==='OT#'||
-                 k.toUpperCase().includes('OT N°');
-        }) || (rowKeys.length>18?rowKeys[18]:null); // fallback: columna S (índice 18)
-        const tipo=String(row[tipoKey]||'').toUpperCase();
-        const cema=String(row[cemaKey]||'').trim();
-        const cat=dashCategoria(cema);
-        // Mes usando parseFechaRow robusto
-        const fd=parseFechaRow(row);
-        const rowMes=fd?fd.mes:-1;
-        // OT: tiene valor en la celda
-        const otVal=String(row[otKey]||'').trim();
-        if(otVal&&otVal!=='0'&&otVal!=='—')totalOT++;
-        const isPrev=tipo.includes('PREV');
-        const isCorr=tipo.includes('CORR');
-        if(isPrev){totalPrev++;if(rowMes>=0&&rowMes<12)byMesPrev[rowMes]++;}
-        if(isCorr){totalCorr++;if(rowMes>=0&&rowMes<12)byMesCorr[rowMes]++;}
-        if(isPrev||isCorr)totalAll++;
-        if(cat&&cat!=='???'){byCategoria[cat]=(byCategoria[cat]||0)+1;}
-        if(cema){byEquipo[cema]=(byEquipo[cema]||0)+1;}
-      });
-    }); // end sheetResults.forEach pass2
+    // Por cada proyecto, traer hojas H.MTTO y procesar
+    for(var iU=0;iU<urlsToQuery.length;iU++){
+      var url=urlsToQuery[iU];
+      try{
+        const sheetsRespP=await fetch(url);
+        const sheetsJsonP=await sheetsRespP.json();
+        const mttoSheetsP=(sheetsJsonP.sheets||[]).filter(HMTTO_SHEETS_FILTER);
+        if(!mttoSheetsP.length)continue;
+        // Fetch all H.MTTO sheets de este proyecto en paralelo
+        const sheetResultsP=await Promise.allSettled(
+          mttoSheetsP.map(function(sheet){return fetch(url+'?sheet='+encodeURIComponent(sheet)+'&hr=4').then(function(r){return r.json();});})
+        );
+        sheetResultsP.forEach(function(result){
+          if(result.status!=='fulfilled')return;
+          const json0=result.value;
+          (json0.rows||[]).forEach(function(row){
+            const fd0=parseFechaRow(row);if(!fd0||fd0.yr!==anio)return;
+            const tipoKey0=Object.keys(row).find(function(k){return k.toUpperCase().includes('TIPO')&&k.toUpperCase().includes('MANT');});
+            const tipo0=String(row[tipoKey0]||'').toUpperCase();
+            const m0=fd0.mes;
+            if(m0>=0&&m0<12){
+              if(tipo0.includes('PREV'))byMesPrevFull[m0]++;
+              if(tipo0.includes('CORR'))byMesCorrFull[m0]++;
+            }
+          });
+        });
+      }catch(eP){console.warn('[dashLoadMtto] proyecto error:',eP);}
+    }
+
+    // Pass 2: re-agregar con filtro de mes desde cada proyecto
+    // Pass 2: para KPIs filtrados — re-fetch cada proyecto y aplicar filtro de mes + categoría/equipo/OT
+    // (Los datos quedan en byMesPrev/byMesCorr/byCategoria/byEquipo/totalPrev/totalCorr/totalOT)
+    for(var iU2=0;iU2<urlsToQuery.length;iU2++){
+      var url2=urlsToQuery[iU2];
+      try{
+        var sheetsR2=await fetch(url2);
+        var sheetsJ2=await sheetsR2.json();
+        var mttoSheets2=(sheetsJ2.sheets||[]).filter(HMTTO_SHEETS_FILTER);
+        if(!mttoSheets2.length)continue;
+        var sheetResults2=await Promise.allSettled(
+          mttoSheets2.map(function(sheet){return fetch(url2+'?sheet='+encodeURIComponent(sheet)+'&hr=4').then(function(r){return r.json();});})
+        );
+        sheetResults2.forEach(function(result){
+          if(result.status!=='fulfilled')return;
+          var json=result.value;
+          var rows=(json.rows||[]).filter(function(r){
+            var fd=parseFechaRow(r);
+            if(!fd)return true;
+            if(fd.yr!==anio)return false;
+            if(mes>=0&&fd.mes!==mes)return false;
+            return true;
+          });
+          rows.forEach(function(row){
+            function norm(s){return String(s).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase();}
+            var tipoKey=Object.keys(row).find(function(k){return norm(k).includes('TIPO')&&norm(k).includes('MANT');});
+            var cemaKey=Object.keys(row).find(function(k){return norm(k)==='CEMA'||norm(k).includes('CEMA');});
+            var rowKeys=Object.keys(row);
+            var otKey=rowKeys.find(function(k){
+              var n=norm(k);
+              return n==='OT'||n.startsWith('OT ')||n.startsWith('OT#')||
+                     (n.includes('ORDEN')&&n.includes('TRAB'))||
+                     (n.includes('NUMERO')&&n.includes('OT'))||
+                     n.includes('N OT')||n.includes('NO OT')||
+                     k.toUpperCase()==='OT N°'||k.toUpperCase()==='OT#'||
+                     k.toUpperCase().includes('OT N°');
+            }) || (rowKeys.length>18?rowKeys[18]:null);
+            var tipo=String(row[tipoKey]||'').toUpperCase();
+            var cema=String(row[cemaKey]||'').trim();
+            var cat=dashCategoria(cema);
+            var fd=parseFechaRow(row);
+            var rowMes=fd?fd.mes:-1;
+            var otVal=String(row[otKey]||'').trim();
+            if(otVal&&otVal!=='0'&&otVal!=='—')totalOT++;
+            var isPrev=tipo.includes('PREV');
+            var isCorr=tipo.includes('CORR');
+            if(isPrev){totalPrev++;if(rowMes>=0&&rowMes<12)byMesPrev[rowMes]++;}
+            if(isCorr){totalCorr++;if(rowMes>=0&&rowMes<12)byMesCorr[rowMes]++;}
+            if(isPrev||isCorr)totalAll++;
+            if(cat&&cat!=='???'){byCategoria[cat]=(byCategoria[cat]||0)+1;}
+            if(cema){byEquipo[cema]=(byEquipo[cema]||0)+1;}
+          });
+        });
+      }catch(eP2){console.warn('[dashLoadMtto pass2] error:',eP2);}
+    }
 
     const pctPrev=totalAll?Math.round(totalPrev/totalAll*100):0;
     const pctOT=totalAll?Math.round(totalOT/totalAll*100):0;
@@ -5929,6 +6229,22 @@ async function dashLoadTopKPIs(anio,mes=-1){
   }catch(e){console.warn('dashLoadTopKPIs:',e);}
 }
 
+
+// ── Helper: cuando "Todos" está activo, ejecuta una función con cada proyecto y agrega resultados ──
+async function dashEachProject(fnProyecto){
+  // fnProyecto recibe (url) y devuelve datos. Agrega resultados.
+  if(window._proyectoActivo){
+    return [await fnProyecto(window._proyectoActivo.url||CSEG_URL)];
+  }
+  // Modo "Todos": ejecutar para cada proyecto con URL
+  var projs=(window._proyectos||[]).filter(function(p){return p.url;});
+  if(!projs.length){
+    return [await fnProyecto(CSEG_URL)];
+  }
+  var results=await Promise.allSettled(projs.map(function(p){return fnProyecto(p.url);}));
+  return results.filter(function(r){return r.status==='fulfilled';}).map(function(r){return r.value;});
+}
+window.dashEachProject=dashEachProject;
 // ── Init principal ──
 window.initDashboardPage=async function(){
   window.scrollTo({top:0,behavior:'instant'});
@@ -5959,69 +6275,18 @@ window.initDashboardPage=async function(){
 
 // ===== QR DE EQUIPOS =====
 window._qrEquipoCema=null;
+window._qrEquipoData=null; // Guarda todos los datos del equipo escaneado
 
 function qrCheckURL(){
   var params=new URLSearchParams(window.location.search);
-  var eq=params.get('eq');
+  var eq=params.get('eq')||params.get('cema');
   if(eq){window._qrEquipoCema=eq.toUpperCase().trim();return true;}
   return false;
 }
 
-async function qrMostrarMenu(cema){
-  if(!cema)return;
-  window._qrEquipoCema=cema;
-  var info='';
-  try{
-    var snap=await getDocs(query(collection(db,'equipos'),where('nombre','==',cema)));
-    if(!snap.empty){
-      var d=snap.docs[0].data();
-      info=(d.codigo||'')+' · '+(d.proyecto||'').toUpperCase();
-    }else{
-      var snap2=await getDocs(query(collection(db,'equipos'),where('codigo','==',cema)));
-      if(!snap2.empty){
-        var d2=snap2.docs[0].data();
-        cema=d2.nombre||cema;
-        info=(d2.codigo||'')+' · '+(d2.proyecto||'').toUpperCase();
-      }
-    }
-  }catch(e){console.warn('qrInfo:',e);}
-  document.getElementById('qr-menu-cema').textContent=cema;
-  document.getElementById('qr-menu-sub').textContent=info||'Selecciona una accion';
-  document.getElementById('qr-menu-overlay').style.display='flex';
-}
-
+// Redirige directo a la página qr-equipo (menú que SÍ funciona)
 window.cerrarQRMenu=function(){
-  document.getElementById('qr-menu-overlay').style.display='none';
-};
-
-window.qrAccion=function(page){
-  var cema=window._qrEquipoCema;
-  if(cema)sessionStorage.setItem('mova_prefill_cema',cema);
-  document.getElementById('qr-menu-overlay').style.display='none';
-  window.navTo(page);
-  setTimeout(function(){
-    var input=document.querySelector('#preop-cema, #falla-cema, #mtto-cema');
-    if(input&&cema){
-      input.value=cema;
-      input.dispatchEvent(new Event('input',{bubbles:true}));
-      setTimeout(function(){
-        if(typeof cargarEquiposCache==='function'){
-          cargarEquiposCache().then(function(equipos){
-            var eq=equipos.find(function(e){return (e.nombre||'').toUpperCase()===cema.toUpperCase();});
-            if(eq){
-              var comeqInput=document.querySelector('#preop-comeq, #falla-comeq, #mtto-nombre');
-              if(comeqInput)comeqInput.value=eq.codigo||'';
-              var tipoSelect=document.getElementById('preop-tipo');
-              if(tipoSelect&&eq.tipo){
-                var opt=Array.from(tipoSelect.options).find(function(o){return o.textContent.toLowerCase().includes((eq.tipo||'').toLowerCase());});
-                if(opt)tipoSelect.value=opt.value;
-              }
-            }
-          });
-        }
-      },300);
-    }
-  },500);
+  // No-op: el modal viejo fue eliminado
 };
 
 window.mostrarQREquipo=function(cema){
@@ -6062,10 +6327,13 @@ window.qrImprimir=function(){
 
 window._qrPendingMenu=function(){
   if(window._qrEquipoCema){
-    qrMostrarMenu(window._qrEquipoCema);
+    // Limpiar params de URL
     var url=new URL(window.location.href);
     url.searchParams.delete('eq');
+    url.searchParams.delete('cema');
     window.history.replaceState({},'',url.toString());
+    // Ir directo a la página qr-equipo funcional
+    window.navTo('qr-equipo');
   }
 };
 
@@ -6231,6 +6499,7 @@ window.plEliminar=async function(id){
 // ===== NOVEDADES =====
 window._novedades=[];
 window._novFotoTemp=null;
+window._novPdfTemp=null;
 window._novFiltroCat='';
 window._novCarouselIdx=0;
 window._novCarouselTimer=null;
@@ -6307,6 +6576,12 @@ window.novVerDetalle=function(id){
   tag.className='nov-slide-tag '+(n.categoria||'');
   document.getElementById('nov-lightbox-title').textContent=n.titulo||'Sin título';
   document.getElementById('nov-lightbox-desc').textContent=n.descripcion||'';
+  var pdfDiv=document.getElementById('nov-lightbox-pdf');
+  if(n.pdfUrl&&pdfDiv){
+    pdfDiv.style.display='block';
+    var a=document.getElementById('nov-lightbox-pdf-link');
+    if(a){a.href=n.pdfUrl;a.download=n.pdfNombre||'novedad.pdf';}
+  }else if(pdfDiv){pdfDiv.style.display='none';}
   var fecha=n.fecha&&n.fecha.toDate?n.fecha.toDate().toLocaleDateString('es-CO',{day:'2-digit',month:'long',year:'numeric'}):'—';
   document.getElementById('nov-lightbox-meta').innerHTML='<strong>Publicado:</strong> '+fecha+' · <strong>Por:</strong> '+(n.autor||'—');
   document.getElementById('nov-lightbox').style.display='flex';
@@ -6320,7 +6595,8 @@ window.novNueva=function(){
   document.getElementById('nov-edit-id').value='';
   document.getElementById('nov-foto-preview').src='';
   document.getElementById('nov-foto-preview').style.display='none';
-  window._novFotoTemp=null;
+  window._novFotoTemp=null;window._novPdfTemp=null;
+  var pdfLbl=document.getElementById('nov-pdf-label');if(pdfLbl)pdfLbl.textContent='Click para subir PDF';
   document.getElementById('nov-modal-overlay').style.display='flex';
 };
 
@@ -6334,7 +6610,24 @@ window.novEditar=function(id){
   var prev=document.getElementById('nov-foto-preview');
   if(n.foto){prev.src=n.foto;prev.style.display='block';window._novFotoTemp=n.foto;}
   else{prev.src='';prev.style.display='none';window._novFotoTemp=null;}
+  // PDF
+  var pdfLbl=document.getElementById('nov-pdf-label');
+  if(n.pdfUrl){window._novPdfTemp={url:n.pdfUrl,nombre:n.pdfNombre||'documento.pdf'};if(pdfLbl)pdfLbl.textContent='✓ '+(n.pdfNombre||'documento.pdf');}
+  else{window._novPdfTemp=null;if(pdfLbl)pdfLbl.textContent='Click para subir PDF';}
   document.getElementById('nov-modal-overlay').style.display='flex';
+};
+
+window.novCargarPDF=function(input){
+  var f=input.files[0];if(!f)return;
+  if(f.size>4*1024*1024){showToast('error','PDF supera 4MB');input.value='';return;}
+  var reader=new FileReader();
+  reader.onload=function(e){
+    window._novPdfTemp={url:e.target.result,nombre:f.name};
+    var lbl=document.getElementById('nov-pdf-label');
+    if(lbl)lbl.textContent='✓ '+f.name;
+  };
+  reader.readAsDataURL(f);
+  input.value='';
 };
 
 window.novCargarFoto=function(input){
@@ -6376,6 +6669,8 @@ window.novGuardar=async function(){
       descripcion:descripcion,
       categoria:categoria,
       foto:window._novFotoTemp||'',
+      pdfUrl:window._novPdfTemp?window._novPdfTemp.url:'',
+      pdfNombre:window._novPdfTemp?window._novPdfTemp.nombre:'',
       autor:window.nombreOperador||'-',
       actualizado:serverTimestamp()
     };
@@ -7171,6 +7466,84 @@ function cpRenderTodo(){
     });
     lista.innerHTML=html;
   }
+  // Render charts
+  cpRenderCharts(porMes,porCategoria);
+}
+
+
+window._cpCharts={};
+function cpRenderCharts(porMes,porCategoria){
+  if(typeof Chart==='undefined'){console.warn('Chart.js no cargado');return;}
+  var MESES=['ENERO','FEBRERO','MARZO','ABRIL','MAYO','JUNIO','JULIO','AGOSTO','SEPTIEMBRE','OCTUBRE','NOVIEMBRE','DICIEMBRE'];
+  var MESES_LBL=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  var costos=MESES.map(function(m){return (porMes[m]||{total:0}).total;});
+  var unidades=MESES.map(function(m){return (porMes[m]||{unidades:0}).unidades;});
+
+  // Tendencia: costo (barra) + unidades (línea)
+  var ctx1=document.getElementById('cp-chart-tendencia');
+  if(ctx1){
+    if(window._cpCharts.tendencia)window._cpCharts.tendencia.destroy();
+    window._cpCharts.tendencia=new Chart(ctx1,{
+      type:'bar',
+      data:{
+        labels:MESES_LBL,
+        datasets:[
+          {type:'bar',label:'Costo (COP)',data:costos,backgroundColor:'rgba(46,117,182,.65)',borderColor:'#1565C0',borderWidth:1,yAxisID:'y',borderRadius:6,order:2},
+          {type:'line',label:'Unidades',data:unidades,borderColor:'#E65100',backgroundColor:'rgba(230,81,0,.1)',borderWidth:3,yAxisID:'y1',tension:0.3,fill:true,pointRadius:5,pointBackgroundColor:'#E65100',pointBorderColor:'#fff',pointBorderWidth:2,order:1}
+        ]
+      },
+      options:{
+        responsive:true,maintainAspectRatio:false,
+        interaction:{mode:'index',intersect:false},
+        plugins:{
+          legend:{position:'top',labels:{font:{size:12,weight:600}}},
+          tooltip:{callbacks:{
+            label:function(ctx){
+              if(ctx.dataset.label==='Costo (COP)'){
+                var v=ctx.parsed.y;
+                return'Costo: $'+(v>=1000000?(v/1000000).toFixed(1)+'M':v>=1000?Math.round(v/1000)+'k':v.toLocaleString('es-CO'));
+              }
+              return'Unidades: '+ctx.parsed.y;
+            }
+          }}
+        },
+        scales:{
+          y:{type:'linear',position:'left',title:{display:true,text:'Costo (COP)',font:{size:11,weight:700}},ticks:{callback:function(v){return v>=1000000?'$'+(v/1000000).toFixed(0)+'M':v>=1000?'$'+Math.round(v/1000)+'k':'$'+v;}},grid:{color:'rgba(0,0,0,.04)'}},
+          y1:{type:'linear',position:'right',title:{display:true,text:'Unidades',font:{size:11,weight:700}},grid:{drawOnChartArea:false},ticks:{precision:0}}
+        }
+      }
+    });
+  }
+
+  // Categoría: barras horizontales
+  var ctx2=document.getElementById('cp-chart-categoria');
+  if(ctx2){
+    if(window._cpCharts.categoria)window._cpCharts.categoria.destroy();
+    var cats=Object.keys(porCategoria).sort(function(a,b){return (porCategoria[b].costo||0)-(porCategoria[a].costo||0);});
+    var labels=cats.map(function(c){return c+' · '+(porCategoria[c].nombre||c).substring(0,18);});
+    var data=cats.map(function(c){return porCategoria[c].costo||0;});
+    var colorByLinea={'L. BLANCA':'#1565C0','L. AMARILLA':'#E65100','EQUIPO MENOR':'#6D28D9'};
+    var bgColors=cats.map(function(c){return colorByLinea[(porCategoria[c]||{}).linea]||'#94a3b8';});
+    window._cpCharts.categoria=new Chart(ctx2,{
+      type:'bar',
+      data:{
+        labels:labels,
+        datasets:[{label:'Costo Total',data:data,backgroundColor:bgColors,borderRadius:6}]
+      },
+      options:{
+        indexAxis:'y',
+        responsive:true,maintainAspectRatio:false,
+        plugins:{
+          legend:{display:false},
+          tooltip:{callbacks:{label:function(ctx){var v=ctx.parsed.x;return'Costo: $'+(v>=1000000?(v/1000000).toFixed(2)+'M':v>=1000?Math.round(v/1000)+'k':v.toLocaleString('es-CO'));}}}
+        },
+        scales:{
+          x:{ticks:{callback:function(v){return v>=1000000?'$'+(v/1000000).toFixed(0)+'M':v>=1000?'$'+Math.round(v/1000)+'k':'$'+v;}},grid:{color:'rgba(0,0,0,.04)'}},
+          y:{grid:{display:false},ticks:{font:{size:11,weight:600}}}
+        }
+      }
+    });
+  }
 }
 
 window.cpEliminarRegistro=async function(id){
@@ -7560,42 +7933,84 @@ function qrGetCemaFromUrl(){
   }catch(e){return null;}
 }
 
-// Initialize QR equipo screen
+// Initialize QR equipo screen — carga datos completos del equipo
 window.initQrEquipoPage=async function(){
   var cema=window._qrEquipoCema||qrGetCemaFromUrl();
   if(!cema){
     document.getElementById('qr-eq-cema').textContent='Sin CEMA';
-    document.getElementById('qr-eq-nombre').textContent='No se especifico equipo';
+    document.getElementById('qr-eq-nombre').textContent='No se especificó equipo';
     return;
   }
+  // Mostrar ícono de carga mientras busca
+  var iconEl=document.querySelector('#page-qr-equipo .qr-equipo-icon');
+  if(iconEl)iconEl.innerHTML='<i class="bi bi-arrow-repeat" style="animation:spin 1s linear infinite;font-size:36px"></i>';
+
   document.getElementById('qr-eq-cema').textContent=cema;
-  document.getElementById('qr-eq-nombre').textContent='Cargando...';
+  document.getElementById('qr-eq-nombre').textContent='Buscando equipo...';
+  var proyBadge=document.getElementById('qr-eq-proyecto');
+  if(proyBadge)proyBadge.style.display='none';
+
   try{
+    // Buscar por nombre (CEMA) primero, luego por código
+    var snap=null;
     var q1=query(collection(db,'equipos'),where('nombre','==',cema));
-    var snap=await getDocs(q1);
-    if(snap.empty){
-      q1=query(collection(db,'equipos'),where('codigo','==',cema));
-      snap=await getDocs(q1);
+    var s1=await getDocs(q1);
+    if(!s1.empty){snap=s1;}
+    else{
+      var q2=query(collection(db,'equipos'),where('codigo','==',cema));
+      var s2=await getDocs(q2);
+      if(!s2.empty){snap=s2;}
     }
-    if(snap.empty){
-      document.getElementById('qr-eq-nombre').textContent='Equipo no registrado';
-      window._qrEquipoData={cema:cema};
+
+    if(!snap||snap.empty){
+      if(iconEl)iconEl.innerHTML='❓';
+      document.getElementById('qr-eq-nombre').textContent='Equipo no registrado en el sistema';
+      window._qrEquipoData={cema:cema,nombre:cema};
       registrarScanQR(cema,'no_encontrado');
       return;
     }
+
     var eq=snap.docs[0].data();
     eq.id=snap.docs[0].id;
-    window._qrEquipoData=eq;
-    document.getElementById('qr-eq-nombre').textContent=eq.codigo||eq.tipo||'';
-    if(eq.proyecto){
-      var pBadge=document.getElementById('qr-eq-proyecto');
-      pBadge.textContent='Proyecto: '+eq.proyecto;
-      pBadge.style.display='inline-block';
+    window._qrEquipoData=eq; // Guarda TODOS los campos para autofill
+
+    // Ícono según categoría
+    var cemaStr=(eq.nombre||cema).toUpperCase();
+    var icono='🚜';
+    if(cemaStr.match(/^9DD|^9TS|^9TC|^9TT|^3SD/))icono='🚛';
+    else if(cemaStr.match(/^7EO|^7TO|^8CC|^8MN/))icono='🏗️';
+    else if(cemaStr.match(/^2DC|^2BS/))icono='🚗';
+    if(iconEl)iconEl.innerHTML=icono;
+
+    // Mostrar datos
+    document.getElementById('qr-eq-cema').textContent=eq.nombre||cema;
+    document.getElementById('qr-eq-nombre').textContent=eq.codigo||eq.tipo||'Sin código';
+
+    if(eq.proyecto&&proyBadge){
+      proyBadge.textContent='Proyecto: '+(eq.proyecto||'').toUpperCase();
+      proyBadge.style.display='inline-block';
     }
-    registrarScanQR(cema,'ok');
+
+    // Mostrar estado del equipo
+    var estadoEl=document.getElementById('qr-eq-estado');
+    if(!estadoEl){
+      estadoEl=document.createElement('div');
+      estadoEl.id='qr-eq-estado';
+      estadoEl.style.cssText='margin:6px auto 0;font-size:11px;font-weight:700;padding:3px 12px;border-radius:10px;display:inline-block';
+      var nombreEl=document.getElementById('qr-eq-nombre');
+      if(nombreEl&&nombreEl.parentNode)nombreEl.parentNode.insertBefore(estadoEl,nombreEl.nextSibling);
+    }
+    var est=(eq.estado||'operativo').toLowerCase();
+    var estColor=est.includes('mant')?'rgba(255,152,0,.15)':est.includes('fuera')||est.includes('varad')?'rgba(229,57,53,.15)':'rgba(76,175,80,.15)';
+    var estText=est.includes('mant')?'🟡 En Mantenimiento':est.includes('fuera')||est.includes('varad')?'🔴 Fuera de Servicio':'🟢 Operativo';
+    estadoEl.style.background=estColor;
+    estadoEl.textContent=estText;
+
+    registrarScanQR(eq.nombre||cema,'ok');
   }catch(e){
     console.warn('initQrEquipoPage:',e);
-    document.getElementById('qr-eq-nombre').textContent='Error al cargar';
+    if(iconEl)iconEl.innerHTML='⚠️';
+    document.getElementById('qr-eq-nombre').textContent='Error al cargar datos';
   }
 };
 
@@ -7615,11 +8030,14 @@ async function registrarScanQR(cema,resultado){
   }catch(e){console.warn('registrarScanQR:',e);}
 }
 
-// Action button handler
+// Action button handler — usa _qrEquipoData para autofill completo
 window.qrAccion=function(accion){
-  var cema=window._qrEquipoCema||qrGetCemaFromUrl();
+  var eq=window._qrEquipoData||{};
+  var cema=eq.nombre||window._qrEquipoCema||qrGetCemaFromUrl();
   if(!cema){showToast('error','CEMA no detectado');return;}
+  // Guardar datos completos para autofill
   window._qrPendingCema=cema;
+  window._qrPendingData=eq;
   if(accion==='preop')window.navTo('preoperacionales');
   else if(accion==='falla')window.navTo('fallas');
   else if(accion==='mtto')window.navTo('ordenes');
@@ -7629,22 +8047,73 @@ window.qrAccion=function(accion){
   }
 };
 
-// Autofill CEMA after navigation
+// Autofill completo: CEMA + COMEQ + Ubicación/Proyecto
 function qrAutofillCema(){
   var cema=window._qrPendingCema;
+  var eq=window._qrPendingData||{};
   if(!cema)return;
   setTimeout(function(){
-    var ids=['preop-cema','falla-cema','mtto-cema'];
-    for(var i=0;i<ids.length;i++){
-      var el=document.getElementById(ids[i]);
-      if(el&&!el.value){
+    // ── Campos CEMA (identificador principal) ──
+    var cemaCandidatos=['preop-cema','falla-cema','mtto-cema','insp-cema'];
+    for(var i=0;i<cemaCandidatos.length;i++){
+      var el=document.getElementById(cemaCandidatos[i]);
+      if(el){
         el.value=cema;
         el.dispatchEvent(new Event('input',{bubbles:true}));
-        showToast('info','CEMA '+cema+' autocompletado');
+        el.dispatchEvent(new Event('change',{bubbles:true}));
         break;
       }
     }
+
+    // ── COMEQ (código del equipo) ──
+    var comeq=eq.codigo||'';
+    if(comeq){
+      var comeqCandidatos=['preop-comeq','falla-comeq','mtto-nombre','insp-comeq'];
+      for(var j=0;j<comeqCandidatos.length;j++){
+        var cel=document.getElementById(comeqCandidatos[j]);
+        if(cel){cel.value=comeq;cel.dispatchEvent(new Event('input',{bubbles:true}));break;}
+      }
+    }
+
+    // ── Ubicación / Proyecto ──
+    var ubicacion=eq.proyecto||eq.ubicacion||'';
+    if(ubicacion){
+      var ubCandidatos=['preop-ubicacion','falla-ubicacion','mtto-ubicacion','insp-ubicacion','preop-proyecto','falla-proyecto'];
+      for(var k=0;k<ubCandidatos.length;k++){
+        var uEl=document.getElementById(ubCandidatos[k]);
+        if(uEl){
+          // Si es select, buscar la opción; si es input, poner el valor
+          if(uEl.tagName==='SELECT'){
+            var opt=Array.from(uEl.options).find(function(o){
+              return o.value.toLowerCase()===ubicacion.toLowerCase()||
+                     o.textContent.toLowerCase().includes(ubicacion.toLowerCase());
+            });
+            if(opt){uEl.value=opt.value;uEl.dispatchEvent(new Event('change',{bubbles:true}));}
+          }else{
+            uEl.value=ubicacion;
+            uEl.dispatchEvent(new Event('input',{bubbles:true}));
+          }
+          break;
+        }
+      }
+    }
+
+    // ── Tipo de equipo (si hay select de tipo) ──
+    var tipo=eq.tipo||'';
+    if(tipo){
+      var tipoSelect=document.getElementById('preop-tipo')||document.getElementById('falla-tipo');
+      if(tipoSelect){
+        var tOpt=Array.from(tipoSelect.options).find(function(o){
+          return o.textContent.toLowerCase().includes(tipo.toLowerCase())||
+                 o.value.toLowerCase().includes(tipo.toLowerCase());
+        });
+        if(tOpt){tipoSelect.value=tOpt.value;tipoSelect.dispatchEvent(new Event('change',{bubbles:true}));}
+      }
+    }
+
+    showToast('success','✅ Equipo '+cema+' cargado automáticamente');
     window._qrPendingCema=null;
+    window._qrPendingData=null;
   },800);
 }
 window.qrAutofillCema=qrAutofillCema;
@@ -7695,7 +8164,7 @@ function qrgenRender(){
       +'<div class="qr-card-cema">'+(eq.nombre||'-')+'</div>'
       +'<div class="qr-card-name">'+(eq.codigo||'-')+'</div>'
       +'<div class="qr-card-proj">'+(eq.proyecto||'')+'</div>'
-      +'<button data-idx="'+idx+'" onclick="window.qrgenImprimirUno(this.dataset.idx)" style="margin-top:8px;padding:6px 12px;border:1px solid var(--gray-200);background:var(--white);border-radius:6px;font-size:11px;cursor:pointer;width:100%">Imprimir</button>';
+      +'<div style="display:flex;gap:6px;margin-top:8px"><button data-idx="'+idx+'" data-canvas="qr-canvas-'+idx+'" onclick="window.qrgenDescargarUno(this.dataset.idx,this.dataset.canvas)" style="padding:6px 8px;border:1px solid var(--gray-200);background:var(--white);border-radius:6px;font-size:11px;cursor:pointer;flex:1" title="Descargar PNG"><i class="bi bi-download"></i> PNG</button><button data-idx="'+idx+'" onclick="window.qrgenImprimirUno(this.dataset.idx)" style="padding:6px 8px;border:1px solid var(--gray-200);background:var(--white);border-radius:6px;font-size:11px;cursor:pointer;flex:1" title="Imprimir"><i class="bi bi-printer"></i> Imprimir</button></div>';
     grid.appendChild(card);
     setTimeout(function(){
       try{
@@ -7733,6 +8202,90 @@ window.qrgenImprimir=function(){
   });
   if(!equipos.length){showToast('error','Sin equipos para imprimir');return;}
   qrgenImprimirLista(equipos);
+};
+
+// Descargar QR individual como PNG
+window.qrgenDescargarUno=function(idx,canvasId){
+  try{
+    var div=document.getElementById(canvasId);
+    if(!div){showToast('error','QR no encontrado');return;}
+    var img=div.querySelector('img')||div.querySelector('canvas');
+    if(!img){showToast('error','QR no generado aún');return;}
+    var equipos=qrgenFiltrados();
+    var i=parseInt(idx);
+    var eq=equipos[i];if(!eq){showToast('error','Equipo no encontrado');return;}
+    var nombre='QR_'+(eq.nombre||eq.codigo||'equipo').replace(/[^a-zA-Z0-9]/g,'_')+'.png';
+    // Si es <img>, descarga directa por src
+    if(img.tagName==='IMG'){
+      var a=document.createElement('a');
+      a.href=img.src;
+      a.download=nombre;
+      a.click();
+    }else if(img.tagName==='CANVAS'){
+      var a=document.createElement('a');
+      a.href=img.toDataURL('image/png');
+      a.download=nombre;
+      a.click();
+    }
+    showToast('success','QR descargado');
+  }catch(e){showToast('error','Error: '+e.message);}
+};
+
+// Helper: lista de equipos filtrados
+function qrgenFiltrados(){
+  var filtroProj=(document.getElementById('qrgen-filter-proj')?.value||'').toLowerCase();
+  var search=(document.getElementById('qrgen-search')?.value||'').toLowerCase().trim();
+  return window._qrEquipos.filter(function(eq){
+    var matchProj=!filtroProj||(eq.proyecto&&eq.proyecto.toLowerCase().includes(filtroProj));
+    var matchSearch=!search||(eq.nombre||'').toLowerCase().includes(search)||(eq.codigo||'').toLowerCase().includes(search);
+    return matchProj&&matchSearch;
+  });
+}
+
+// Descargar todos los QR (como PDF compilado o múltiples PNGs)
+window.qrgenDescargarTodos=async function(){
+  var equipos=qrgenFiltrados();
+  if(!equipos.length){showToast('error','Sin equipos');return;}
+  if(equipos.length>50){if(!confirm('¿Descargar PDF con '+equipos.length+' QRs? (puede tardar)'))return;}
+  showToast('info','Generando PDF con '+equipos.length+' códigos QR...');
+  try{
+    var{jsPDF}=window.jspdf;
+    var pdf=new jsPDF({orientation:'p',unit:'mm',format:'a4'});
+    // 4 QR por página A4 (2x2 grid de 100mm x 100mm)
+    var baseUrl=window.location.origin+window.location.pathname;
+    for(var i=0;i<equipos.length;i++){
+      var eq=equipos[i];
+      var idxInPage=i%4;
+      if(i>0&&idxInPage===0)pdf.addPage();
+      var col=idxInPage%2,row=Math.floor(idxInPage/2);
+      var x=col*100+5,y=row*145+5;
+      // Render QR offscreen
+      var div=document.createElement('div');
+      div.style.cssText='position:absolute;left:-9999px';
+      document.body.appendChild(div);
+      var qrUrl=baseUrl+'?cema='+encodeURIComponent(eq.nombre||eq.codigo);
+      new QRCode(div,{text:qrUrl,width:300,height:300,colorDark:'#0f2137',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M});
+      await new Promise(function(r){setTimeout(r,80);});
+      var img=div.querySelector('img')||div.querySelector('canvas');
+      var dataUrl=img.tagName==='IMG'?img.src:img.toDataURL('image/png');
+      // Logo
+      pdf.setFont('helvetica','bold');pdf.setFontSize(11);pdf.setTextColor(15,33,55);
+      pdf.text('MM&E MOVA',x+50,y+8,{align:'center'});
+      // QR
+      pdf.addImage(dataUrl,'PNG',x+25,y+12,50,50);
+      // CEMA
+      pdf.setFontSize(16);pdf.text(String(eq.nombre||'-'),x+50,y+72,{align:'center'});
+      pdf.setFont('helvetica','normal');pdf.setFontSize(9);pdf.setTextColor(80,80,80);
+      pdf.text(String(eq.codigo||eq.tipo||''),x+50,y+80,{align:'center'});
+      if(eq.proyecto){pdf.setTextColor(46,117,182);pdf.text(String(eq.proyecto).toUpperCase(),x+50,y+86,{align:'center'});}
+      // Border
+      pdf.setDrawColor(220,220,220);pdf.rect(x,y,90,135);
+      document.body.removeChild(div);
+    }
+    var fname='QRs_MOVA_'+new Date().toISOString().substring(0,10)+'.pdf';
+    pdf.save(fname);
+    showToast('success','PDF descargado: '+fname);
+  }catch(e){console.error('descargar QRs:',e);showToast('error','Error: '+e.message);}
 };
 
 window.qrgenImprimirUno=function(idx){
@@ -7805,10 +8358,11 @@ async function galeriaCargarFotos(){
 }
 
 // ── Carrusel en inicio ──
-async function inicioCarouselInit(){
+window.inicioCarouselInit=async function(){
   var container=document.getElementById('inicio-galeria-carousel');
   if(!container)return;
-  var fotos=_galeriaFotos.length?_galeriaFotos:await galeriaCargarFotos();
+  // Always reload fotos to reflect project changes
+  var fotos=await galeriaCargarFotos();
   // Filter by active project
   if(window._proyectoActivo){
     var pn=window._proyectoActivo.nombre.toLowerCase();
@@ -7987,10 +8541,165 @@ window.galeriaEliminar=async function(id){
   }catch(e){showToast('error','Error: '+e.message);}
 };
 
+// ===== INICIO DINÁMICO: Próximos Mantenimientos + Actividad Reciente =====
+window.cargarInicioProxMtto=async function(){
+  var cont=document.getElementById('inicio-prox-mtto');
+  if(!cont)return;
+  try{
+    var pendientes=[];
+    try{
+      var snap=await getDcsByProy('solicitudes_mtto');
+      snap.docs.forEach(function(d){
+        var data=d.data();
+        if(data.estado&&data.estado!=='pendiente'&&data.estado!=='abierta')return;
+        pendientes.push({
+          fecha:data.fecha&&data.fecha.toDate?data.fecha.toDate():new Date(),
+          cema:data.cema||(data.equipo&&data.equipo.cema)||'—',
+          tipo:data.tipoMtto||'Mantenimiento',
+          prioridad:data.urgencia||'media',
+          fuente:'firestore'
+        });
+      });
+    }catch(e){}
+    try{
+      var url=activeUrl();
+      var sheetsR=await fetch(url);
+      var sheetsJ=await sheetsR.json();
+      var cronSheet=(sheetsJ.sheets||[]).find(function(s){var n=s.toUpperCase().replace(/\s+/g,'');return n.includes('CRONOGRAMA')||(n.includes('DASH')&&n.includes('CRONO'));});
+      if(cronSheet){
+        var resp=await fetch(url+'?sheet='+encodeURIComponent(cronSheet)+'&hr=1');
+        var json=await resp.json();
+        var rows=json.rows||[];
+        var startIdx=-1;
+        for(var i=0;i<rows.length;i++){
+          var rowVals=Object.values(rows[i]).map(function(v){return String(v||'').toUpperCase();});
+          if(rowVals.some(function(v){return v.includes('PROXIMOS')||v.includes('PRÓXIMOS');})&&rowVals.some(function(v){return v.includes('MANTENIMIENTO');})){
+            startIdx=i+1;break;
+          }
+        }
+        if(startIdx>=0){
+          var dataRows=rows.slice(startIdx,startIdx+15);
+          dataRows.forEach(function(row){
+            var keys=Object.keys(row);
+            var cema=String(row[keys[0]]||'').trim();
+            var tipo=String(row[keys[2]]||row[keys[1]]||'').trim();
+            var fechaStr=String(row[keys[3]]||row[keys[keys.length-1]]||'').trim();
+            if(!cema||cema.length>10)return;
+            var fecha=null;
+            if(fechaStr){
+              var p=fechaStr.replace(/-/g,'/').split('/');
+              if(p.length>=3){
+                var d=parseInt(p[0]),m=parseInt(p[1])-1,y=parseInt(p[2]);
+                if(y>2000)fecha=new Date(y,m,d);
+              }
+            }
+            if(!fecha)return;
+            pendientes.push({fecha:fecha,cema:cema,tipo:tipo||'Preventivo',prioridad:'media',fuente:'cronograma'});
+          });
+        }
+      }
+    }catch(eC){console.warn('[prox-mtto] cronograma:',eC);}
+    pendientes.sort(function(a,b){return a.fecha-b.fecha;});
+    var top=pendientes.slice(0,5);
+    if(!top.length){
+      cont.innerHTML='<div style="text-align:center;padding:20px;color:var(--gray-400);font-size:12px"><i class="bi bi-check-circle" style="font-size:28px;display:block;margin-bottom:6px;color:var(--green)"></i>Sin mantenimientos pendientes</div>';
+      return;
+    }
+    var html='';
+    var MES_ABR=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+    top.forEach(function(p){
+      var d=p.fecha.getDate();
+      var m=MES_ABR[p.fecha.getMonth()];
+      var hoy=new Date();hoy.setHours(0,0,0,0);
+      var diasDif=Math.floor((p.fecha-hoy)/(1000*60*60*24));
+      var bg='linear-gradient(135deg,var(--blue),var(--blue-bright))';
+      if(diasDif<0)bg='linear-gradient(135deg,var(--red),#EF5350)';
+      else if(diasDif<=3)bg='linear-gradient(135deg,#E65100,#F57C00)';
+      var prevTag=p.tipo.toUpperCase().includes('CORR')?'cal-tag-corr':'cal-tag-prev';
+      var prevLbl=p.tipo.toUpperCase().includes('CORR')?'Correctivo':'Preventivo';
+      var alerta=diasDif<0?' · ⚠ Vencido '+Math.abs(diasDif)+'d':diasDif===0?' · Hoy':diasDif<=7?' · '+diasDif+'d':'';
+      html+='<div class="cal-item">'
+        +'<div class="cal-date" style="background:'+bg+'"><span class="cal-date-day">'+d+'</span><span class="cal-date-month">'+m+'</span></div>'
+        +'<div class="cal-info"><div class="cal-info-title">'+(p.tipo||'Mtto.')+' — '+p.cema+'</div>'
+        +'<div class="cal-info-sub">'+(p.fuente==='cronograma'?'Cronograma':'Solicitado')+alerta+'</div>'
+        +'<span class="cal-info-tag '+prevTag+'">'+prevLbl+'</span></div></div>';
+    });
+    cont.innerHTML=html;
+  }catch(e){
+    cont.innerHTML='<div style="text-align:center;padding:20px;color:var(--gray-400);font-size:12px">Error al cargar</div>';
+  }
+};
+
+window.cargarInicioActividad=async function(){
+  var cont=document.getElementById('inicio-actividad');
+  if(!cont)return;
+  try{
+    var actividades=[];
+    var colecciones=[
+      {col:'reportes_fallas',accion:'reportó falla',color:'#ef4444',campo:'reportadoPor'},
+      {col:'solicitudes_mtto',accion:'solicitó mantenimiento',color:'#f97316',campo:'solicitadoPor'},
+      {col:'inspecciones_linea_amarilla',accion:'completó preop. amarilla',color:'#22c55e',campo:'operador'},
+      {col:'inspecciones_linea_blanca',accion:'completó preop. blanca',color:'#22c55e',campo:'operador'},
+      {col:'reportes_danos',accion:'reportó daño',color:'#dc2626',campo:'reportadoPor'},
+      {col:'novedades',accion:'publicó novedad',color:'#8b5cf6',campo:'autor'}
+    ];
+    for(var i=0;i<colecciones.length;i++){
+      var c=colecciones[i];
+      try{
+        var snap=await getDocs(collection(db,c.col));
+        snap.docs.forEach(function(d){
+          var data=d.data();
+          var f=data.fecha&&data.fecha.toDate?data.fecha.toDate():null;
+          var fAct=data.actualizado&&data.actualizado.toDate?data.actualizado.toDate():null;
+          var fEvento=fAct||f;
+          if(!fEvento)return;
+          var cema=data.cema||(data.equipo&&data.equipo.cema)||data.identificacion||'';
+          var titulo=data.titulo||data.tipoFalla||data.tipoMtto||'';
+          var quien=data[c.campo]||data.operador||data.actualizadoPor||data.cerradoPor||'—';
+          actividades.push({fecha:fEvento,quien:quien,accion:c.accion,ref:cema||titulo||'',color:c.color});
+          if(data.fechaCierre&&data.fechaCierre.toDate){
+            actividades.push({fecha:data.fechaCierre.toDate(),quien:data.cerradoPor||'—',accion:'cerró '+(c.col==='reportes_fallas'?'falla':'reporte'),ref:cema||'',color:'#16a34a'});
+          }
+        });
+      }catch(eC){}
+    }
+    actividades.sort(function(a,b){return b.fecha-a.fecha;});
+    var top=actividades.slice(0,8);
+    if(!top.length){
+      cont.innerHTML='<div style="text-align:center;padding:20px;color:var(--gray-400);font-size:12px">Sin actividad reciente</div>';
+      return;
+    }
+    function tiempoRel(d){
+      var diff=(Date.now()-d.getTime())/1000;
+      if(diff<60)return'Hace un momento';
+      if(diff<3600)return'Hace '+Math.floor(diff/60)+'m';
+      if(diff<86400)return'Hace '+Math.floor(diff/3600)+'h';
+      if(diff<2592000)return'Hace '+Math.floor(diff/86400)+'d';
+      return d.toLocaleDateString('es-CO',{day:'2-digit',month:'short'});
+    }
+    function iniciales(nombre){
+      var p=String(nombre||'').trim().split(/\s+/);
+      if(p.length>=2)return(p[0][0]+p[1][0]).toUpperCase();
+      return(p[0]||'??').substring(0,2).toUpperCase();
+    }
+    var html='';
+    top.forEach(function(a){
+      var ini=iniciales(a.quien);
+      html+='<div class="activity-item">'
+        +'<div class="activity-avatar" style="background:linear-gradient(135deg,'+a.color+','+a.color+'aa)">'+ini+'</div>'
+        +'<div style="flex:1"><div class="activity-text"><strong>'+a.quien+'</strong> '+a.accion+(a.ref?' <strong>'+a.ref+'</strong>':'')+'</div>'
+        +'<div class="activity-time">'+tiempoRel(a.fecha)+'</div></div></div>';
+    });
+    cont.innerHTML=html;
+  }catch(e){
+    cont.innerHTML='<div style="text-align:center;padding:20px;color:var(--gray-400);font-size:12px">Error al cargar</div>';
+  }
+};
 
 window.abrirCierreFalla=async function(fallaId){
   try{
-    var snap=await getDoc(doc(db,'reportes_fallas',fallaId));
+    var col=window._cierreColeccion||'reportes_fallas';
+    var snap=await getDoc(doc(db,col,fallaId));
     if(!snap.exists()){showToast('error','Falla no encontrada');return;}
     var d=snap.data();
     var cema=d.cema||(d.equipo&&d.equipo.cema)||'—';
@@ -8023,7 +8732,8 @@ window.confirmarCierreFalla=async function(){
   try{
     var data={estado:'cerrada',fechaCierre:serverTimestamp(),observacionCierre:obs,cerradoPor:window.nombreOperador||'—'};
     if(ot)data.otCierre=ot;
-    await setDoc(doc(db,'reportes_fallas',id),data,{merge:true});
+    var col=window._cierreColeccion||'reportes_fallas';
+    await setDoc(doc(db,col,id),data,{merge:true});
     document.getElementById('falla-cierre-overlay').style.display='none';
     showToast('success','Falla cerrada correctamente');
     if(window.loadInicioKPIs)window.loadInicioKPIs();
@@ -8185,7 +8895,7 @@ window.seleccionarProyecto=async function(proyId){
   else if(pageId==='planner'&&window.initPlannerPage)window.initPlannerPage();
   else if(pageId==='galeria'&&window.initGaleriaPage)window.initGaleriaPage();
   else if(pageId==='qrgen'&&window.initQrGenPage)window.initQrGenPage();
-  else if(pageId==='equipos'&&window.cargarEquipos)window.cargarEquipos('todos');
+  else if(pageId==='equipos'&&window.cargarEquipos)window.cargarEquipos(window._proyectoActivo?window._proyectoActivo.nombre.toLowerCase():'todos');
 };
 
 function getProyectoUrl(){
@@ -8476,7 +9186,7 @@ window.navTo=function(page){
 if((page==='preoperacionales'||page==='fallas'||page==='ordenes')&&window.qrAutofillCema)window.qrAutofillCema();if(page==='galeria'&&window.initGaleriaPage)window.initGaleriaPage();if(page==='proyectos'&&window.initProyectosPage)window.initProyectosPage();
 if(page==='ordenes'&&window.initOrdenesPage)window.initOrdenesPage();
 if(page==='hist-mtto'&&window.initHistMttoPage){initProjBars().then(function(){var b=document.getElementById('hmtto-proj-bar');if(b&&window.rolActivo==='admin')b.style.display='flex';});window.initHistMttoPage();}
-if(page==='ctrl-seg'&&window.initCtrlSegPage){initProjBars().then(function(){var b=document.getElementById('cseg-proj-bar');if(b&&window.rolActivo==='admin')b.style.display='flex';});window.initCtrlSegPage();}if(page==='equipos'&&window.cargarEquipos)window.cargarEquipos(document.querySelector('.project-btn.active')?.dataset.project||'todos');if(page==='inicio'){if(window._initHeroCarousel)window._initHeroCarousel();setTimeout(()=>{document.querySelectorAll('.progress-fill').forEach(b=>{b.style.width='0';setTimeout(()=>{b.style.width=b.dataset.target+'%'},100)})},300);if(window.loadInicioKPIs)window.loadInicioKPIs();setTimeout(inicioCarouselInit,600);if(window.initNovCarousel)setTimeout(window.initNovCarousel,500);if(typeof inicioGaleriaCargar!=='undefined')inicioGaleriaCargar();}window.scrollTo({top:0,behavior:'smooth'});document.getElementById('sidebar')?.classList.remove('mobile-open');document.getElementById('sidebarOverlay')?.classList.remove('show')};
+if(page==='ctrl-seg'&&window.initCtrlSegPage){initProjBars().then(function(){var b=document.getElementById('cseg-proj-bar');if(b&&window.rolActivo==='admin')b.style.display='flex';});window.initCtrlSegPage();}if(page==='equipos'&&window.cargarEquipos)window.cargarEquipos(document.querySelector('.project-btn.active')?.dataset.project||'todos');if(page==='inicio'){if(window._initHeroCarousel)window._initHeroCarousel();setTimeout(()=>{document.querySelectorAll('.progress-fill').forEach(b=>{b.style.width='0';setTimeout(()=>{b.style.width=b.dataset.target+'%'},100)})},300);if(window.loadInicioKPIs)window.loadInicioKPIs();setTimeout(window.inicioCarouselInit,600);if(window.initNovCarousel)setTimeout(window.initNovCarousel,500);if(typeof inicioGaleriaCargar!=='undefined')inicioGaleriaCargar();if(window.cargarInicioProxMtto)window.cargarInicioProxMtto();if(window.cargarInicioActividad)window.cargarInicioActividad();}window.scrollTo({top:0,behavior:'smooth'});document.getElementById('sidebar')?.classList.remove('mobile-open');document.getElementById('sidebarOverlay')?.classList.remove('show')};
 
 document.addEventListener('DOMContentLoaded',()=>{
   const p=document.getElementById('progressBars');if(p){[{l:'Mtto. Preventivo',v:87,c:'green'},{l:'Mtto. Instalaciones',v:72,c:'yellow'},{l:'Inspecciones',v:95,c:'green'},{l:'OT Cerradas',v:63,c:'red'}].forEach(x=>{p.innerHTML+=`<div class="progress-item"><div class="progress-header"><span class="progress-label">${x.l}</span><span class="progress-value">${x.v}%</span></div><div class="progress-bar"><div class="progress-fill ${x.c}" data-target="${x.v}" style="width:0"></div></div></div>`});setTimeout(()=>{document.querySelectorAll('.progress-fill').forEach(b=>{b.style.width=b.dataset.target+'%'})},600)}
@@ -8498,53 +9208,7 @@ document.getElementById('sidebarOverlay')?.addEventListener('click',()=>{
 });
 document.getElementById('globalSearch')?.addEventListener('input',e=>{const term=e.target.value.toLowerCase();const ap=document.querySelector('.page-section.active');if(!term){ap.querySelectorAll('.doc-card,tr').forEach(el=>el.style.display='');return}if(ap.id==='page-documentos')ap.querySelectorAll('.doc-card').forEach(c=>{c.style.display=c.textContent.toLowerCase().includes(term)?'':'none'});else if(ap.id==='page-equipos')ap.querySelectorAll('.eq-table tbody tr').forEach(r=>{r.style.display=r.textContent.toLowerCase().includes(term)?'':'none'})});
 </script>
-  <!-- QR EQUIPO MENU -->
-  <div class="qr-menu-overlay" id="qr-menu-overlay">
-    <div class="qr-menu-card">
-      <div class="qr-menu-header">
-        <button class="qr-menu-close" onclick="window.cerrarQRMenu()">✕</button>
-        <div class="qr-menu-icon">🚜</div>
-        <div class="qr-menu-cema" id="qr-menu-cema">—</div>
-        <div class="qr-menu-sub" id="qr-menu-sub">Selecciona una acción</div>
-      </div>
-      <div class="qr-menu-body">
-        <div class="qr-menu-actions">
-          <button class="qr-menu-btn" onclick="window.qrAccion('preoperacionales')">
-            <div class="qr-menu-btn-icon preop">📝</div>
-            <div class="qr-menu-btn-info">
-              <div class="qr-menu-btn-title">Inspección Preoperacional</div>
-              <div class="qr-menu-btn-desc">Realiza el chequeo del equipo</div>
-            </div>
-            <div class="qr-menu-btn-arrow">→</div>
-          </button>
-          <button class="qr-menu-btn" onclick="window.qrAccion('fallas')">
-            <div class="qr-menu-btn-icon falla">⚠️</div>
-            <div class="qr-menu-btn-info">
-              <div class="qr-menu-btn-title">Reportar Falla</div>
-              <div class="qr-menu-btn-desc">Notifica un problema o avería</div>
-            </div>
-            <div class="qr-menu-btn-arrow">→</div>
-          </button>
-          <button class="qr-menu-btn" onclick="window.qrAccion('ordenes')">
-            <div class="qr-menu-btn-icon mtto">🔧</div>
-            <div class="qr-menu-btn-info">
-              <div class="qr-menu-btn-title">Solicitar Mantenimiento</div>
-              <div class="qr-menu-btn-desc">Pide servicio preventivo o correctivo</div>
-            </div>
-            <div class="qr-menu-btn-arrow">→</div>
-          </button>
-          <button class="qr-menu-btn admin-only" onclick="window.qrAccion('hojavida')">
-            <div class="qr-menu-btn-icon hv">📑</div>
-            <div class="qr-menu-btn-info">
-              <div class="qr-menu-btn-title">Hoja de Vida</div>
-              <div class="qr-menu-btn-desc">Ver historial técnico del equipo</div>
-            </div>
-            <div class="qr-menu-btn-arrow">→</div>
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
+  
 
   <!-- QR PRINT MODAL -->
   <div class="qr-print-modal" id="qr-print-modal">
@@ -8564,3 +9228,4 @@ document.getElementById('globalSearch')?.addEventListener('input',e=>{const term
 
 </body>
 </html>
+
